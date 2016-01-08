@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">filenotes</string>
+    <string name="action_new">New</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_save">Save</string>
+    <string name="action_settings">Settings</string>
+    <string name="newFileName">UNTITLED</string>
+    <string name="version">Filenotes 1.0</string>
+    <string name="version_summary">Sam Strachan</string>
+    
+</resources>

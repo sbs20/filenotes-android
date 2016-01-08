@@ -1,0 +1,38 @@
+<resources>
+
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="pref_header_general">General</string>
+    <string name="pref_font_default">Monospace</string>
+    
+    <string-array name="pref_font_list">
+        <item>Monospace</item>
+        <item>Serif</item>
+        <item>Sans Serif</item>
+    </string-array>
+    <string-array name="pref_font_list_values">
+        <item>monospace</item>
+        <item>serif</item>
+        <item>sansserif</item>
+    </string-array>
+
+    <string-array name="pref_font_size">
+        <item>Eagle-eyed</item>
+        <item>Young-un</item>
+        <item>Twenties</item>
+        <item>Eye-strain</item>
+        <item>Old</item>
+        <item>The screens are so small these days</item>
+    </string-array>
+    <string-array name="pref_font_size_values">
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+        <item>24</item>
+        <item>28</item>
+    </string-array>
+    
+</resources>
