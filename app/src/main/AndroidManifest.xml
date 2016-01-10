@@ -4,11 +4,14 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +19,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="sbs20.filenotes.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,16 +28,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sbs20.filenotes.EditActivity"
-            android:parentActivityName="sbs20.filenotes.MainActivity" >
+            android:name=".EditActivity"
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sbs20.filenotes.MainActivity" />
         </activity>
         <activity
-            android:name="sbs20.filenotes.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="sbs20.filenotes.MainActivity" >
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sbs20.filenotes.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sbs20.filenotes.MainActivity" />
+        </activity>
+        <activity
+            android:name=".SettingsActivity2"
+            android:label="@string/title_activity_settings2"
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sbs20.filenotes.MainActivity" />

@@ -4,13 +4,6 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	
-	<TextView
-		android:id="@+id/notetitle"
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		android:background="#111111"
-		android:textAppearance="?android:attr/textAppearanceMedium"/>
-	
 	<ScrollView
 		android:id="@+id/scroll"
 		android:orientation="vertical"

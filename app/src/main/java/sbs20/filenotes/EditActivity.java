@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -25,7 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class EditActivity extends Activity {
+public class EditActivity extends ThemedActivity {
 
 	private boolean isDirty;
 	
@@ -94,17 +93,15 @@ public class EditActivity extends Activity {
 		EditText edit = (EditText) this.findViewById(R.id.note);
 		edit.setText(this.readFileAsString(file));
 
-		// Set the title bar
-		final TextView title = (TextView) this.findViewById(R.id.notetitle);
-		title.setText(file.getName());
-		
+		this.setTitle(file.getName());
+
 		// Now listen for changes
 		edit.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence one, int a, int b, int c) {
 				thisActivity.isDirty = true;
-				String temp = title.getText().toString();
+				String temp = thisActivity.getTitle().toString();
 				if (!temp.startsWith("* ")) {
-					title.setText("* " + temp);
+					thisActivity.setTitle("* " + temp);
 				}
 			}
 
@@ -123,7 +120,7 @@ public class EditActivity extends Activity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 	}
 

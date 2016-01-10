@@ -11,10 +11,12 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,22 +27,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ThemedActivity {
 
-	/*
-	 * 1. Add settings
-	 * 2. Make font face and size adjustable
-	 * 3. Configurable path
-	 * 4. What if path is empty
-	 * 5. Save icon
-	 * 8. New file
-	 * 9. Name a new file (or capture UNTITLED)
-	 * 10. Rename a file
-	 * 11. Remove hard coded strings
-	 */
-	
 	private static final int MAX_FILE_SIZE = 32 * 1024;
-	
+
+	private ListView drawerList;
+	private ArrayAdapter<String> drawerAdapter;
+	private ActionBarDrawerToggle drawerToggle;
+	private DrawerLayout drawerLayout;
+	private String activityTitle;
+
 	private ListView filelist;
 	private File noteDirectory;
 	private File[] notes;
@@ -63,6 +59,7 @@ public class MainActivity extends Activity {
 								return true;
 							}
 						}
+
 						return false;
 					}
 				});
@@ -99,10 +96,80 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	private void addDrawerItems() {
+		final String[] drawerItems = { "Create new", "Settings", "About" };
+		this.drawerAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1,
+				drawerItems);
+
+		this.drawerList.setAdapter(this.drawerAdapter);
+
+		final MainActivity activity = this;
+
+		this.drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+				switch (drawerItems[position]) {
+					case "Create new":
+						activity.createNew();
+						break;
+
+					case "Settings": {
+						Intent intent = new Intent(activity, SettingsActivity2.class);
+						startActivity(intent);
+						break;
+					}
+
+					case "About": {
+						Intent intent = new Intent(activity, AboutActivity.class);
+						startActivity(intent);
+						break;
+					}
+				}
+			}
+		});
+	}
+
+	private void setupDrawer() {
+		this.drawerToggle = new ActionBarDrawerToggle(this,
+				this.drawerLayout,
+				R.string.drawer_open,
+				R.string.drawer_close) {
+
+			/** Called when a drawer has settled in a completely open state. */
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				getSupportActionBar().setTitle("Navigation!");
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+			}
+
+			/** Called when a drawer has settled in a completely closed state. */
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+				getSupportActionBar().setTitle(activityTitle);
+				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+			}
+		};
+
+		this.drawerToggle.setDrawerIndicatorEnabled(true);
+		this.drawerLayout.setDrawerListener(this.drawerToggle);
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		this.drawerList = (ListView)findViewById(R.id.navList);
+		this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+		this.activityTitle = getTitle().toString();
+
+		this.addDrawerItems();
+		this.setupDrawer();
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 
 		this.initNotes();
 
@@ -173,7 +240,20 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
-	
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		this.drawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		this.drawerToggle.onConfigurationChanged(newConfig);
+	}
+
 	public void createNew() {
 		
 		// Is there a file already there? - delete it
@@ -202,22 +282,8 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_settings:
-			Intent intent = new Intent(this, SettingsActivity.class);
-			this.startActivity(intent);
-			return true;
-			
-		case R.id.action_new:
-			this.createNew();
+		if (this.drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 

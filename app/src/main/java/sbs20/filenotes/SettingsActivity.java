@@ -11,8 +11,13 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.support.v7.widget.Toolbar;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -37,36 +42,46 @@ public class SettingsActivity extends PreferenceActivity {
 	public static final String KEY_STORAGE_DIRECTORY = "pref_storagedir";
 	public static final String KEY_FONTFACE = "pref_font";
 	public static final String KEY_FONTSIZE = "pref_font_size";
-	
+
+    private Toolbar actionbar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setupActionBar();
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			// Show the Up button in the action bar.
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-	}
+    @Override
+    public void setContentView (int layoutResID)
+    {
+        ViewGroup contentView = (ViewGroup) this.getLayoutInflater().inflate(
+                R.layout.pref_settings, new LinearLayout(this), false);
+
+        actionbar = (Toolbar) contentView.findViewById(R.id.pref_toolbar);
+        actionbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        ViewGroup contentWrapper = (ViewGroup) contentView.findViewById(R.id.content_wrapper);
+        LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true);
+
+        super.setContentView(contentView);
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
+            case android.R.id.home:
+                // This ID represents the Home or Up button. In the case of this
+                // activity, the Up button is shown. Use NavUtils to allow users
+                // to navigate up one level in the application structure. For
+                // more details, see the Navigation pattern on Android Design:
+                //
+                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

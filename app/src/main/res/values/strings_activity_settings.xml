@@ -4,7 +4,6 @@
 
     <!-- Strings related to Settings -->
 
-    <string name="pref_header_general">General</string>
     <string name="pref_font_default">Monospace</string>
     
     <string-array name="pref_font_list">
