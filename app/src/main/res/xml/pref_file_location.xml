@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <sbs20.filenotes.DirectoryPickerDialog
+        android:key="pref_storagedir"
+        android:title="Storage Directory"
+        android:dialogTitle="Storage Directory"
+        android:summary="Filesystem location where notes are stored" />
+
+</PreferenceScreen>

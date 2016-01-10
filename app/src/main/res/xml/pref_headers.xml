@@ -2,14 +2,10 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-    <header android:fragment="sbs20.filenotes.SettingsActivity2$GeneralPreferenceFragment"
-        android:title="@string/pref_header_general" android:icon="@drawable/ic_info_black_24dp" />
+    <header android:fragment="sbs20.filenotes.SettingsActivity$FileLocationPreferenceFragment"
+        android:title="@string/pref_header_file_location" />
 
-    <header android:fragment="sbs20.filenotes.SettingsActivity2$NotificationPreferenceFragment"
-        android:title="@string/pref_header_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp" />
-
-    <header android:fragment="sbs20.filenotes.SettingsActivity2$DataSyncPreferenceFragment"
-        android:title="@string/pref_header_data_sync" android:icon="@drawable/ic_sync_black_24dp" />
+    <header android:fragment="sbs20.filenotes.SettingsActivity$AppearancePreferenceFragment"
+        android:title="@string/pref_header_appearance" />
 
 </preference-headers>

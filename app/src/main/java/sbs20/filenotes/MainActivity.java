@@ -116,7 +116,7 @@ public class MainActivity extends ThemedActivity {
 						break;
 
 					case "Settings": {
-						Intent intent = new Intent(activity, SettingsActivity2.class);
+						Intent intent = new Intent(activity, SettingsActivity.class);
 						startActivity(intent);
 						break;
 					}
@@ -140,7 +140,7 @@ public class MainActivity extends ThemedActivity {
 			/** Called when a drawer has settled in a completely open state. */
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
-				getSupportActionBar().setTitle("Navigation!");
+				getSupportActionBar().setTitle(activityTitle);
 				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
 			}
 
@@ -257,7 +257,7 @@ public class MainActivity extends ThemedActivity {
 	public void createNew() {
 		
 		// Is there a file already there? - delete it
-		String filename = this.getResources().getString(R.string.newFileName);
+		String filename = this.getString(R.string.newFileName);
 		File file = new File(this.noteDirectory, "/" + filename);
 		
 		// The file may already exist with gash content. Just delete it
