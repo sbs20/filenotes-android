@@ -4,15 +4,18 @@ package sbs20.filenotes;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -39,10 +42,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     public static final String KEY_STORAGE_DIRECTORY = "pref_storagedir";
     public static final String KEY_FONTFACE = "pref_font";
     public static final String KEY_FONTSIZE = "pref_font_size";
+    public static final String KEY_THEME = "pref_theme";
+
+    protected FilenotesApplication getFilenotesApplication() {
+        return (FilenotesApplication)this.getApplication();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.setTheme(this.getFilenotesApplication().getActiveThemeId());
         super.onCreate(savedInstanceState);
         setupActionBar();
+
+        // DEBUG
+//        getPreferences().edit().remove(KEY_THEME).commit();
     }
 
     /**
@@ -55,7 +68,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
+    
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         int id = item.getItemId();

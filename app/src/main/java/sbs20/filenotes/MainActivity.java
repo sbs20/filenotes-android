@@ -10,10 +10,8 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.LayoutInflater;
@@ -40,11 +38,14 @@ public class MainActivity extends ThemedActivity {
 	private ListView filelist;
 	private File noteDirectory;
 	private File[] notes;
-	
+
 	private void initNotes() {
-		
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		String directoryPath = sharedPref.getString(SettingsActivity.KEY_STORAGE_DIRECTORY, "");
+
+		String directoryPath = this
+				.getFilenotesApplication()
+				.getPreferences()
+				.getString(SettingsActivity.KEY_STORAGE_DIRECTORY, "");
+
 		this.noteDirectory = new File(directoryPath);
 		
 		if (this.noteDirectory.exists()) {

@@ -5,7 +5,7 @@
         android:title="Font face"
         android:summary="Choose a font type"
         android:dialogTitle="Choose a font type"
-        android:entries="@array/pref_font_list"
+        android:entries="@array/pref_font_list_text"
         android:entryValues="@array/pref_font_list_values"
         android:defaultValue="@string/pref_font_default" />
 
@@ -14,7 +14,15 @@
         android:title="Font size"
         android:summary="Choose a font size"
         android:dialogTitle="Choose a font size"
-        android:entries="@array/pref_font_size"
+        android:entries="@array/pref_font_size_text"
         android:entryValues="@array/pref_font_size_values" />
+
+    <ListPreference
+        android:key="pref_theme"
+        android:title="Theme"
+        android:summary="Choose a theme"
+        android:dialogTitle="Choose a theme"
+        android:entries="@array/pref_theme_text"
+        android:entryValues="@array/pref_theme_values" />
 
 </PreferenceScreen>

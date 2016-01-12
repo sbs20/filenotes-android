@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import android.annotation.TargetApi;
+//import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -113,14 +113,8 @@ public class EditActivity extends ThemedActivity {
 		edit.setTextSize(this.getTextSize());
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override

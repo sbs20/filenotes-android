@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Fixed values - never translate -->
+
+
+
     <string name="app_name">filenotes</string>
     <string name="action_new">New</string>
     <string name="action_delete">Delete</string>
@@ -14,19 +18,47 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about">About</string>
 
+
     <!-- Strings related to Settings -->
     <string name="pref_header_file_location">File location</string>
     <string name="pref_header_appearance">Appearance</string>
 
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
+    <string name="pref_font_default">Monospace</string>
+
+    <string-array name="pref_font_list_text">
+        <item>Monospace</item>
+        <item>Serif</item>
+        <item>Sans Serif</item>
     </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
+    <string-array name="pref_font_list_values">
+        <item>monospace</item>
+        <item>serif</item>
+        <item>sansserif</item>
     </string-array>
 
+    <string-array name="pref_font_size_text">
+        <item>8pt</item>
+        <item>12pt</item>
+        <item>16pt</item>
+        <item>20pt</item>
+        <item>24pt</item>
+        <item>28pt</item>
+    </string-array>
+    <string-array name="pref_font_size_values">
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+        <item>24</item>
+        <item>28</item>
+    </string-array>
+
+    <string-array name="pref_theme_text">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="pref_theme_values">
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
 </resources>
