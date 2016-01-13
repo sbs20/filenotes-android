@@ -44,7 +44,7 @@
                 android:value="sbs20.filenotes.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".PreferenceSettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" >
             <meta-data

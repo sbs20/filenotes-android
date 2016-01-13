@@ -44,7 +44,7 @@ public class MainActivity extends ThemedActivity {
 		String directoryPath = this
 				.getFilenotesApplication()
 				.getPreferences()
-				.getString(SettingsActivity.KEY_STORAGE_DIRECTORY, "");
+				.getString(PreferenceSettingsActivity.KEY_STORAGE_DIRECTORY, "");
 
 		this.noteDirectory = new File(directoryPath);
 		
@@ -117,7 +117,7 @@ public class MainActivity extends ThemedActivity {
 						break;
 
 					case "Settings": {
-						Intent intent = new Intent(activity, SettingsActivity.class);
+						Intent intent = new Intent(activity, PreferenceSettingsActivity.class);
 						startActivity(intent);
 						break;
 					}

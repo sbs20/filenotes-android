@@ -2,10 +2,10 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-    <header android:fragment="sbs20.filenotes.SettingsActivity$FileLocationPreferenceFragment"
+    <header android:fragment="sbs20.filenotes.PreferenceSettingsActivity$FileLocationPreferenceFragment"
         android:title="@string/pref_header_file_location" />
 
-    <header android:fragment="sbs20.filenotes.SettingsActivity$AppearancePreferenceFragment"
+    <header android:fragment="sbs20.filenotes.PreferenceSettingsActivity$AppearancePreferenceFragment"
         android:title="@string/pref_header_appearance" />
 
 </preference-headers>

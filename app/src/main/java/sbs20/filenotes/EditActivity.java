@@ -11,7 +11,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
@@ -54,7 +53,7 @@ public class EditActivity extends ThemedActivity {
 	
 	private Typeface getTypeface() {
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		String fontFace = sharedPref.getString(SettingsActivity.KEY_FONTFACE, "monospace");
+		String fontFace = sharedPref.getString(PreferenceSettingsActivity.KEY_FONTFACE, "monospace");
 
 		if (fontFace.compareTo("monospace") == 0) {
 			return Typeface.MONOSPACE;
@@ -69,7 +68,7 @@ public class EditActivity extends ThemedActivity {
 	
 	private float getTextSize() {
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		int fontSize = Integer.parseInt(sharedPref.getString(SettingsActivity.KEY_FONTSIZE, "16"));
+		int fontSize = Integer.parseInt(sharedPref.getString(PreferenceSettingsActivity.KEY_FONTSIZE, "16"));
 		return fontSize;
 	}
 
@@ -221,7 +220,7 @@ public class EditActivity extends ThemedActivity {
 					case DialogInterface.BUTTON_POSITIVE:
 						// Yes button clicked
 						SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(thisActivity);
-						String directoryPath = sharedPref.getString(SettingsActivity.KEY_STORAGE_DIRECTORY, "");
+						String directoryPath = sharedPref.getString(PreferenceSettingsActivity.KEY_STORAGE_DIRECTORY, "");
 						String filepath = directoryPath + "/" + editTextFilename.getText().toString();
 						thisActivity.finishSave(filepath, action);
 						break;
