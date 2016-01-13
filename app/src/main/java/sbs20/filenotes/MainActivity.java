@@ -5,19 +5,15 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Locale;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -100,7 +96,7 @@ public class MainActivity extends ThemedActivity {
 	private void addDrawerItems() {
 		final String[] drawerItems = { "Create new", "Settings", "About" };
 		this.drawerAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1,
+				R.layout.listview_drawer,
 				drawerItems);
 
 		this.drawerList.setAdapter(this.drawerAdapter);
@@ -176,55 +172,8 @@ public class MainActivity extends ThemedActivity {
 
 		final MainActivity thisActivity = this;
 
-		ArrayAdapter<File> adapter = new ArrayAdapter<File>(this, R.layout.listview_notes, this.notes) {
-			private String getSize(File file) {
-				long size = file.length();
-
-				if (file.isDirectory())
-					return "";
-
-				if (size < 0)
-					return "0";
-				else if (size == 1)
-					return "1 Byte";
-				else if (size < 2048)
-					return size + " Bytes";
-				else if (size < 1024*1024*2)
-					return ((int) (size/1024)) + " KB";
-				else 
-					return Math.round(100.0*size/(1024*1024))/100.0 + " MB";
-			}
-			
-			private String getModificationDate(File file) {
-				Date lastModified = new Date(file.lastModified());
-				return lastModified.toString();
-			}
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				File file = this.getItem(position);
-				View row = convertView;
-
-				if(row == null)
-				{
-					LayoutInflater inflater = ((Activity)thisActivity).getLayoutInflater();
-					row = inflater.inflate(R.layout.listview_notes, parent, false);
-				}
-
-				TextView filename = (TextView) row.findViewById(R.id.fileName);
-				filename.setText(file.getName());
-
-				TextView modificationDate = (TextView) row.findViewById(R.id.modificationDate);
-				modificationDate.setText(this.getModificationDate(file));
-				
-				TextView fileSize = (TextView) row.findViewById(R.id.fileSize);
-				fileSize.setText(this.getSize(file));
-				
-				row.setTag(file);
-
-				return row;
-			}
-		};
+		FileArrayAdapter adapter = new FileArrayAdapter(this);
+		adapter.updateItems(this.notes);
 
 		filelist = (ListView)findViewById(R.id.fileList);
 		filelist.setAdapter(adapter);

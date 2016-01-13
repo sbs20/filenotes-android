@@ -51,6 +51,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sbs20.filenotes.MainActivity" />
         </activity>
+        <activity android:name=".SettingsActivity" >
+        </activity>
     </application>
 
 </manifest>
