@@ -30,7 +30,8 @@
 
     <ListView
         android:id="@+id/navList"
-        android:layout_width="200dp"
+        android:layout_width="240dp"
+        android:background="#ff009688"
         android:layout_height="match_parent"
         android:layout_gravity="left|start" />
 

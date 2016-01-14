@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "sbs20.filenotes"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 17
     }
 
