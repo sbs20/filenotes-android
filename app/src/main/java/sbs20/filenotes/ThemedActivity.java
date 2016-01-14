@@ -1,14 +1,16 @@
 package sbs20.filenotes;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 abstract class ThemedActivity extends AppCompatActivity {
 
     protected FilenotesApplication getFilenotesApplication() {
         return (FilenotesApplication)this.getApplication();
+    }
+
+    protected StorageManager getStorageManager() {
+        return this.getFilenotesApplication().getStorageManager();
     }
 
     @Override

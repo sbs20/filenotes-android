@@ -1,12 +1,5 @@
 package sbs20.filenotes;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Locale;
-
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -32,56 +25,24 @@ public class MainActivity extends ThemedActivity {
 	private String activityTitle;
 
 	private ListView filelist;
-	private File noteDirectory;
-	private File[] notes;
+	private NoteCollection notes;
 
 	private void initNotes() {
 
-		String directoryPath = this
-				.getFilenotesApplication()
-				.getPreferences()
-				.getString(PreferenceSettingsActivity.KEY_STORAGE_DIRECTORY, "");
-
-		this.noteDirectory = new File(directoryPath);
-		
-		if (this.noteDirectory.exists()) {
-			if (this.noteDirectory.isDirectory()) {
-				this.notes = this.noteDirectory.listFiles(new FileFilter() {
-					@Override
-					public boolean accept(File pathname) {
-						if (pathname.canRead() && pathname.isFile()) {
-							Locale locale = Locale.getDefault();
-							String filename = pathname.getName().toLowerCase(locale);
-							if (filename.endsWith(".txt")) {
-								return true;
-							}
-						}
-
-						return false;
-					}
-				});
-				
-				Arrays.sort(this.notes, new Comparator<File>() {
-					@Override
-					public int compare(File lhs, File rhs) {
-						Locale locale = Locale.getDefault();
-						String l = lhs.getAbsolutePath().toLowerCase(locale);
-						String r = rhs.getAbsolutePath().toLowerCase(locale);
-						return l.compareTo(r);
-					}
-				});
-			}
-		}
-		
 		TextView message = (TextView) this.findViewById(R.id.fileListMessage);
-		if (!this.noteDirectory.exists()) {
-			message.setText("Directory " + this.noteDirectory.getAbsolutePath() + " does not exist");
+
+		try {
+			this.notes = this.getFilenotesApplication()
+					.getStorageManager()
+					.readAllFromStorage();
+		}
+		catch (Exception ex) {
+			message.setText("Storage directory does not exist");
 			message.setVisibility(View.VISIBLE);
-		} else if (!this.noteDirectory.canRead()) {
-			message.setText("Unable to read " + this.noteDirectory.getAbsolutePath());
-			message.setVisibility(View.VISIBLE);
-		} else if (this.notes.length == 0) {
-			message.setText("No matching files in " + this.noteDirectory.getAbsolutePath());
+		}
+
+		if (this.notes.size() == 0) {
+			message.setText("No matching files in storage directory");
 			message.setVisibility(View.VISIBLE);
 		} else {
 			message.setText("");
@@ -89,7 +50,7 @@ public class MainActivity extends ThemedActivity {
 		}
 		
 		if (this.notes == null) {
-			this.notes = new File[0];
+			this.notes = new NoteCollection();
 		}
 	}
 
@@ -172,21 +133,21 @@ public class MainActivity extends ThemedActivity {
 
 		final MainActivity thisActivity = this;
 
-		FileArrayAdapter adapter = new FileArrayAdapter(this);
+		NoteArrayAdapter adapter = new NoteArrayAdapter(this);
 		adapter.updateItems(this.notes);
 
 		filelist = (ListView)findViewById(R.id.fileList);
 		filelist.setAdapter(adapter);
 		filelist.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				File file = (File) view.getTag();
-				
-				if (file.length() > MAX_FILE_SIZE) {
-					String message =  file.getName() + " is larger than 32k. Note Monkey is not designed for large files";
-					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();					
-				} else {
-					thisActivity.edit(file);
-				}
+            Note note = (Note) view.getTag();
+
+            if (note.getSize() > MAX_FILE_SIZE) {
+                String message =  note.getName() + " is larger than 32k. Filenotes is not designed for large files";
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            } else {
+                thisActivity.edit(note);
+            }
 			}
 		});
 	}
@@ -205,28 +166,12 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	public void createNew() {
-		
-		// Is there a file already there? - delete it
-		String filename = this.getString(R.string.newFileName);
-		File file = new File(this.noteDirectory, "/" + filename);
-		
-		// The file may already exist with gash content. Just delete it
-		if (file.exists()) {
-			file.delete();
-		}
-		
-		// Now recreate the file since we've more or less guaranteed it's not there
-		try {
-			file.createNewFile();
-		} catch (IOException e) {
-		}
-		
-		// Edit the file
-		this.edit(file);
+        Note note = this.notes.createNote();
+		this.edit(note);
 	}
 	
-	public void edit(File file) {
-		Current.setFile(file);
+	public void edit(Note note) {
+		Current.setSelectedNote(note);
 		Intent intent = new Intent(this, EditActivity.class);
 		this.startActivity(intent);
 	}

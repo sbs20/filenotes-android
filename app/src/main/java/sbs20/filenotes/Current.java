@@ -1,15 +1,12 @@
 package sbs20.filenotes;
 
-import java.io.File;
-
 public class Current {
-	private static File file;
+	private static Note selectedNote;
 	
-	public static void setFile(File file) {
-		Current.file = file;
+	public static void setSelectedNote(Note file) {
+		Current.selectedNote = file;
 	}
-	
-	public static File getFile() {
-		return Current.file;
+	public static Note getSelectedNote() {
+		return Current.selectedNote;
 	}
 }

@@ -7,6 +7,20 @@ import android.widget.Toast;
 
 public class FilenotesApplication extends Application {
 
+    private StorageManager storageManager;
+
+    public FilenotesApplication() {
+        super();
+    }
+
+    public StorageManager getStorageManager() {
+        if (this.storageManager == null) {
+            this.storageManager = new StorageManager(this);
+        }
+
+        return this.storageManager;
+    }
+
     public SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(this);
     }
