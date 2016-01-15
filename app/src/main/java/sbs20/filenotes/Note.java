@@ -67,6 +67,20 @@ public class Note implements Comparable<Note> {
         this.text = text;
     }
 
+    public String getTextSummary() {
+        int summaryLength = 27;
+        StringBuffer buffer = new StringBuffer();
+        for (int index = 0; index < this.text.length() && index < summaryLength && this.text.charAt(index) != '\n'; index++) {
+            buffer.append(this.text.charAt(index));
+        }
+
+        if (buffer.length() == summaryLength) {
+            buffer.append("...");
+        }
+
+        return buffer.toString();
+    }
+
     public Date getLastModified() {
         return lastModified;
     }

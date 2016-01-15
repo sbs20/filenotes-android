@@ -1,27 +1,51 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-	android:orientation="vertical" 
+	android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/fileName"
+    <LinearLayout
+        android:id="@+id/listnote_layoutRight"
+        android:layout_width="100dp"
+        android:gravity="right"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/listnode_lastModified"
+            android:gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/listnote_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp" />
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/listnote_layoutRight">
 
-    <TextView
-        android:id="@+id/modificationDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/listnote_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/fileSize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
-</LinearLayout>
+        <TextView
+            android:id="@+id/listnote_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</RelativeLayout>

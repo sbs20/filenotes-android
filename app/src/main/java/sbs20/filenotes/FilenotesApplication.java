@@ -8,6 +8,7 @@ import android.widget.Toast;
 public class FilenotesApplication extends Application {
 
     private StorageManager storageManager;
+    private DateTimeHelper dateTimeHelper;
 
     public FilenotesApplication() {
         super();
@@ -19,6 +20,14 @@ public class FilenotesApplication extends Application {
         }
 
         return this.storageManager;
+    }
+
+    public DateTimeHelper getDateTimeHelper() {
+        if (this.dateTimeHelper == null) {
+            this.dateTimeHelper = new DateTimeHelper(this);
+        }
+
+        return this.dateTimeHelper;
     }
 
     public SharedPreferences getPreferences() {
