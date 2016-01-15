@@ -104,7 +104,6 @@ public class EditActivity extends ThemedActivity {
 				// more details, see the Navigation pattern on Android Design:
 				//
 				// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-				//
 				this.startClose();
                 return true;
 

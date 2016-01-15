@@ -3,23 +3,28 @@
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-	
-	<ScrollView
-		android:id="@+id/scroll"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:fadingEdge="none">
-		
-		<EditText
-			android:id="@+id/note"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:padding="5dip"
-			android:fadingEdge="none"
-			android:scrollbars="vertical|horizontal"
-			android:gravity="top"
-			android:inputType="textMultiLine"
-			/>
-	</ScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/scrollHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ScrollView
+            android:id="@+id/scrollVertical"
+            android:orientation="vertical"
+            android:scrollbarStyle="outsideInset"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fadingEdge="none">
+
+            <EditText
+                android:id="@+id/note"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dip"
+                android:gravity="top"
+                android:inputType="textMultiLine" />
+
+        </ScrollView>
+    </HorizontalScrollView>
 </LinearLayout>
