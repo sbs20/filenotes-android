@@ -3,6 +3,7 @@ package sbs20.filenotes;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
@@ -55,7 +56,7 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	private void addDrawerItems() {
-		final String[] drawerItems = { "Create new", "Settings", "About" };
+		final String[] drawerItems = { "Settings", "About" };
 		this.drawerAdapter = new ArrayAdapter<String>(this,
 				R.layout.listview_drawer,
 				drawerItems);
@@ -67,11 +68,7 @@ public class MainActivity extends ThemedActivity {
 		this.drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 				switch (drawerItems[position]) {
-					case "Create new":
-						activity.createNew();
-						break;
 
 					case "Settings": {
 						Intent intent = new Intent(activity, PreferenceSettingsActivity.class);
@@ -131,23 +128,25 @@ public class MainActivity extends ThemedActivity {
 
 		this.initNotes();
 
-		final MainActivity thisActivity = this;
+		final MainActivity activity = this;
 
 		NoteArrayAdapter adapter = new NoteArrayAdapter(this);
 		adapter.updateItems(this.notes);
 
-		filelist = (ListView)findViewById(R.id.fileList);
-		filelist.setAdapter(adapter);
-		filelist.setOnItemClickListener(new OnItemClickListener() {
+		this.filelist = (ListView)this.findViewById(R.id.fileList);
+		this.filelist.setAdapter(adapter);
+		this.filelist.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Note note = (Note) view.getTag();
+				Note note = (Note) view.getTag();
+				activity.edit(note);
+			}
+		});
 
-            if (note.getSize() > MAX_FILE_SIZE) {
-                String message =  note.getName() + " is larger than 32k. Filenotes is not designed for large files";
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            } else {
-                thisActivity.edit(note);
-            }
+		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.createNew);
+		createNew.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.createNew();
 			}
 		});
 	}

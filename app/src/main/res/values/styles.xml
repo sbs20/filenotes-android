@@ -34,10 +34,12 @@
     <!-- Main app theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">#80cbc4</item>
+        <item name="colorAccent">#80cbc4</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="colorPrimary">#00695c</item>
+        <item name="colorAccent">#00695c</item>
     </style>
 
 </resources>

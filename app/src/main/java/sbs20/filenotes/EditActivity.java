@@ -1,6 +1,7 @@
 package sbs20.filenotes;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -11,11 +12,14 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 public class EditActivity extends ThemedActivity {
 
 	private Note note;
+	private EditText noteText;
 
 	private Typeface getTypeface() {
 		String fontFace = this.getFilenotesApplication()
@@ -58,14 +62,14 @@ public class EditActivity extends ThemedActivity {
 
 		// Load the note
 		this.note = Current.getSelectedNote();
-		final EditText edit = (EditText) this.findViewById(R.id.note);
-		edit.setText(this.note.getText());
+		this.noteText = (EditText) this.findViewById(R.id.note);
+		this.noteText.setText(this.note.getText());
 		this.setTitle(this.note.getName());
 
 		// Listen for changes so we can mark this as dirty
-		edit.addTextChangedListener(new TextWatcher() {
+		this.noteText.addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence one, int a, int b, int c) {
-                activity.updateNote();
+				activity.updateNote();
 				if (activity.note.isDirty()) {
 					String title = activity.getTitle().toString();
 					if (!title.startsWith("* ")) {
@@ -75,13 +79,27 @@ public class EditActivity extends ThemedActivity {
 			}
 
 			// complete the interface
-			public void afterTextChanged(Editable s) { }
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+			public void afterTextChanged(Editable s) {
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 		});
 
-		edit.setTypeface(this.getTypeface());
-		edit.setTextSize(this.getTextSize());
+		this.noteText.setTypeface(this.getTypeface());
+		this.noteText.setTextSize(this.getTextSize());
+		this.noteText.clearFocus();
 	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+
+		// Hide the keyboard by default
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(this.noteText.getWindowToken(), 0);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
 
 	private void setupActionBar() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -176,10 +194,10 @@ public class EditActivity extends ThemedActivity {
 
 	public void rename() {
 		final EditActivity activity = this;
-		final EditText editText = new EditText(this);
+		final EditText renameEditText = new EditText(this);
 		boolean isRenamed = false;
 
-		editText.setText(this.note.getName());
+		renameEditText.setText(this.note.getName());
 
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
@@ -189,7 +207,7 @@ public class EditActivity extends ThemedActivity {
 						// Yes button clicked
 						boolean succeeded = activity.getFilenotesApplication()
 								.getStorageManager()
-								.renameNote(activity.note, editText.getText().toString());
+								.renameNote(activity.note, renameEditText.getText().toString());
 
                         if (succeeded) {
                             activity.setTitle(activity.note.getName());
@@ -207,15 +225,14 @@ public class EditActivity extends ThemedActivity {
 
 		new AlertDialog.Builder(this)
 				.setMessage("Rename")
-				.setView(editText)
+				.setView(renameEditText)
 				.setPositiveButton("Yes", dialogClickListener)
 				.setNeutralButton("Cancel", dialogClickListener)
 				.show();
 	}
 	
 	public void save() {
-		EditText editText = (EditText) this.findViewById(R.id.note);
-		String content = editText.getText().toString();
+		String content = this.noteText.getText().toString();
 		this.note.setText(content);
 		this.getFilenotesApplication().getStorageManager().writeToStorage(this.note);
         this.setTitle(this.note.getName());
