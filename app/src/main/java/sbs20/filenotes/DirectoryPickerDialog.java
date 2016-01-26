@@ -13,10 +13,11 @@ import android.content.res.TypedArray;
 import android.os.Environment;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -112,33 +113,31 @@ public class DirectoryPickerDialog extends DialogPreference {
 		
 	@Override
 	protected View onCreateDialogView() {
-		final TextView textView = new TextView(this.context);
-		final ListView listView = new ListView(this.context);
-		final DirectoryPickerDialog thisDialog = this;
-		
-		textView.setText(thisDialog.currentDirectory.getAbsolutePath());
-		listView.setAdapter(this.createArrayAdapter());
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				File file = (File) view.getTag();
-				
-				thisDialog.currentDirectory = file;
-				listView.setAdapter(thisDialog.createArrayAdapter());
-				textView.setText(thisDialog.currentDirectory.getAbsolutePath());
-			}
-		});
-		
-		LinearLayout layout = new LinearLayout(this.context);
-		layout.setOrientation(LinearLayout.VERTICAL);
-		layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-		// Revisit minimum height
-		layout.setMinimumHeight(1000);
-		layout.addView(textView);
-		layout.addView(listView);
+        final DirectoryPickerDialog dialog = this;
+        LinearLayout layout = (LinearLayout)LayoutInflater.from(this.context).inflate(R.layout.dialog_preference_directory, null);
+        final TextView textView = (TextView) layout.findViewById(R.id.currentDirectory);
+        final ListView listView = (ListView) layout.findViewById(R.id.directoryList);
 
-		return layout;
-	}
+        textView.setText(dialog.currentDirectory.getAbsolutePath());
+        listView.setAdapter(this.createArrayAdapter());
+
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                File file = (File) view.getTag();
+                dialog.currentDirectory = file;
+                listView.setAdapter(dialog.createArrayAdapter());
+                textView.setText(dialog.currentDirectory.getAbsolutePath());
+            }
+        });
+
+        WindowManager windowManager = (WindowManager) this.context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        final int height = (int)(displayMetrics.heightPixels * 0.9);
+        layout.setMinimumHeight(height);
+        return layout;
+    }
 	
 	@Override
 	protected void onDialogClosed(boolean positiveResult) {
