@@ -19,12 +19,14 @@
             android:id="@+id/listnode_lastModified"
             android:gravity="right"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:theme="@style/Text.Small" />
 
         <TextView
             android:id="@+id/listnote_size"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:theme="@style/Text.Small" />
 
     </LinearLayout>
 
@@ -39,12 +41,13 @@
             android:id="@+id/listnote_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:theme="@style/Text.Large" />
 
         <TextView
             android:id="@+id/listnote_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:theme="@style/Text.Medium" />
 
     </LinearLayout>
 

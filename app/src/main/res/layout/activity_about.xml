@@ -11,23 +11,25 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/TextHeader"
+        android:theme="@style/Text.Header"
         android:text="@string/about_overview_header"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:theme="@style/Text.Medium"
         android:text="@string/about_overview_body"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/TextHeader"
+        android:theme="@style/Text.Header"
         android:text="@string/about_license_header"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:theme="@style/Text.Medium"
         android:text="@string/about_license_body"/>
 
 </LinearLayout>

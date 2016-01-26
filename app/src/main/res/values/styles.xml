@@ -8,35 +8,38 @@
     -->
 
     <!-- Font sizes -->
-    <style name="TextSizeTiny">
+    <style name="Text">
+        <item name="android:paddingBottom">5sp</item>
+    </style>
+
+    <style name="Text.Tiny">
         <item name="android:textSize">8sp</item>
     </style>
-    <style name="TextSizeSmall">
+    <style name="Text.Small">
         <item name="android:textSize">12sp</item>
     </style>
-    <style name="TextSizeMedium">
+    <style name="Text.Medium">
         <item name="android:textSize">16sp</item>
     </style>
-    <style name="TextSizeLarge">
-        <item name="android:textSize">20sp</item>
+    <style name="Text.Large">
+        <item name="android:textSize">24sp</item>
     </style>
-    <style name="TextSizeHuge">
-        <item name="android:textSize">38sp</item>
+    <style name="Text.Huge">
+        <item name="android:textSize">28sp</item>
     </style>
 
     <!-- Themes -->
     <style name="Drawer">
         <item name="android:background">?android:attr/windowBackground</item>
     </style>
-    <style name="DrawerText" parent="TextSizeLarge">
+    <style name="DrawerText" parent="Text.Large">
         <item name="android:padding">16dp</item>
     </style>
 
-    <style name="TextHeader">
+    <style name="Text.Header" parent="Text.Large">
         <item name="android:textColor">?android:attr/colorPrimary</item>
-        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:paddingTop">10dp</item>
     </style>
 
     <!-- Main app theme -->

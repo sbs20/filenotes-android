@@ -5,7 +5,7 @@
     
     <TextView
         android:id="@+id/currentDirectory"
-        android:theme="@style/TextHeader"
+        android:theme="@style/Text.Header"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
