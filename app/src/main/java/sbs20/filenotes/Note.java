@@ -33,18 +33,20 @@ public class Note implements Comparable<Note> {
     }
 
     public String getSizeString() {
-
+        long kb = 1 << 10;
+        long mb = kb << 10;
         long size = this.getSize();
-        if (size < 0)
+        if (size < 0) {
             return "0";
-        else if (size == 1)
+        } else if (size == 1) {
             return "1 Byte";
-        else if (size < 2048)
+        } else if (size < 2 * kb) {
             return size + " Bytes";
-        else if (size < 1024*1024*2)
-            return ((int) (size/1024)) + " KB";
-        else
-            return Math.round(100.0*size/(1024*1024))/100.0 + " MB";
+        } else if (size < 2 * mb) {
+            return ((int) (size / kb)) + " KB";
+        } else {
+            return Math.round(100.0 * size / (mb)) / 100.0 + " MB";
+        }
     }
 
     public String getName() {

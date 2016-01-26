@@ -204,7 +204,12 @@ public class EditActivity extends ThemedActivity {
 			public void onClick(DialogInterface dialog, int result) {
 				switch (result){
 					case DialogInterface.BUTTON_POSITIVE:
-						// Yes button clicked
+						// If nothing has changed...
+						if (renameEditText.getText().toString().compareTo(activity.note.getName()) == 0) {
+							// don't do anything
+							return;
+						}
+
 						boolean succeeded = activity.getFilenotesApplication()
 								.getStorageManager()
 								.renameNote(activity.note, renameEditText.getText().toString());

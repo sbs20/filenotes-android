@@ -66,11 +66,20 @@ public class StorageManager {
                     @Override
                     public boolean accept(File file) {
                         if (file.canRead() && file.isFile()) {
+                            boolean showAllFiles = true;
+                            boolean showHiddenFiles = false;
                             Locale locale = Locale.getDefault();
                             String filename = file.getName().toLowerCase(locale);
-                            if (filename.endsWith(".txt")) {
-                                return true;
+
+                            if (filename.startsWith(".") && !showHiddenFiles) {
+                                return false;
                             }
+
+                            if (!filename.endsWith(".txt") && !showAllFiles) {
+                                return false;
+                            }
+
+                            return true;
                         }
 
                         return false;
