@@ -32,15 +32,24 @@
         <item name="android:padding">16dp</item>
     </style>
 
+    <style name="TextHeader">
+        <item name="android:textColor">?android:attr/colorPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">5dp</item>
+    </style>
+
     <!-- Main app theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">#80cbc4</item>
-        <item name="colorAccent">#80cbc4</item>
+        <item name="colorPrimary">#b0bec5</item>
+        <item name="colorAccent">#b0bec5</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
-        <item name="colorPrimary">#00695c</item>
-        <item name="colorAccent">#00695c</item>
+        <item name="colorPrimary">#455a64</item>
+        <item name="colorAccent">#455a64</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
 </resources>
