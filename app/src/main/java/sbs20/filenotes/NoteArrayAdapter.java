@@ -11,12 +11,8 @@ import java.util.List;
 
 public class NoteArrayAdapter extends GenericBaseAdpater<Note> {
 
-    private List<Note> files = Collections.emptyList();
-    private Context context;
-
     public NoteArrayAdapter(Context context) {
         super(context);
-        this.context = context;
     }
 
     @Override
