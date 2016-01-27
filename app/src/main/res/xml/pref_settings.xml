@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <sbs20.filenotes.DirectoryPickerDialog
+        android:key="pref_storagedir"
+        android:title="Storage Directory"
+        android:dialogTitle="Storage Directory"
+        android:summary="Filesystem location where notes are stored" />
+
+    <ListPreference
+        android:key="pref_font"
+        android:title="Font face"
+        android:summary="Choose a font type"
+        android:dialogTitle="Choose a font type"
+        android:entries="@array/pref_font_list_text"
+        android:entryValues="@array/pref_font_list_values"
+        android:defaultValue="@string/pref_font_default" />
+
+    <ListPreference
+        android:key="pref_font_size"
+        android:title="Font size"
+        android:summary="Choose a font size"
+        android:dialogTitle="Choose a font size"
+        android:entries="@array/pref_font_size_text"
+        android:entryValues="@array/pref_font_size_values" />
+
+    <ListPreference
+        android:key="pref_theme"
+        android:title="Theme"
+        android:summary="Choose a theme"
+        android:dialogTitle="Choose a theme"
+        android:entries="@array/pref_theme_text"
+        android:entryValues="@array/pref_theme_values" />
+
+</PreferenceScreen>
