@@ -44,14 +44,12 @@
                 android:value="sbs20.filenotes.MainActivity" />
         </activity>
         <activity
-            android:name=".PreferenceSettingsActivity"
+            android:name=".SettingsPreferenceActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sbs20.filenotes.MainActivity" />
-        </activity>
-        <activity android:name=".SettingsActivity" >
         </activity>
     </application>
 

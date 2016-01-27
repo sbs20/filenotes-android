@@ -35,7 +35,7 @@ public class FilenotesApplication extends Application {
     }
 
     public int getActiveThemeId() {
-        String theme = this.getPreferences().getString(PreferenceSettingsActivity.KEY_THEME, "light");
+        String theme = this.getPreferences().getString(SettingsPreferenceActivity.KEY_THEME, "light");
         switch (theme) {
             case "light":
                 return R.style.AppTheme;

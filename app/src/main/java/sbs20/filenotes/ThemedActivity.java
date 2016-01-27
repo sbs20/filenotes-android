@@ -18,5 +18,6 @@ abstract class ThemedActivity extends AppCompatActivity {
         this.setTheme(this.getFilenotesApplication().getActiveThemeId());
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(0);
     }
 }

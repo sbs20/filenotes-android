@@ -5,8 +5,8 @@
     
     <TextView
         android:id="@+id/currentDirectory"
-        android:theme="@style/Text.Header"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:theme="@style/Text.Large"
+        android:paddingLeft="@dimen/activity_horizontal_margin_double"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"

@@ -24,7 +24,7 @@ public class EditActivity extends ThemedActivity {
 	private Typeface getTypeface() {
 		String fontFace = this.getFilenotesApplication()
 				.getPreferences()
-				.getString(PreferenceSettingsActivity.KEY_FONTFACE, "monospace");
+				.getString(SettingsPreferenceActivity.KEY_FONTFACE, "monospace");
 
 		if (fontFace.compareTo("monospace") == 0) {
 			return Typeface.MONOSPACE;
@@ -39,7 +39,7 @@ public class EditActivity extends ThemedActivity {
 	
 	private float getTextSize() {
 		SharedPreferences sharedPref = this.getFilenotesApplication().getPreferences();
-		int fontSize = Integer.parseInt(sharedPref.getString(PreferenceSettingsActivity.KEY_FONTSIZE, "16"));
+		int fontSize = Integer.parseInt(sharedPref.getString(SettingsPreferenceActivity.KEY_FONTSIZE, "16"));
 		return fontSize;
 	}
 

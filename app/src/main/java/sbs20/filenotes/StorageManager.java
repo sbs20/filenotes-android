@@ -31,7 +31,7 @@ public class StorageManager {
     private File getStorageDirectory() {
         String directoryPath = this.application
                 .getPreferences()
-                .getString(PreferenceSettingsActivity.KEY_STORAGE_DIRECTORY, "");
+                .getString(SettingsPreferenceActivity.KEY_STORAGE_DIRECTORY, "");
 
         return new File(directoryPath);
     }

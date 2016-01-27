@@ -13,7 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends ThemedActivity {
 
@@ -71,7 +70,7 @@ public class MainActivity extends ThemedActivity {
 				switch (drawerItems[position]) {
 
 					case "Settings": {
-						Intent intent = new Intent(activity, PreferenceSettingsActivity.class);
+						Intent intent = new Intent(activity, SettingsPreferenceActivity.class);
 						startActivity(intent);
 						break;
 					}

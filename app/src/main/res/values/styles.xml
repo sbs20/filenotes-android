@@ -32,7 +32,7 @@
     <style name="Drawer">
         <item name="android:background">?android:attr/windowBackground</item>
     </style>
-    <style name="DrawerText" parent="Text.Large">
+    <style name="DrawerText" parent="Text.Medium">
         <item name="android:padding">16dp</item>
     </style>
 
@@ -47,12 +47,14 @@
         <item name="colorPrimary">#b0bec5</item>
         <item name="colorAccent">#b0bec5</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="colorPrimary">#455a64</item>
         <item name="colorAccent">#455a64</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
 </resources>
