@@ -3,8 +3,14 @@
     <!--
      Useful references:
         http://www.hidroh.com/2015/02/25/support-multiple-themes-android-app-part-2/
+
+        Colours
         https://www.google.com/design/spec/style/color.html
+        http://developer.android.com/training/material/theme.html
+
+        Icons
         https://design.google.com/icons/#ic_redo
+        http://stackoverflow.com/questions/28700593/how-to-import-set-of-icons-into-android-studio-project
     -->
 
     <!-- Font sizes -->
@@ -43,18 +49,19 @@
     </style>
 
     <!-- Main app theme -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">#b0bec5</item>
-        <item name="colorAccent">#b0bec5</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Header colour -->
+        <item name="colorPrimary">#42a5f5</item>
+        <!-- Button and cursor colour -->
+        <item name="colorAccent">#42a5f5</item>
+        <!-- Header text colour -->
         <item name="android:lineSpacingMultiplier">1.2</item>
-        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <item name="colorPrimary">#455a64</item>
         <item name="colorAccent">#455a64</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
-        <item name="android:windowContentOverlay">@null</item>
     </style>
 
 </resources>

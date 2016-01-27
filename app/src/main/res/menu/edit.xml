@@ -2,21 +2,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_save"
         android:orderInCategory="100"
         app:showAsAction="always"
         android:title="@string/action_save" />
 
     <item
         android:id="@+id/action_delete"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/ic_delete"
         android:orderInCategory="100"
         app:showAsAction="collapseActionView"
         android:title="@string/action_delete" />
 
     <item
         android:id="@+id/action_rename"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/ic_edit"
         android:orderInCategory="100"
         app:showAsAction="collapseActionView"
         android:title="@string/action_rename" />
