@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 public class MainActivity extends ThemedActivity {
 
-	private static final int MAX_FILE_SIZE = 32 * 1024;
-
 	private ListView drawerList;
 	private ArrayAdapter<String> drawerAdapter;
 	private ActionBarDrawerToggle drawerToggle;
