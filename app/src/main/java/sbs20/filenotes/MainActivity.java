@@ -28,7 +28,6 @@ public class MainActivity extends ThemedActivity {
 	private NoteCollection notes;
 
 	private void initNotes() {
-
 		TextView message = (TextView) this.findViewById(R.id.fileListMessage);
 
 		try {
@@ -37,25 +36,25 @@ public class MainActivity extends ThemedActivity {
 					.readAllFromStorage();
 		}
 		catch (Exception ex) {
-			message.setText("Storage directory does not exist");
+			message.setText(R.string.error_storage_does_not_exist);
 			message.setVisibility(View.VISIBLE);
 		}
 
 		if (this.notes.size() == 0) {
-			message.setText("No matching files in storage directory");
+			message.setText(R.string.storage_is_empty);
 			message.setVisibility(View.VISIBLE);
 		} else {
 			message.setText("");
 			message.setVisibility(View.GONE);
 		}
-		
-		if (this.notes == null) {
-			this.notes = new NoteCollection();
-		}
-	}
+    }
 
 	private void addDrawerItems() {
-		final String[] drawerItems = { "Settings", "About" };
+		final String[] drawerItems = {
+				getString(R.string.title_activity_settings) ,
+				getString(R.string.title_activity_about)
+		};
+
 		this.drawerAdapter = new ArrayAdapter<String>(this,
 				R.layout.listview_drawer,
 				drawerItems);
@@ -67,19 +66,13 @@ public class MainActivity extends ThemedActivity {
 		this.drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				switch (drawerItems[position]) {
-
-					case "Settings": {
-						Intent intent = new Intent(activity, SettingsPreferenceActivity.class);
-						startActivity(intent);
-						break;
-					}
-
-					case "About": {
-						Intent intent = new Intent(activity, AboutActivity.class);
-						startActivity(intent);
-						break;
-					}
+				String selection = drawerItems[position];
+				if (selection.compareTo(getString(R.string.title_activity_settings)) == 0) {
+					Intent intent = new Intent(activity, SettingsPreferenceActivity.class);
+					startActivity(intent);
+				} else if (selection.compareTo(getString(R.string.title_activity_about)) == 0) {
+					Intent intent = new Intent(activity, AboutActivity.class);
+					startActivity(intent);
 				}
 			}
 		});
