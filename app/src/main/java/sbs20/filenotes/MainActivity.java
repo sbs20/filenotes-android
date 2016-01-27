@@ -27,9 +27,10 @@ public class MainActivity extends ThemedActivity {
 
 	private void initNotes() {
 		TextView message = (TextView) this.findViewById(R.id.fileListMessage);
+        this.notes = Current.getNotes();
 
 		try {
-			this.notes = this.getFilenotesApplication()
+			this.getFilenotesApplication()
 					.getStorageManager()
 					.readAllFromStorage();
 		}

@@ -6,6 +6,7 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Locale;
 
 public class StorageManager {
@@ -55,17 +56,14 @@ public class StorageManager {
         return stringBuffer.toString();
     }
 
-    public NoteCollection readAllFromStorage() {
-
-        NoteCollection notes = new NoteCollection();
-
+    private File[] readAllFilesFromStorage() {
         if (this.getStorageDirectory().exists()) {
             if (this.getStorageDirectory().isDirectory()) {
-
-                File[] files = this.getStorageDirectory().listFiles(new FileFilter() {
+                return this.getStorageDirectory().listFiles(new FileFilter() {
                     @Override
                     public boolean accept(File file) {
                         if (file.canRead() && file.isFile()) {
+                            // TODO move these to preferences
                             boolean showAllFiles = true;
                             boolean showHiddenFiles = false;
                             Locale locale = Locale.getDefault();
@@ -85,16 +83,55 @@ public class StorageManager {
                         return false;
                     }
                 });
-
-                for (int index = 0; index < files.length; index++) {
-                    notes.add(Note.FromFile(files[index]));
-                }
-
-                notes.sort();
             }
         }
 
-        return notes;
+        return new File[0];
+    }
+
+    private void mergeFileIntoNote(File file, Note note) {
+        note.setText(StorageManager.readFileAsString(file));
+        note.setLastModified(new Date(file.lastModified()));
+        note.reset();
+    }
+
+    private boolean fileArrayContainsName(File[] files, String name) {
+        for (File file : files) {
+            if (name.compareTo(file.getName()) == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void readAllFromStorage() {
+
+        NoteCollection notes = Current.getNotes();
+
+        File[] files = this.readAllFilesFromStorage();
+
+        // Ensure all files are in notes and up to date
+        for (File file : files) {
+            Note note = notes.getByName(file.getName());
+            if (note == null) {
+                note = new Note();
+                note.setName(file.getName());
+                notes.add(note);
+            }
+
+            this.mergeFileIntoNote(file, note);
+        }
+
+        // Now ensure that any notes NOT in a file is removed
+        for (int index = 0; index < notes.size(); index++) {
+            if (!fileArrayContainsName(files, notes.get(index).getName())) {
+                notes.remove(index);
+                index--;
+            }
+        }
+
+        notes.sort();
     }
 
     public void writeToStorage(Note note) {

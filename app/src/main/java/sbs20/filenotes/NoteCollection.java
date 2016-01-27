@@ -37,4 +37,14 @@ public class NoteCollection extends ArrayList<Note> {
         this.add(note);
         return note;
     }
+
+    public Note getByName(String name) {
+        for (Note note : this) {
+            if (name.compareTo(note.getName()) == 0) {
+                return note;
+            }
+        }
+
+        return null;
+    }
 }

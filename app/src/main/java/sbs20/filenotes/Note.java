@@ -19,15 +19,6 @@ public class Note implements Comparable<Note> {
         this.lastModified = new Date();
     }
 
-    public static Note FromFile(File file) {
-        Note note = new Note();
-        note.setName(file.getName());
-        note.setText(StorageManager.readFileAsString(file));
-        note.setLastModified(new Date(file.lastModified()));
-        note.originalText = note.getText();
-        return note;
-    }
-
     public long getSize() {
         return this.getText().length();
     }
