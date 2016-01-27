@@ -25,7 +25,7 @@ public class MainActivity extends ThemedActivity {
 	private ListView filelist;
 	private NoteCollection notes;
 
-	private void initNotes() {
+	private void loadNotes() {
 		TextView message = (TextView) this.findViewById(R.id.fileListMessage);
         this.notes = Current.getNotes();
 
@@ -117,7 +117,7 @@ public class MainActivity extends ThemedActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
-		this.initNotes();
+		this.loadNotes();
 
 		final MainActivity activity = this;
 
