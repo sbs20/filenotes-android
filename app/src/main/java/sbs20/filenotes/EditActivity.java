@@ -188,7 +188,7 @@ public class EditActivity extends ThemedActivity {
 	}
 
 	public void finishClose() {
-		Current.setSelectedNote(null);
+		// Do not clear the current note yet - we need to know about it on the MainActivity
 		NavUtils.navigateUpFromSameTask(this);
 	}
 

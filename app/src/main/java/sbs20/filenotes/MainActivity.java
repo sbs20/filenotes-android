@@ -127,11 +127,17 @@ public class MainActivity extends ThemedActivity {
 		this.filelist = (ListView)this.findViewById(R.id.fileList);
 		this.filelist.setAdapter(adapter);
 		this.filelist.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Note note = (Note) view.getTag();
-				activity.edit(note);
-			}
-		});
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note note = (Note) view.getTag();
+                activity.edit(note);
+            }
+        });
+
+        if (Current.getSelectedNote() != null) {
+            int index = this.notes.indexOf(Current.getSelectedNote());
+            this.filelist.setSelection(index);
+        }
+
 
 		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.createNew);
 		createNew.setOnClickListener(new View.OnClickListener() {
