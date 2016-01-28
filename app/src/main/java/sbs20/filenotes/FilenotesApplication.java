@@ -5,13 +5,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import sbs20.filenotes.cloud.CloudStorage;
+import sbs20.filenotes.cloud.NoopCloud;
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.NotesManager;
-import sbs20.filenotes.model.StorageManager;
 
 public class FilenotesApplication extends Application {
 
-    private StorageManager storageManager;
+    private CloudStorage cloudStorage;
     private NotesManager notesManager;
     private DateTimeHelper dateTimeHelper;
     private Logger logger;
@@ -26,6 +27,14 @@ public class FilenotesApplication extends Application {
         }
 
         return this.notesManager;
+    }
+
+    public CloudStorage getCloudStorage() {
+        if (this.cloudStorage == null) {
+            this.cloudStorage = new NoopCloud(this);
+        }
+
+        return this.cloudStorage;
     }
 
     public DateTimeHelper getDateTimeHelper() {

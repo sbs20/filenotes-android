@@ -2,9 +2,8 @@ package sbs20.filenotes;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
+import sbs20.filenotes.cloud.CloudStorage;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 
@@ -155,24 +155,24 @@ public class MainActivity extends ThemedActivity {
 		swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                final Handler handler = new Handler() {
-                    @Override
-                    public void handleMessage(Message message) {
-                        if (message.what == 0) {
-                            swipeLayout.setRefreshing(false);
-                        }
-                    }
-                };
 
-                Thread thread = new Thread() {
+                AsyncTask<CloudStorage, Void, CloudStorage> task = new AsyncTask<CloudStorage, Void, CloudStorage>() {
                     @Override
-                    public void run() {
+                    protected CloudStorage doInBackground(CloudStorage... params) {
+                        params[0].sync();
+                        return params[0];
+                    }
+
+                    @Override
+                    protected void onPostExecute(CloudStorage cloudStorage) {
+                        super.onPostExecute(cloudStorage);
                         activity.loadNotes();
-                        handler.sendEmptyMessage(0);
+                        swipeLayout.setRefreshing(false);
                     }
                 };
 
-                thread.run();
+                CloudStorage cloudStorage = activity.getFilenotesApplication().getCloudStorage();
+                task.execute(cloudStorage);
             }
         });
 
