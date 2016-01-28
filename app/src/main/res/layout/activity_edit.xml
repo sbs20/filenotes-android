@@ -25,6 +25,7 @@
                 android:id="@+id/note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:padding="5dip"
                 android:gravity="top"
                 android:inputType="textMultiLine" />
