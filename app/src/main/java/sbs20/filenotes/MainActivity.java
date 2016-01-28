@@ -38,7 +38,7 @@ public class MainActivity extends ThemedActivity {
 
 		try {
 			this.getFilenotesApplication()
-					.getStorageManager()
+					.getNotesManager()
 					.readAllFromStorage();
 		}
 		catch (Exception ex) {

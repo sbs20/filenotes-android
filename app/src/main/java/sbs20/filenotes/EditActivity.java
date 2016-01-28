@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Note;
 
 public class EditActivity extends ThemedActivity {
@@ -102,7 +101,7 @@ public class EditActivity extends ThemedActivity {
         super.onPostCreate(savedInstanceState);
 
         // Hide the keyboard if on disk (if it's new you want to type!)
-        if (this.getFilenotesApplication().getStorageManager().isStored(this.note)) {
+        if (this.getFilenotesApplication().getNotesManager().isStored(this.note)) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(this.noteText.getWindowToken(), 0);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -223,7 +222,7 @@ public class EditActivity extends ThemedActivity {
                         }
 
                         boolean succeeded = activity.getFilenotesApplication()
-                                .getStorageManager()
+                                .getNotesManager()
                                 .renameNote(activity.note, renameEditText.getText().toString());
 
                         if (succeeded) {
@@ -251,12 +250,12 @@ public class EditActivity extends ThemedActivity {
     public void save() {
         String content = this.noteText.getText().toString();
         this.note.setText(content);
-        this.getFilenotesApplication().getStorageManager().writeToStorage(this.note);
+        this.getFilenotesApplication().getNotesManager().writeToStorage(this.note);
         this.setTitle(this.note.getName());
     }
 
     public void delete() {
-        this.getFilenotesApplication().getStorageManager().deleteNote(this.note);
+        this.getFilenotesApplication().getNotesManager().deleteNote(this.note);
         this.finishClose();
     }
 
@@ -300,7 +299,7 @@ public class EditActivity extends ThemedActivity {
 
             // Reload all notes
             this.getFilenotesApplication()
-                    .getStorageManager()
+                    .getNotesManager()
                     .readAllFromStorage();
 
             // Now get that note

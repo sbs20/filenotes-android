@@ -20,14 +20,6 @@ public class FilenotesApplication extends Application {
         super();
     }
 
-    public StorageManager getStorageManager() {
-        if (this.storageManager == null) {
-            this.storageManager = new StorageManager(this);
-        }
-
-        return this.storageManager;
-    }
-
     public NotesManager getNotesManager() {
         if (this.notesManager == null) {
             this.notesManager = new NotesManager(this);

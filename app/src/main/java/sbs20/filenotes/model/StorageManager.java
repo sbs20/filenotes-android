@@ -6,7 +6,6 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Locale;
 
 import sbs20.filenotes.FilenotesApplication;
@@ -20,12 +19,8 @@ public class StorageManager {
         return this.getStorageDirectory().getAbsolutePath() + "/" + filename;
     }
 
-    private String getFilepath(Note note) {
-        return this.getFilepath(note.getName());
-    }
-
-    private File getFile(Note note) {
-        return new File(this.getFilepath(note));
+    private File getFile(String name) {
+        return new File(this.getFilepath(name));
     }
 
     public StorageManager(FilenotesApplication application) {
@@ -62,7 +57,7 @@ public class StorageManager {
         return stringBuffer.toString();
     }
 
-    private File[] readAllFilesFromStorage() {
+    public File[] readAllFilesFromStorage() {
         if (this.getStorageDirectory().exists()) {
             if (this.getStorageDirectory().isDirectory()) {
                 return this.getStorageDirectory().listFiles(new FileFilter() {
@@ -96,97 +91,38 @@ public class StorageManager {
         return new File[0];
     }
 
-    private void mergeFileIntoNote(File file, Note note) {
-        note.setText(this.readFileAsString(file));
-        note.setLastModified(new Date(file.lastModified()));
-        note.reset();
-    }
-
-    private boolean fileArrayContainsName(File[] files, String name) {
-        for (File file : files) {
-            if (name.equals(file.getName())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void readAllFromStorage() {
-
-        this.application
-                .getLogger()
-                .verbose(this, "readAllFromStorage.Start");
-
-        NoteCollection notes = this.application.getNotesManager().getNotes();
-
-        File[] files = this.readAllFilesFromStorage();
-
-        // Ensure all files are in notes and up to date
-        for (File file : files) {
-            Note note = notes.getByName(file.getName());
-            if (note == null) {
-                note = new Note();
-                note.setName(file.getName());
-                notes.add(note);
-            }
-
-            this.mergeFileIntoNote(file, note);
-        }
-
-        // Now ensure that any notes NOT in a file is removed
-        for (int index = 0; index < notes.size(); index++) {
-            if (!fileArrayContainsName(files, notes.get(index).getName())) {
-                notes.remove(index);
-                index--;
-            }
-        }
-
-        notes.sort();
-
-        this.application
-                .getLogger()
-                .verbose(this, "readAllFromStorage.Finish");
-    }
-
-    public void writeToStorage(Note note) {
+    public void write(String name, String text) {
         try {
-            FileWriter fileWriter = new FileWriter(this.getFilepath(note));
+            FileWriter fileWriter = new FileWriter(this.getFilepath(name));
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(note.getText());
+            bufferedWriter.write(text);
             bufferedWriter.close();
             fileWriter.close();
             this.application.toast("Saved");
-            note.reset();
         } catch (IOException ex) {
             this.application.getLogger().error(this, ex.toString());
         }
     }
 
-    public void deleteNote(Note note) {
-        File file = new File(this.getFilepath(note));
+    public void delete(String name) {
+        File file = new File(this.getFilepath(name));
         if (file.exists()) {
             file.delete();
         }
     }
 
-    public boolean renameNote(Note note, String desiredName) {
+    public boolean rename(String name, String desiredName) {
         File desiredFile = new File(this.getFilepath(desiredName));
         if (desiredFile.exists()) {
             return false;
         }
 
-        File file = this.getFile(note);
-        boolean succeeded = file.renameTo(desiredFile);
-        if (succeeded) {
-            note.setName(desiredName);
-        }
-
-        return succeeded;
+        File file = this.getFile(name);
+        return file.renameTo(desiredFile);
     }
 
-    public boolean isStored(Note note) {
-        File file = new File(this.getFilepath(note));
+    public boolean exists(String name) {
+        File file = new File(this.getFilepath(name));
         return file.exists();
     }
 }
