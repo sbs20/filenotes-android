@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package sbs20.filenotes.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+
+import sbs20.filenotes.R;
 
 public class DirectoryArrayAdapter extends GenericBaseAdpater<File> {
 

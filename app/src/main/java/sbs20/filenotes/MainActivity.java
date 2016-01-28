@@ -14,6 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import sbs20.filenotes.adapters.NoteArrayAdapter;
+import sbs20.filenotes.model.Note;
+import sbs20.filenotes.model.NoteCollection;
+
 public class MainActivity extends ThemedActivity {
 
 	private ListView drawerList;

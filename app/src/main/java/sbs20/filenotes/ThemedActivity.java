@@ -3,13 +3,15 @@ package sbs20.filenotes;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import sbs20.filenotes.model.StorageManager;
+
 abstract class ThemedActivity extends AppCompatActivity {
 
-    protected FilenotesApplication getFilenotesApplication() {
+    public FilenotesApplication getFilenotesApplication() {
         return (FilenotesApplication)this.getApplication();
     }
 
-    protected StorageManager getStorageManager() {
+    public StorageManager getStorageManager() {
         return this.getFilenotesApplication().getStorageManager();
     }
 

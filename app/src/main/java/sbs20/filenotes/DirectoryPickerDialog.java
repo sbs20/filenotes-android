@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import sbs20.filenotes.adapters.DirectoryArrayAdapter;
+
 public class DirectoryPickerDialog extends DialogPreference {
 
 	private Context context;

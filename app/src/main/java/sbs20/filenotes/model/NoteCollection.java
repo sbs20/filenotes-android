@@ -1,7 +1,9 @@
-package sbs20.filenotes;
+package sbs20.filenotes.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import sbs20.filenotes.model.Note;
 
 public class NoteCollection extends ArrayList<Note> {
 

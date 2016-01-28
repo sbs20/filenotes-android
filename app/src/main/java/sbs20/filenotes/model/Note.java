@@ -1,6 +1,5 @@
-package sbs20.filenotes;
+package sbs20.filenotes.model;
 
-import java.io.File;
 import java.util.Date;
 import java.util.Locale;
 

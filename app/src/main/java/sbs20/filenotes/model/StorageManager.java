@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package sbs20.filenotes.model;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,6 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
+
+import sbs20.filenotes.Current;
+import sbs20.filenotes.FilenotesApplication;
+import sbs20.filenotes.SettingsPreferenceActivity;
 
 public class StorageManager {
 

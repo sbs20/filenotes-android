@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package sbs20.filenotes.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Collections;
-import java.util.List;
+import sbs20.filenotes.DateTimeHelper;
+import sbs20.filenotes.MainActivity;
+import sbs20.filenotes.model.Note;
+import sbs20.filenotes.R;
 
 public class NoteArrayAdapter extends GenericBaseAdpater<Note> {
 

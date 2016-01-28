@@ -16,6 +16,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import sbs20.filenotes.model.Note;
+
 public class EditActivity extends ThemedActivity {
 
 	private Note note;

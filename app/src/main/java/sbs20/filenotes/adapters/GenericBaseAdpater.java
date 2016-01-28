@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package sbs20.filenotes.adapters;
 
 import android.content.Context;
 import android.widget.BaseAdapter;

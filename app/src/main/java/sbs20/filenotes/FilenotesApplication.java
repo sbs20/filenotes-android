@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import sbs20.filenotes.model.StorageManager;
+
 public class FilenotesApplication extends Application {
 
     private StorageManager storageManager;
