@@ -3,8 +3,11 @@ package sbs20.filenotes;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,13 +27,13 @@ public class MainActivity extends ThemedActivity {
 	private ArrayAdapter<String> drawerAdapter;
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
-	private String activityTitle;
 
 	private ListView filelist;
 	private NoteCollection notes;
+    private NoteArrayAdapter notesAdapter;
 
 	private void loadNotes() {
-		TextView message = (TextView) this.findViewById(R.id.fileListMessage);
+		TextView message = (TextView) this.findViewById(R.id.noteListMessage);
         this.notes = Current.getNotes();
 
 		try {
@@ -50,6 +53,11 @@ public class MainActivity extends ThemedActivity {
 			message.setText("");
 			message.setVisibility(View.GONE);
 		}
+
+        // refresh the ui
+        if (this.notesAdapter != null) {
+            this.notesAdapter.updateItems(this.notes);
+        }
     }
 
 	private void addDrawerItems() {
@@ -82,7 +90,9 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	private void setupDrawer() {
-		this.drawerToggle = new ActionBarDrawerToggle(this,
+        final String activityTitle = getTitle().toString();
+
+        this.drawerToggle = new ActionBarDrawerToggle(this,
 				this.drawerLayout,
 				R.string.drawer_open,
 				R.string.drawer_close) {
@@ -111,36 +121,74 @@ public class MainActivity extends ThemedActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+        // Setup the drawer
 		this.drawerList = (ListView)findViewById(R.id.navList);
 		this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-		this.activityTitle = getTitle().toString();
-
 		this.addDrawerItems();
 		this.setupDrawer();
 
+        // Toolbar
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 
-		this.loadNotes();
-
+        // Note list
 		final MainActivity activity = this;
-
-		NoteArrayAdapter adapter = new NoteArrayAdapter(this);
-		adapter.updateItems(this.notes);
-
-		this.filelist = (ListView)this.findViewById(R.id.fileList);
-		this.filelist.setAdapter(adapter);
+        this.notesAdapter = new NoteArrayAdapter(this);
+		this.filelist = (ListView)this.findViewById(R.id.noteList);
+		this.filelist.setAdapter(this.notesAdapter);
 		this.filelist.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Note note = (Note) view.getTag();
-                activity.edit(note);
-            }
-        });
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Note note = (Note) view.getTag();
+				activity.edit(note);
+			}
+		});
 
+        // load the notes
+        this.loadNotes();
+
+        // Select a note if applicable
         if (Current.getSelectedNote() != null) {
             int index = this.notes.indexOf(Current.getSelectedNote());
             this.filelist.setSelection(index);
         }
+
+        // Swipe handling
+		final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.noteListSwipeContainer);
+		swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+                final Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message message) {
+                        if (message.what == 0) {
+                            swipeLayout.setRefreshing(false);
+                        }
+                    }
+                };
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        activity.loadNotes();
+                        handler.sendEmptyMessage(0);
+                    }
+                };
+
+                thread.run();
+
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                        swipeLayout.setRefreshing(false);
+//                    }
+//                }, 5000);
+            }
+		});
+		swipeLayout.setColorSchemeColors(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
 
 		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.createNew);
 		createNew.setOnClickListener(new View.OnClickListener() {

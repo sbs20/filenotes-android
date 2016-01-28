@@ -1,5 +1,7 @@
 package sbs20.filenotes.model;
 
+import android.util.Log;
+
 import sbs20.filenotes.FilenotesApplication;
 
 public class Logger {
@@ -18,7 +20,25 @@ public class Logger {
 
     private void log(String level, String tag, String msg) {
         // TODO - write somewhere better
-        this.application.toast(level + ":" + tag + ":" + msg);
+        if (level.equals(ERROR)) {
+            this.application.toast(level + ":" + tag + ":" + msg);
+            Log.e(tag, msg);
+        } else {
+            switch (level) {
+                case VERBOSE:
+                    Log.v(tag, msg);
+                    break;
+                case INFORMATION:
+                    Log.i(tag, msg);
+                    break;
+                case DEBUG:
+                    Log.d(tag, msg);
+                    break;
+                case WARN:
+                    Log.w(tag, msg);
+                    break;
+            }
+        }
     }
 
     public void verbose(String tag, String msg) {

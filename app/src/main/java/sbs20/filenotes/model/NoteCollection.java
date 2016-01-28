@@ -13,7 +13,7 @@ public class NoteCollection extends ArrayList<Note> {
 
     public boolean isExistingName(String name) {
         for (int index = 0; index < this.size(); index++) {
-            if (this.get(index).getName().compareToIgnoreCase(name) == 0) {
+            if (this.get(index).getName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
@@ -41,7 +41,7 @@ public class NoteCollection extends ArrayList<Note> {
 
     public Note getByName(String name) {
         for (Note note : this) {
-            if (name.compareTo(note.getName()) == 0) {
+            if (name.equals(note.getName())) {
                 return note;
             }
         }

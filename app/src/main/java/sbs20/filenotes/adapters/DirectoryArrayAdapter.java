@@ -81,7 +81,7 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<File> {
 
         String text = directory.getName();
         if (this.currentDirectory.getParentFile() != null) {
-            if (directory.compareTo(this.currentDirectory.getParentFile()) == 0) {
+            if (directory.equals(this.currentDirectory.getParentFile())) {
                 text = "..";
             }
         }

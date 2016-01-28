@@ -28,11 +28,11 @@ public class EditActivity extends ThemedActivity {
 				.getPreferences()
 				.getString(SettingsPreferenceActivity.KEY_FONTFACE, "monospace");
 
-		if (fontFace.compareTo("monospace") == 0) {
+		if (fontFace.equals("monospace")) {
 			return Typeface.MONOSPACE;
-		} else if (fontFace.compareTo("sansserif") == 0) {
+		} else if (fontFace.equals("sansserif")) {
 			return Typeface.SANS_SERIF;
-		} else if (fontFace.compareTo("serif") == 0) {
+		} else if (fontFace.equals("serif")) {
 			return Typeface.SERIF;
 		}
 
@@ -206,7 +206,7 @@ public class EditActivity extends ThemedActivity {
 				switch (result){
 					case DialogInterface.BUTTON_POSITIVE:
 						// If nothing has changed...
-						if (renameEditText.getText().toString().compareTo(activity.note.getName()) == 0) {
+						if (renameEditText.getText().toString().equals(activity.note.getName())) {
                             activity.getFilenotesApplication()
                                     .getLogger()
                                     .verbose(activity, "File renamed to same name");

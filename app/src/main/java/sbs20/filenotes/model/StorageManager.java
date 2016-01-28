@@ -105,7 +105,7 @@ public class StorageManager {
 
     private boolean fileArrayContainsName(File[] files, String name) {
         for (File file : files) {
-            if (name.compareTo(file.getName()) == 0) {
+            if (name.equals(file.getName())) {
                 return true;
             }
         }
@@ -114,6 +114,10 @@ public class StorageManager {
     }
 
     public void readAllFromStorage() {
+
+        this.application
+                .getLogger()
+                .verbose(this, "readAllFromStorage.Start");
 
         NoteCollection notes = Current.getNotes();
 
@@ -140,6 +144,10 @@ public class StorageManager {
         }
 
         notes.sort();
+
+        this.application
+                .getLogger()
+                .verbose(this, "readAllFromStorage.Finish");
     }
 
     public void writeToStorage(Note note) {
