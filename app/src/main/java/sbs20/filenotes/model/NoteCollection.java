@@ -3,8 +3,6 @@ package sbs20.filenotes.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import sbs20.filenotes.R;
-
 public class NoteCollection extends ArrayList<Note> {
 
     public void sort() {
@@ -19,24 +17,6 @@ public class NoteCollection extends ArrayList<Note> {
         }
 
         return false;
-    }
-
-    private String createUniqueNewName(String stem) {
-        String attempt = String.format(stem, "");
-        int i = 0;
-        while (this.isExistingName(attempt)) {
-            ++i;
-            attempt = String.format(stem, i);
-        }
-
-        return attempt;
-    }
-
-    public Note createNote(String stem) {
-        Note note = new Note();
-        note.setName(this.createUniqueNewName(stem));
-        this.add(note);
-        return note;
     }
 
     public Note getByName(String name) {

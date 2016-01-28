@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 
 import sbs20.filenotes.FilenotesApplication;
+import sbs20.filenotes.R;
 
 public class NotesManager {
 
@@ -46,7 +47,6 @@ public class NotesManager {
     }
 
     public void readAllFromStorage() {
-
         this.application
                 .getLogger()
                 .verbose(this, "readAllFromStorage.Start");
@@ -87,6 +87,7 @@ public class NotesManager {
 
     public void deleteNote(Note note) {
         this.storage.delete(note.getName());
+        this.notes.remove(note);
     }
 
     public boolean renameNote(Note note, String desiredName) {
@@ -100,5 +101,24 @@ public class NotesManager {
 
     public boolean isStored(Note note) {
         return this.storage.exists(note.getName());
+    }
+
+    private String createUniqueNewName(String stem) {
+        String attempt = String.format(stem, "");
+        int i = 0;
+        while (this.notes.isExistingName(attempt)) {
+            ++i;
+            attempt = String.format(stem, i);
+        }
+
+        return attempt;
+    }
+
+    public Note createNote() {
+        String stem = this.application.getString(R.string.new_note_file_stem);
+        Note note = new Note();
+        note.setName(this.createUniqueNewName(stem));
+        this.notes.add(note);
+        return note;
     }
 }

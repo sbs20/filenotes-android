@@ -101,7 +101,7 @@ public class EditActivity extends ThemedActivity {
         super.onPostCreate(savedInstanceState);
 
         // Hide the keyboard if on disk (if it's new you want to type!)
-        if (this.getFilenotesApplication().getNotesManager().isStored(this.note)) {
+        if (this.getNotesManager().isStored(this.note)) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(this.noteText.getWindowToken(), 0);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -221,8 +221,7 @@ public class EditActivity extends ThemedActivity {
                             return;
                         }
 
-                        boolean succeeded = activity.getFilenotesApplication()
-                                .getNotesManager()
+                        boolean succeeded = activity.getNotesManager()
                                 .renameNote(activity.note, renameEditText.getText().toString());
 
                         if (succeeded) {
@@ -250,12 +249,12 @@ public class EditActivity extends ThemedActivity {
     public void save() {
         String content = this.noteText.getText().toString();
         this.note.setText(content);
-        this.getFilenotesApplication().getNotesManager().writeToStorage(this.note);
+        this.getNotesManager().writeToStorage(this.note);
         this.setTitle(this.note.getName());
     }
 
     public void delete() {
-        this.getFilenotesApplication().getNotesManager().deleteNote(this.note);
+        this.getNotesManager().deleteNote(this.note);
         this.finishClose();
     }
 
@@ -298,8 +297,7 @@ public class EditActivity extends ThemedActivity {
             String name = savedInstanceState.getString(UNSAVEDNOTE);
 
             // Reload all notes
-            this.getFilenotesApplication()
-                    .getNotesManager()
+            this.getNotesManager()
                     .readAllFromStorage();
 
             // Now get that note

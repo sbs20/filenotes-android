@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
-import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 
@@ -37,9 +36,7 @@ public class MainActivity extends ThemedActivity {
         NoteCollection notes = this.getNotesManager().getNotes();
 
 		try {
-			this.getFilenotesApplication()
-					.getNotesManager()
-					.readAllFromStorage();
+			this.getNotesManager().readAllFromStorage();
 		}
 		catch (Exception ex) {
 			message.setText(R.string.error_storage_does_not_exist);
@@ -202,10 +199,7 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	public void createNew() {
-        Note note = this.getNotesManager()
-                .getNotes()
-                .createNote(getString(R.string.NewNoteFileStem));
-
+        Note note = this.getNotesManager().createNote();
 		this.edit(note);
 	}
 	
