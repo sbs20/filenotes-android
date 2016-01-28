@@ -6,11 +6,13 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import sbs20.filenotes.model.Logger;
+import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.StorageManager;
 
 public class FilenotesApplication extends Application {
 
     private StorageManager storageManager;
+    private NotesManager notesManager;
     private DateTimeHelper dateTimeHelper;
     private Logger logger;
 
@@ -24,6 +26,14 @@ public class FilenotesApplication extends Application {
         }
 
         return this.storageManager;
+    }
+
+    public NotesManager getNotesManager() {
+        if (this.notesManager == null) {
+            this.notesManager = new NotesManager(this);
+        }
+
+        return this.notesManager;
     }
 
     public DateTimeHelper getDateTimeHelper() {

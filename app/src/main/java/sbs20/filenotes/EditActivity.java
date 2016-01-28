@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Note;
 
 public class EditActivity extends ThemedActivity {
@@ -66,7 +67,7 @@ public class EditActivity extends ThemedActivity {
         setupActionBar();
 
         // Load the note
-        this.note = Current.getSelectedNote();
+        this.note = this.getNotesManager().getSelectedNote();
         this.noteText = (EditText) this.findViewById(R.id.note);
         this.noteText.setText(this.note.getText());
         this.setTitle(this.note.getName());
@@ -303,7 +304,9 @@ public class EditActivity extends ThemedActivity {
                     .readAllFromStorage();
 
             // Now get that note
-            this.note = Current.getNotes().getByName(name);
+            this.note = this.getNotesManager()
+                    .getNotes()
+                    .getByName(name);
 
             // Finally update the text field
             EditText edit = (EditText) this.findViewById(R.id.note);

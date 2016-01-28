@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
+import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 
@@ -29,12 +30,11 @@ public class MainActivity extends ThemedActivity {
 	private DrawerLayout drawerLayout;
 
 	private ListView filelist;
-	private NoteCollection notes;
     private NoteArrayAdapter notesAdapter;
 
 	private void loadNotes() {
 		TextView message = (TextView) this.findViewById(R.id.noteListMessage);
-        this.notes = Current.getNotes();
+        NoteCollection notes = this.getNotesManager().getNotes();
 
 		try {
 			this.getFilenotesApplication()
@@ -46,7 +46,7 @@ public class MainActivity extends ThemedActivity {
 			message.setVisibility(View.VISIBLE);
 		}
 
-		if (this.notes.size() == 0) {
+		if (notes.size() == 0) {
 			message.setText(R.string.storage_is_empty);
 			message.setVisibility(View.VISIBLE);
 		} else {
@@ -56,7 +56,7 @@ public class MainActivity extends ThemedActivity {
 
         // refresh the ui
         if (this.notesAdapter != null) {
-            this.notesAdapter.updateItems(this.notes);
+            this.notesAdapter.updateItems(notes);
         }
     }
 
@@ -147,16 +147,17 @@ public class MainActivity extends ThemedActivity {
         this.loadNotes();
 
         // Select a note if applicable
-        if (Current.getSelectedNote() != null) {
-            int index = this.notes.indexOf(Current.getSelectedNote());
+        Note selected = this.getNotesManager().getSelectedNote();
+        if (selected != null) {
+            int index = this.getNotesManager().getNotes().indexOf(selected);
             this.filelist.setSelection(index);
         }
 
         // Swipe handling
 		final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.noteListSwipeContainer);
 		swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
+            @Override
+            public void onRefresh() {
                 final Handler handler = new Handler() {
                     @Override
                     public void handleMessage(Message message) {
@@ -176,7 +177,7 @@ public class MainActivity extends ThemedActivity {
 
                 thread.run();
             }
-		});
+        });
 
 		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.createNew);
 		createNew.setOnClickListener(new View.OnClickListener() {
@@ -201,12 +202,15 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	public void createNew() {
-        Note note = this.notes.createNote(getString(R.string.NewNoteFileStem));
+        Note note = this.getNotesManager()
+                .getNotes()
+                .createNote(getString(R.string.NewNoteFileStem));
+
 		this.edit(note);
 	}
 	
 	public void edit(Note note) {
-		Current.setSelectedNote(note);
+        this.getNotesManager().setSelectedNote(note);
 		Intent intent = new Intent(this, EditActivity.class);
 		this.startActivity(intent);
 	}

@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
 
-import sbs20.filenotes.Current;
 import sbs20.filenotes.FilenotesApplication;
 import sbs20.filenotes.SettingsPreferenceActivity;
 
@@ -119,7 +118,7 @@ public class StorageManager {
                 .getLogger()
                 .verbose(this, "readAllFromStorage.Start");
 
-        NoteCollection notes = Current.getNotes();
+        NoteCollection notes = this.application.getNotesManager().getNotes();
 
         File[] files = this.readAllFilesFromStorage();
 
