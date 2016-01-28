@@ -173,4 +173,9 @@ public class StorageManager {
 
         return succeeded;
     }
+
+    public boolean isStored(Note note) {
+        File file = new File(this.getFilepath(note));
+        return file.exists();
+    }
 }

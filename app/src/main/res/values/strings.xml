@@ -31,6 +31,7 @@
         for business or personal use. It is open source and released under the GPL2 license. Copyright Sam Strachan 2015-16</string>
     <string name="error_storage_does_not_exist">Storage directory does not exist</string>
     <string name="storage_is_empty">No matching files in storage directory</string>
+    <string name="NewNoteFileStem">New Note%s.txt</string>
 
     <string-array name="pref_font_list_text">
         <item>Monospace</item>

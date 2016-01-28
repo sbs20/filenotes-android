@@ -81,11 +81,8 @@ public class EditActivity extends ThemedActivity {
 			}
 
 			// complete the interface
-			public void afterTextChanged(Editable s) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
+			public void afterTextChanged(Editable s) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 		});
 
 		this.noteText.setTypeface(this.getTypeface());
@@ -95,12 +92,14 @@ public class EditActivity extends ThemedActivity {
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
+        super.onPostCreate(savedInstanceState);
 
-		// Hide the keyboard by default
-		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(this.noteText.getWindowToken(), 0);
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        // Hide the keyboard if on disk (if it's new you want to type!)
+        if (this.getFilenotesApplication().getStorageManager().isStored(this.note)) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(this.noteText.getWindowToken(), 0);
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        }
     }
 
 	private void setupActionBar() {

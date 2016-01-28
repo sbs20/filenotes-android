@@ -166,7 +166,7 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	public void createNew() {
-        Note note = this.notes.createNote();
+        Note note = this.notes.createNote(getString(R.string.NewNoteFileStem));
 		this.edit(note);
 	}
 	

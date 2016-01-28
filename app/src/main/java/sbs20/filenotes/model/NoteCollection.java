@@ -3,7 +3,7 @@ package sbs20.filenotes.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import sbs20.filenotes.model.Note;
+import sbs20.filenotes.R;
 
 public class NoteCollection extends ArrayList<Note> {
 
@@ -21,8 +21,7 @@ public class NoteCollection extends ArrayList<Note> {
         return false;
     }
 
-    private String createUniqueNewName() {
-        String stem = "_New%s.txt";
+    private String createUniqueNewName(String stem) {
         String attempt = String.format(stem, "");
         int i = 0;
         while (this.isExistingName(attempt)) {
@@ -33,9 +32,9 @@ public class NoteCollection extends ArrayList<Note> {
         return attempt;
     }
 
-    public Note createNote() {
+    public Note createNote(String stem) {
         Note note = new Note();
-        note.setName(this.createUniqueNewName());
+        note.setName(this.createUniqueNewName(stem));
         this.add(note);
         return note;
     }
