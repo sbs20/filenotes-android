@@ -175,20 +175,8 @@ public class MainActivity extends ThemedActivity {
                 };
 
                 thread.run();
-
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                        swipeLayout.setRefreshing(false);
-//                    }
-//                }, 5000);
             }
 		});
-		swipeLayout.setColorSchemeColors(android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
 
 		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.createNew);
 		createNew.setOnClickListener(new View.OnClickListener() {
