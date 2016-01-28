@@ -207,6 +207,10 @@ public class EditActivity extends ThemedActivity {
 					case DialogInterface.BUTTON_POSITIVE:
 						// If nothing has changed...
 						if (renameEditText.getText().toString().compareTo(activity.note.getName()) == 0) {
+                            activity.getFilenotesApplication()
+                                    .getLogger()
+                                    .verbose(activity, "File renamed to same name");
+
 							// don't do anything
 							return;
 						}
@@ -218,7 +222,7 @@ public class EditActivity extends ThemedActivity {
                         if (succeeded) {
                             activity.setTitle(activity.note.getName());
                         } else {
-							activity.getFilenotesApplication().toast("Rename failed: name already exists?");
+							activity.getFilenotesApplication().toast(getString(R.string.rename_failed));
 						}
 						break;
 

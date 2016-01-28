@@ -5,12 +5,14 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.StorageManager;
 
 public class FilenotesApplication extends Application {
 
     private StorageManager storageManager;
     private DateTimeHelper dateTimeHelper;
+    private Logger logger;
 
     public FilenotesApplication() {
         super();
@@ -30,6 +32,14 @@ public class FilenotesApplication extends Application {
         }
 
         return this.dateTimeHelper;
+    }
+
+    public Logger getLogger() {
+        if (this.logger == null) {
+            this.logger = new Logger(this);
+        }
+
+        return this.logger;
     }
 
     public SharedPreferences getPreferences() {

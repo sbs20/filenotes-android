@@ -41,7 +41,7 @@ public class StorageManager {
         return new File(directoryPath);
     }
 
-    public static String readFileAsString(File file) {
+    public String readFileAsString(File file) {
         StringBuffer stringBuffer = new StringBuffer();
         try {
             FileReader reader = new FileReader(file);
@@ -52,6 +52,9 @@ public class StorageManager {
             }
             reader.close();
         } catch (IOException e) {
+            this.application
+                    .getLogger()
+                    .error(this, e.toString());
 
         } finally {
 
@@ -70,6 +73,7 @@ public class StorageManager {
                             // TODO move these to preferences
                             boolean showAllFiles = true;
                             boolean showHiddenFiles = false;
+
                             Locale locale = Locale.getDefault();
                             String filename = file.getName().toLowerCase(locale);
 
@@ -94,7 +98,7 @@ public class StorageManager {
     }
 
     private void mergeFileIntoNote(File file, Note note) {
-        note.setText(StorageManager.readFileAsString(file));
+        note.setText(this.readFileAsString(file));
         note.setLastModified(new Date(file.lastModified()));
         note.reset();
     }
@@ -148,7 +152,7 @@ public class StorageManager {
             this.application.toast("Saved");
             note.reset();
         } catch (IOException ex) {
-            this.application.toast(ex.toString());
+            this.application.getLogger().error(this, ex.toString());
         }
     }
 

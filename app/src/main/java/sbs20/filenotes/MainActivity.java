@@ -142,7 +142,6 @@ public class MainActivity extends ThemedActivity {
             this.filelist.setSelection(index);
         }
 
-
 		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.createNew);
 		createNew.setOnClickListener(new View.OnClickListener() {
 			@Override
