@@ -20,78 +20,84 @@ import sbs20.filenotes.model.Note;
 
 public class EditActivity extends ThemedActivity {
 
-	private Note note;
-	private EditText noteText;
+    private static final String UNSAVEDNOTE = "SELECTEDNOTE";
+    private static final String UNSAVEDTEXT = "UNSAVEDTEXT";
 
-	private Typeface getTypeface() {
-		String fontFace = this.getFilenotesApplication()
-				.getPreferences()
-				.getString(SettingsPreferenceActivity.KEY_FONTFACE, "monospace");
+    private Note note;
+    private EditText noteText;
 
-		if (fontFace.equals("monospace")) {
-			return Typeface.MONOSPACE;
-		} else if (fontFace.equals("sansserif")) {
-			return Typeface.SANS_SERIF;
-		} else if (fontFace.equals("serif")) {
-			return Typeface.SERIF;
-		}
+    private Typeface getTypeface() {
+        String fontFace = this.getFilenotesApplication()
+                .getPreferences()
+                .getString(SettingsPreferenceActivity.KEY_FONTFACE, "monospace");
 
-		return Typeface.MONOSPACE;
-	}
-	
-	private float getTextSize() {
-		SharedPreferences sharedPref = this.getFilenotesApplication().getPreferences();
-		int fontSize = Integer.parseInt(sharedPref.getString(SettingsPreferenceActivity.KEY_FONTSIZE, "16"));
-		return fontSize;
-	}
+        if (fontFace.equals("monospace")) {
+            return Typeface.MONOSPACE;
+        } else if (fontFace.equals("sansserif")) {
+            return Typeface.SANS_SERIF;
+        } else if (fontFace.equals("serif")) {
+            return Typeface.SERIF;
+        }
+
+        return Typeface.MONOSPACE;
+    }
+
+    private float getTextSize() {
+        SharedPreferences sharedPref = this.getFilenotesApplication().getPreferences();
+        int fontSize = Integer.parseInt(sharedPref.getString(SettingsPreferenceActivity.KEY_FONTSIZE, "16"));
+        return fontSize;
+    }
 
     private void updateNote() {
-        final EditText edit = (EditText) this.findViewById(R.id.note);
+        EditText edit = (EditText) this.findViewById(R.id.note);
         this.note.setText(edit.getText().toString());
     }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_edit);
 
-		// Keep a note of this
-		final EditActivity activity = this;
+        // Keep a note of this
+        final EditActivity activity = this;
 
-		// Show the Up button in the action bar.
-		setupActionBar();
+        // Show the Up button in the action bar.
+        setupActionBar();
 
-		// Load the note
-		this.note = Current.getSelectedNote();
-		this.noteText = (EditText) this.findViewById(R.id.note);
-		this.noteText.setText(this.note.getText());
-		this.setTitle(this.note.getName());
+        // Load the note
+        this.note = Current.getSelectedNote();
+        this.noteText = (EditText) this.findViewById(R.id.note);
+        this.noteText.setText(this.note.getText());
+        this.setTitle(this.note.getName());
 
-		// Listen for changes so we can mark this as dirty
-		this.noteText.addTextChangedListener(new TextWatcher() {
-			public void onTextChanged(CharSequence one, int a, int b, int c) {
-				activity.updateNote();
-				if (activity.note.isDirty()) {
-					String title = activity.getTitle().toString();
-					if (!title.startsWith("* ")) {
-						activity.setTitle("* " + title);
-					}
-				}
-			}
+        // Listen for changes so we can mark this as dirty
+        this.noteText.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence one, int a, int b, int c) {
+                activity.updateNote();
+                if (activity.note.isDirty()) {
+                    String title = activity.getTitle().toString();
+                    if (!title.startsWith("* ")) {
+                        activity.setTitle("* " + title);
+                    }
+                }
+            }
 
-			// complete the interface
-			public void afterTextChanged(Editable s) {}
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-		});
+            // complete the interface
+            public void afterTextChanged(Editable s) {
+            }
 
-		this.noteText.setTypeface(this.getTypeface());
-		this.noteText.setTextSize(this.getTextSize());
-		this.noteText.clearFocus();
-	}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+        });
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
+        this.noteText.setTypeface(this.getTypeface());
+        this.noteText.setTextSize(this.getTextSize());
+        this.noteText.clearFocus();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
         // Hide the keyboard if on disk (if it's new you want to type!)
@@ -102,154 +108,206 @@ public class EditActivity extends ThemedActivity {
         }
     }
 
-	private void setupActionBar() {
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	}
+    private void setupActionBar() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit, menu);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit, menu);
+        return true;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				// This ID represents the Home or Up button. In the case of this
-				// activity, the Up button is shown. Use NavUtils to allow users
-				// to navigate up one level in the application structure. For
-				// more details, see the Navigation pattern on Android Design:
-				//
-				// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-				this.startClose();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // This ID represents the Home or Up button. In the case of this
+                // activity, the Up button is shown. Use NavUtils to allow users
+                // to navigate up one level in the application structure. For
+                // more details, see the Navigation pattern on Android Design:
+                //
+                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+                this.startClose();
                 return true;
 
-			case R.id.action_save:
-				this.save();
-				return true;
+            case R.id.action_save:
+                this.save();
+                return true;
 
-			case R.id.action_delete:
-				this.delete();
-				return true;
+            case R.id.action_delete:
+                this.delete();
+                return true;
 
-			case R.id.action_rename:
-				this.rename();
-				return true;
-		}
+            case R.id.action_rename:
+                this.rename();
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	    	this.startClose();
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	public void startClose() {
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            this.startClose();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void startClose() {
 
         this.updateNote();
-		final EditActivity activity = this;
+        final EditActivity activity = this;
 
-		if (this.note.isDirty()) {
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int result) {
-					switch (result){
-						case DialogInterface.BUTTON_POSITIVE:
-							activity.save();
+        if (this.note.isDirty()) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int result) {
+                    switch (result) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            activity.save();
                             activity.finishClose();
-							break;
+                            break;
 
-						case DialogInterface.BUTTON_NEGATIVE:
-							activity.finishClose();
-							break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            activity.finishClose();
+                            break;
 
-						case DialogInterface.BUTTON_NEUTRAL:
-							break;
-					}
-				}
-			};
+                        case DialogInterface.BUTTON_NEUTRAL:
+                            break;
+                    }
+                }
+            };
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Do you want to save your changes?")
-				.setPositiveButton("Yes", dialogClickListener)
-				.setNegativeButton("No", dialogClickListener)
-				.setNeutralButton("Cancel", dialogClickListener)
-				.show();
-		} else {
-			// This is not dirty. Nothing to save. Just close
-			this.finishClose();
-		}
-	}
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Do you want to save your changes?")
+                    .setPositiveButton(android.R.string.yes, dialogClickListener)
+                    .setNegativeButton(android.R.string.no, dialogClickListener)
+                    .setNeutralButton(android.R.string.cancel, dialogClickListener)
+                    .show();
+        } else {
+            // This is not dirty. Nothing to save. Just close
+            this.finishClose();
+        }
+    }
 
-	public void finishClose() {
-		// Do not clear the current note yet - we need to know about it on the MainActivity
-		NavUtils.navigateUpFromSameTask(this);
-	}
+    public void finishClose() {
+        // Do not clear the current note yet - we need to know about it on the MainActivity
+        NavUtils.navigateUpFromSameTask(this);
+    }
 
-	public void rename() {
-		final EditActivity activity = this;
-		final EditText renameEditText = new EditText(this);
-		boolean isRenamed = false;
+    public void rename() {
+        final EditActivity activity = this;
+        final EditText renameEditText = new EditText(this);
+        boolean isRenamed = false;
 
-		renameEditText.setText(this.note.getName());
+        renameEditText.setText(this.note.getName());
 
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int result) {
-				switch (result){
-					case DialogInterface.BUTTON_POSITIVE:
-						// If nothing has changed...
-						if (renameEditText.getText().toString().equals(activity.note.getName())) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int result) {
+                switch (result) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        // If nothing has changed...
+                        if (renameEditText.getText().toString().equals(activity.note.getName())) {
                             activity.getFilenotesApplication()
                                     .getLogger()
                                     .verbose(activity, "File renamed to same name");
 
-							// don't do anything
-							return;
-						}
+                            // don't do anything
+                            return;
+                        }
 
-						boolean succeeded = activity.getFilenotesApplication()
-								.getStorageManager()
-								.renameNote(activity.note, renameEditText.getText().toString());
+                        boolean succeeded = activity.getFilenotesApplication()
+                                .getStorageManager()
+                                .renameNote(activity.note, renameEditText.getText().toString());
 
                         if (succeeded) {
                             activity.setTitle(activity.note.getName());
                         } else {
-							activity.getFilenotesApplication().toast(getString(R.string.rename_failed));
-						}
-						break;
+                            activity.getFilenotesApplication().toast(getString(R.string.rename_failed));
+                        }
+                        break;
 
-					case DialogInterface.BUTTON_NEUTRAL:
-						// Cancel button clicked - don't do anything further
-						break;
-				}
-			}
-		};
+                    case DialogInterface.BUTTON_NEUTRAL:
+                        // Cancel button clicked - don't do anything further
+                        break;
+                }
+            }
+        };
 
-		new AlertDialog.Builder(this)
-				.setMessage("Rename")
-				.setView(renameEditText)
-				.setPositiveButton("Yes", dialogClickListener)
-				.setNeutralButton("Cancel", dialogClickListener)
-				.show();
-	}
-	
-	public void save() {
-		String content = this.noteText.getText().toString();
-		this.note.setText(content);
-		this.getFilenotesApplication().getStorageManager().writeToStorage(this.note);
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.rename)
+                .setView(renameEditText)
+                .setPositiveButton(android.R.string.yes, dialogClickListener)
+                .setNeutralButton(android.R.string.no, dialogClickListener)
+                .show();
+    }
+
+    public void save() {
+        String content = this.noteText.getText().toString();
+        this.note.setText(content);
+        this.getFilenotesApplication().getStorageManager().writeToStorage(this.note);
         this.setTitle(this.note.getName());
-	}
-	
-	public void delete() {
-		this.getFilenotesApplication().getStorageManager().deleteNote(this.note);
-		this.finishClose();
-	}
+    }
+
+    public void delete() {
+        this.getFilenotesApplication().getStorageManager().deleteNote(this.note);
+        this.finishClose();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        this.updateNote();
+        this.getFilenotesApplication()
+                .getLogger()
+                .verbose(this, "onSaveInstanceState");
+
+        if (this.note.isDirty()) {
+            this.getFilenotesApplication()
+                    .getLogger()
+                    .verbose(this, "onSaveInstanceState.savingNote");
+
+            savedInstanceState.putString(UNSAVEDNOTE, this.note.getName());
+            savedInstanceState.putCharSequence(UNSAVEDTEXT, this.note.getText());
+        }
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+
+        this.getFilenotesApplication()
+                .getLogger()
+                .verbose(this, "onRestoreInstanceState");
+
+        // Restore state members from saved instance
+        if (this.note == null) {
+
+            this.getFilenotesApplication()
+                    .getLogger()
+                    .verbose(this, "onRestoreInstanceState.restoreNote");
+
+            // Get the current note name
+            String name = savedInstanceState.getString(UNSAVEDNOTE);
+
+            // Reload all notes
+            this.getFilenotesApplication()
+                    .getStorageManager()
+                    .readAllFromStorage();
+
+            // Now get that note
+            this.note = Current.getNotes().getByName(name);
+
+            // Finally update the text field
+            EditText edit = (EditText) this.findViewById(R.id.note);
+            edit.setText(savedInstanceState.getCharSequence(UNSAVEDTEXT));
+        }
+    }
 }
