@@ -12,16 +12,16 @@ public class Logger {
     private static final String WARN = "Warn";
     private static final String ERROR = "Error";
 
-    private ServiceManager application;
+    private ServiceManager serviceManager;
 
-    public Logger(ServiceManager application) {
-        this.application = application;
+    public Logger(ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
     }
 
     private void log(String level, String tag, String msg) {
         // TODO - write somewhere better
         if (level.equals(ERROR)) {
-            this.application.toast(level + ":" + tag + ":" + msg);
+            this.serviceManager.toast(level + ":" + tag + ":" + msg);
             Log.e(tag, msg);
         } else {
             switch (level) {
