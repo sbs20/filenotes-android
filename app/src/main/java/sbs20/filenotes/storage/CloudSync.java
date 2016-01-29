@@ -1,4 +1,4 @@
-package sbs20.filenotes.cloud;
+package sbs20.filenotes.storage;
 
 import java.util.LinkedList;
 import java.util.Queue;

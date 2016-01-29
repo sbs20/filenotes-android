@@ -1,4 +1,4 @@
-package sbs20.filenotes.cloud;
+package sbs20.filenotes.storage;
 
 import com.dropbox.core.*;
 import com.dropbox.core.android.Auth;
@@ -8,7 +8,10 @@ import sbs20.filenotes.FilenotesApplication;
 
 public class DropboxSync extends CloudSync {
 
-    private static final String AppKey = "q1p3jfhnraz1k7l";
+    private static final String APP_KEY = "q1p3jfhnraz1k7l";
+    private static final String CLIENT_IDENTIFER = "sbs20.filenotes/1.0";
+    private static final String LOCALE = "en_UK";
+
     private static DbxClientV2 client;
 
     public DropboxSync(FilenotesApplication application) {
@@ -32,7 +35,7 @@ public class DropboxSync extends CloudSync {
         if (client == null) {
             String accessToken = this.getAuthenticationToken();
             if (accessToken != null && accessToken.length() > 0) {
-                DbxRequestConfig config = new DbxRequestConfig("dropbox/java-tutorial", "en_US");
+                DbxRequestConfig config = new DbxRequestConfig(CLIENT_IDENTIFER, LOCALE);
                 client = new DbxClientV2(config, accessToken);
             }
         }
@@ -50,7 +53,7 @@ public class DropboxSync extends CloudSync {
     public void login() {
         if (!this.isAuthenticated()) {
             this.getLogger().verbose(this, "login():!Authenticated");
-            Auth.startOAuth2Authentication(this.application, AppKey);
+            Auth.startOAuth2Authentication(this.application, APP_KEY);
         }
     }
 
@@ -69,7 +72,24 @@ public class DropboxSync extends CloudSync {
             String result;
 
             try {
-                result = client.users.getCurrentAccount().toJson(true);
+                DbxFiles.ListFolderResult r = client.files.listFolder("");
+
+                for (DbxFiles.Metadata m : r.entries) {
+                    if (m instanceof DbxFiles.FileMetadata) {
+                        DbxFiles.FileMetadata f = (DbxFiles.FileMetadata)m;
+                        this.getLogger().verbose(this, "trySync():File:" + f.name);
+
+                    } else if (m instanceof DbxFiles.FolderMetadata) {
+                        DbxFiles.FolderMetadata f = (DbxFiles.FolderMetadata)m;
+                        this.getLogger().verbose(this, "trySync():Folder:" + f.name);
+                    } else {
+                        this.getLogger().verbose(this, "trySync():" + m.getClass().getName() + ":" + m.name);
+                    }
+
+                }
+
+                result = "";//r.toJson(true);
+
             } catch(DbxException e) {
                 result = e.toString();
             } catch (Exception e) {

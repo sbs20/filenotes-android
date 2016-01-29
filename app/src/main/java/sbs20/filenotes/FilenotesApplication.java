@@ -4,9 +4,9 @@ import android.app.Application;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import sbs20.filenotes.cloud.CloudSync;
-import sbs20.filenotes.cloud.DropboxSync;
-import sbs20.filenotes.cloud.NoopCloudSync;
+import sbs20.filenotes.storage.CloudSync;
+import sbs20.filenotes.storage.DropboxSync;
+import sbs20.filenotes.storage.NoopCloudSync;
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Settings;

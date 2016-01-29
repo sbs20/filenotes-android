@@ -15,78 +15,39 @@ import java.util.List;
 import java.util.Locale;
 
 import sbs20.filenotes.R;
+import sbs20.filenotes.storage.IDirectoryListProvider;
 
-public class DirectoryArrayAdapter extends GenericBaseAdpater<File> {
+public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
 
-    private File currentDirectory;
+    private IDirectoryListProvider provider;
+    private String currentDirectory;
 
-    private List<File> getCurrentDirectoryListing() {
-        File[] dirs = this.currentDirectory.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-            }
-        });
-
-        List<File> list = new ArrayList<>();
-
-        // Add the parent first
-        if (this.currentDirectory.getParentFile() != null) {
-            list.add(this.currentDirectory.getParentFile());
-        }
-
-        // Now add the children (sorted)
-        if (dirs != null) {
-            Arrays.sort(dirs, new Comparator<File>() {
-                @Override
-                public int compare(File lhs, File rhs) {
-                    Locale locale = Locale.getDefault();
-                    String l = lhs.getAbsolutePath().toLowerCase(locale);
-                    String r = rhs.getAbsolutePath().toLowerCase(locale);
-                    return l.compareTo(r);
-                }
-            });
-
-            for (File f : dirs) {
-                list.add(f);
-            }
-        }
-
-        return list;
-    }
-
-    public DirectoryArrayAdapter(Context context, File directory) {
+    public DirectoryArrayAdapter(Context context, IDirectoryListProvider provider, String directory) {
         super(context);
+        this.provider = provider;
         this.setCurrentDirectory(directory);
     }
 
-    public void setCurrentDirectory(File directory) {
+    public void setCurrentDirectory(String directory) {
+
         this.currentDirectory = directory;
-        List<File> dirs = this.getCurrentDirectoryListing();
+        List<String> dirs = this.provider.getChildDirectoryPaths(this.currentDirectory);
         this.updateItems(dirs);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        File directory = this.getItem(position);
+        String directory = this.getItem(position);
         View row = convertView;
 
-        if(row == null)
-        {
+        if(row == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
             row = inflater.inflate(R.layout.listview_directories, parent, false);
         }
 
         TextView directoryItem = (TextView) row.findViewById(R.id.directoryItem);
 
-        String text = directory.getName();
-        if (this.currentDirectory.getParentFile() != null) {
-            if (directory.equals(this.currentDirectory.getParentFile())) {
-                text = "..";
-            }
-        }
-
-        directoryItem.setText(text);
+        directoryItem.setText(directory);
         row.setTag(directory);
 
         return row;

@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
-import sbs20.filenotes.cloud.CloudSync;
+import sbs20.filenotes.storage.CloudSync;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 

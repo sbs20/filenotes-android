@@ -1,4 +1,4 @@
-package sbs20.filenotes.cloud;
+package sbs20.filenotes.storage;
 
 import sbs20.filenotes.FilenotesApplication;
 

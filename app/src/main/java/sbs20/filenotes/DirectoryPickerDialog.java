@@ -18,11 +18,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import sbs20.filenotes.adapters.DirectoryArrayAdapter;
+import sbs20.filenotes.storage.FileSystemManager;
+import sbs20.filenotes.storage.IDirectoryListProvider;
 
 public class DirectoryPickerDialog extends DialogPreference {
 
 	private Context context;
-	private File currentDirectory;
+	private String currentDirectory;
+    private IDirectoryListProvider provider;
 		
 	public DirectoryPickerDialog(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -31,12 +34,8 @@ public class DirectoryPickerDialog extends DialogPreference {
         setNegativeButtonText(android.R.string.cancel);
         
         this.context = context;
-        this.currentDirectory = this.getRootDirectory();
-	}
-		
-	private File getRootDirectory() {
-		String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-		return new File(path);
+        this.provider = new FileSystemManager(null);
+        this.currentDirectory = this.provider.getRootDirectoryPath();
 	}
 
 	@Override
@@ -46,16 +45,18 @@ public class DirectoryPickerDialog extends DialogPreference {
         LinearLayout layout = (LinearLayout) LayoutInflater.from(this.context).inflate(R.layout.dialog_preference_directory, null);
         final TextView textView = (TextView) layout.findViewById(R.id.currentDirectory);
         final ListView listView = (ListView) layout.findViewById(R.id.directoryList);
-        final DirectoryArrayAdapter directoryAdapter = new DirectoryArrayAdapter(this.context, currentDirectory);
+        final DirectoryArrayAdapter directoryAdapter = new DirectoryArrayAdapter(this.context,
+                this.provider,
+                this.currentDirectory);
 
-        textView.setText(dialog.currentDirectory.getAbsolutePath());
+        textView.setText(dialog.currentDirectory);
         listView.setAdapter(directoryAdapter);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                dialog.currentDirectory = (File) view.getTag();
-                directoryAdapter.setCurrentDirectory(dialog.currentDirectory);
-                textView.setText(dialog.currentDirectory.getAbsolutePath());
+            dialog.currentDirectory = (String) view.getTag();
+            directoryAdapter.setCurrentDirectory(dialog.currentDirectory);
+            textView.setText(dialog.currentDirectory);
             }
         });
 
@@ -73,7 +74,7 @@ public class DirectoryPickerDialog extends DialogPreference {
 	protected void onDialogClosed(boolean positiveResult) {
 	    // When the user selects "OK", persist the new value
 	    if (positiveResult) {
-	    	this.persistString(this.currentDirectory.getAbsolutePath());
+	    	this.persistString(this.currentDirectory);
 	    }
 	}
 	
@@ -85,8 +86,7 @@ public class DirectoryPickerDialog extends DialogPreference {
 
 	@Override
 	protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-		String fallback = this.getRootDirectory().getAbsolutePath();
-		String path = restoreValue ? this.getPersistedString(fallback) : (String)defaultValue;
-		this.currentDirectory = new File(path);
+		String fallback = this.provider.getRootDirectoryPath();
+        this.currentDirectory = restoreValue ? this.getPersistedString(fallback) : (String)defaultValue;
 	}
 }

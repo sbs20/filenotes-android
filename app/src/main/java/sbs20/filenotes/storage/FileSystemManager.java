@@ -1,4 +1,6 @@
-package sbs20.filenotes.model;
+package sbs20.filenotes.storage;
+
+import android.os.Environment;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,12 +8,16 @@ import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import sbs20.filenotes.FilenotesApplication;
 import sbs20.filenotes.SettingsPreferenceActivity;
 
-public class StorageManager {
+public class FileSystemManager implements IDirectoryListProvider {
 
     private FilenotesApplication application;
 
@@ -23,7 +29,7 @@ public class StorageManager {
         return new File(this.getFilepath(name));
     }
 
-    public StorageManager(FilenotesApplication application) {
+    public FileSystemManager(FilenotesApplication application) {
         this.application = application;
     }
 
@@ -122,4 +128,47 @@ public class StorageManager {
         File file = new File(this.getFilepath(name));
         return file.exists();
     }
+
+    @Override
+    public List<String> getChildDirectoryPaths(String path) {
+        File directory = new File(path);
+
+        File[] dirs = directory.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+            return pathname.isDirectory();
+            }
+        });
+
+        List<String> list = new ArrayList<>();
+
+        // Add the parent first
+        if (directory.getParentFile() != null) {
+            list.add(directory.getParentFile().getAbsolutePath());
+        }
+
+        // Now add the children (sorted)
+        if (dirs != null) {
+            Arrays.sort(dirs, new Comparator<File>() {
+                @Override
+                public int compare(File lhs, File rhs) {
+                    Locale locale = Locale.getDefault();
+                    String l = lhs.getAbsolutePath().toLowerCase(locale);
+                    String r = rhs.getAbsolutePath().toLowerCase(locale);
+                    return l.compareTo(r);
+                }
+            });
+
+            for (File f : dirs) {
+                list.add(f.getAbsolutePath());
+            }
+        }
+
+        return list;
+    }
+
+    public String getRootDirectoryPath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
 }

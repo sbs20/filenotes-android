@@ -5,17 +5,18 @@ import java.util.Date;
 
 import sbs20.filenotes.FilenotesApplication;
 import sbs20.filenotes.R;
+import sbs20.filenotes.storage.FileSystemManager;
 
 public class NotesManager {
 
     private FilenotesApplication application;
-    private StorageManager storage;
+    private FileSystemManager storage;
 	private Note selectedNote;
 	private NoteCollection notes;
 
     public NotesManager(FilenotesApplication application) {
         this.application = application;
-        this.storage = new StorageManager(application);
+        this.storage = new FileSystemManager(application);
         this.notes = new NoteCollection();
     }
 
