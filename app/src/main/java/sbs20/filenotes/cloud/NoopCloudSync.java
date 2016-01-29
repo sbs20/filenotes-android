@@ -2,9 +2,9 @@ package sbs20.filenotes.cloud;
 
 import sbs20.filenotes.FilenotesApplication;
 
-public class NoopCloud extends CloudStorage {
+public class NoopCloudSync extends CloudSync {
 
-    public NoopCloud(FilenotesApplication application) {
+    public NoopCloudSync(FilenotesApplication application) {
         super(application);
     }
 
@@ -22,7 +22,7 @@ public class NoopCloud extends CloudStorage {
     }
 
     @Override
-    public NoopCloud trySync() {
+    public NoopCloudSync trySync() {
         this.getLogger().verbose(this, "trySync()");
         return this;
     }

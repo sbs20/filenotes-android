@@ -10,13 +10,9 @@ import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
-public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
+import sbs20.filenotes.model.Settings;
 
-    public static final String KEY_STORAGE_DIRECTORY = "pref_storagedir";
-    public static final String KEY_FONTFACE = "pref_font";
-    public static final String KEY_FONTSIZE = "pref_font_size";
-    public static final String KEY_THEME = "pref_theme";
-    public static final String KEY_DROPBOX_ACCESS_TOKEN = "pref_dbx_access_token";
+public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
 
     protected FilenotesApplication getFilenotesApplication() {
         return (FilenotesApplication)this.getApplication();
@@ -32,9 +28,6 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
                 .beginTransaction()
                 .replace(android.R.id.content, new SettingsPreferenceFragment())
                 .commit();
-
-        // DEBUG to remove bad settings
-        // getPreferences().edit().remove(KEY_THEME).commit();
     }
 
     private void setupActionBar() {
@@ -79,12 +72,14 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_settings);
         }
 
-        // This fires on initial click rather than selection....
         @Override
+        // This fires on initial click rather than selection....
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
             switch (preference.getKey()) {
-                case "pref_cloud":
-                    this.getFilenotesApplication().getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud");
+                case "pref_cloud_logout":
+                    this.getFilenotesApplication().getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud_logout");
+                    this.getFilenotesApplication().getCloudSync().logout();
+                    this.getFilenotesApplication().getSettings().clearCloudSyncName();
                     break;
             }
 
@@ -105,11 +100,10 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("pref_cloud")) {
+            if (key.equals(Settings.CLOUD_SYNC_SERVICE)) {
                 this.getFilenotesApplication().getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
-                String value = sharedPreferences.getString(key, null);
-                this.getFilenotesApplication().resetCloudStorage();
-                this.getFilenotesApplication().getCloudStorage().login();
+                this.getFilenotesApplication().resetCloudSync();
+                this.getFilenotesApplication().getCloudSync().login();
             }
         }
     }

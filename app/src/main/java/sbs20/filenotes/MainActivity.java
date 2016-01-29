@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
-import sbs20.filenotes.cloud.CloudStorage;
+import sbs20.filenotes.cloud.CloudSync;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 
@@ -156,23 +156,23 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onRefresh() {
 
-                AsyncTask<CloudStorage, Void, CloudStorage> task = new AsyncTask<CloudStorage, Void, CloudStorage>() {
+                AsyncTask<CloudSync, Void, CloudSync> task = new AsyncTask<CloudSync, Void, CloudSync>() {
                     @Override
-                    protected CloudStorage doInBackground(CloudStorage... params) {
+                    protected CloudSync doInBackground(CloudSync... params) {
                         params[0].trySync();
                         return params[0];
                     }
 
                     @Override
-                    protected void onPostExecute(CloudStorage cloudStorage) {
-                        super.onPostExecute(cloudStorage);
+                    protected void onPostExecute(CloudSync cloudSync) {
+                        super.onPostExecute(cloudSync);
                         activity.loadNotes();
                         swipeLayout.setRefreshing(false);
                     }
                 };
 
-                CloudStorage cloudStorage = activity.getFilenotesApplication().getCloudStorage();
-                task.execute(cloudStorage);
+                CloudSync cloudSync = activity.getFilenotesApplication().getCloudSync();
+                task.execute(cloudSync);
             }
         });
 

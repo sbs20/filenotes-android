@@ -1,31 +1,27 @@
 package sbs20.filenotes.cloud;
 
-import android.content.SharedPreferences;
-
 import com.dropbox.core.*;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.*;
 
 import sbs20.filenotes.FilenotesApplication;
-import sbs20.filenotes.SettingsPreferenceActivity;
 
-public class Dropbox extends CloudStorage {
+public class DropboxSync extends CloudSync {
 
     private static final String AppKey = "q1p3jfhnraz1k7l";
     private static DbxClientV2 client;
 
-    public Dropbox(FilenotesApplication application) {
+    public DropboxSync(FilenotesApplication application) {
         super(application);
     }
 
     private String getAuthenticationToken() {
-        SharedPreferences prefs = this.application.getPreferences();
-        String accessToken = prefs.getString(SettingsPreferenceActivity.KEY_DROPBOX_ACCESS_TOKEN, null);
+        String accessToken = this.settings.getDropboxAccessToken();
 
         if (accessToken == null) {
             accessToken = Auth.getOAuth2Token();
             if (accessToken != null) {
-                prefs.edit().putString(SettingsPreferenceActivity.KEY_DROPBOX_ACCESS_TOKEN, accessToken).apply();
+                this.settings.setDropboxAccessToken(accessToken);
             }
         }
 
@@ -53,18 +49,19 @@ public class Dropbox extends CloudStorage {
     @Override
     public void login() {
         if (!this.isAuthenticated()) {
+            this.getLogger().verbose(this, "login():!Authenticated");
             Auth.startOAuth2Authentication(this.application, AppKey);
         }
     }
 
     @Override
     public void logout() {
-        // TODO
-        this.application.getPreferences().edit().remove(SettingsPreferenceActivity.KEY_DROPBOX_ACCESS_TOKEN).commit();
+        this.settings.clearDropboxAccessToken();
+        this.getLogger().verbose(this, "logout()");
     }
 
     @Override
-    public Dropbox trySync() {
+    public DropboxSync trySync() {
         this.getLogger().verbose(this, "trySync():Start");
 
         if (this.isAuthenticated()) {

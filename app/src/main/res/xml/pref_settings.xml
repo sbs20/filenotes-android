@@ -48,8 +48,11 @@
             android:entries="@array/pref_cloud_text"
             android:entryValues="@array/pref_cloud_values" />
 
+        <Preference
+            android:key="pref_cloud_logout"
+            android:title="Cloud logout"
+            android:summary="Log out of your cloud account"/>
+
     </PreferenceCategory>
-
-
 
 </PreferenceScreen>

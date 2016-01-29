@@ -1,19 +1,20 @@
 package sbs20.filenotes;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import sbs20.filenotes.cloud.CloudStorage;
-import sbs20.filenotes.cloud.Dropbox;
-import sbs20.filenotes.cloud.NoopCloud;
+import sbs20.filenotes.cloud.CloudSync;
+import sbs20.filenotes.cloud.DropboxSync;
+import sbs20.filenotes.cloud.NoopCloudSync;
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.NotesManager;
+import sbs20.filenotes.model.Settings;
 
 public class FilenotesApplication extends Application {
 
-    private CloudStorage cloudStorage;
+    private Settings settings;
+    private CloudSync cloudSync;
     private NotesManager notesManager;
     private DateTimeHelper dateTimeHelper;
     private Logger logger;
@@ -30,24 +31,24 @@ public class FilenotesApplication extends Application {
         return this.notesManager;
     }
 
-    public CloudStorage getCloudStorage() {
-        if (this.cloudStorage == null) {
-            switch (this.getPreferences().getString("pref_cloud", null)) {
+    public CloudSync getCloudSync() {
+        if (this.cloudSync == null) {
+            switch (this.getSettings().getCloudSyncName()) {
                 case "dropbox":
-                    this.cloudStorage = new Dropbox(this);
+                    this.cloudSync = new DropboxSync(this);
                     break;
 
                 default:
-                    this.cloudStorage = new NoopCloud(this);
+                    this.cloudSync = new NoopCloudSync(this);
                     break;
             }
         }
 
-        return this.cloudStorage;
+        return this.cloudSync;
     }
 
-    public void resetCloudStorage() {
-        this.cloudStorage = null;
+    public void resetCloudSync() {
+        this.cloudSync = null;
     }
 
     public DateTimeHelper getDateTimeHelper() {
@@ -62,16 +63,18 @@ public class FilenotesApplication extends Application {
         if (this.logger == null) {
             this.logger = new Logger(this);
         }
-
         return this.logger;
     }
 
-    public SharedPreferences getPreferences() {
-        return PreferenceManager.getDefaultSharedPreferences(this);
+    public Settings getSettings() {
+        if (this.settings == null) {
+            this.settings = new Settings(PreferenceManager.getDefaultSharedPreferences(this));
+        }
+        return this.settings;
     }
 
     public int getActiveThemeId() {
-        String theme = this.getPreferences().getString(SettingsPreferenceActivity.KEY_THEME, "light");
+        String theme = this.getSettings().getThemeId();
         switch (theme) {
             case "light":
                 return R.style.AppTheme;

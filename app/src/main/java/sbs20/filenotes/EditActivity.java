@@ -26,28 +26,6 @@ public class EditActivity extends ThemedActivity {
     private Note note;
     private EditText noteText;
 
-    private Typeface getTypeface() {
-        String fontFace = this.getFilenotesApplication()
-                .getPreferences()
-                .getString(SettingsPreferenceActivity.KEY_FONTFACE, "monospace");
-
-        if (fontFace.equals("monospace")) {
-            return Typeface.MONOSPACE;
-        } else if (fontFace.equals("sansserif")) {
-            return Typeface.SANS_SERIF;
-        } else if (fontFace.equals("serif")) {
-            return Typeface.SERIF;
-        }
-
-        return Typeface.MONOSPACE;
-    }
-
-    private float getTextSize() {
-        SharedPreferences sharedPref = this.getFilenotesApplication().getPreferences();
-        int fontSize = Integer.parseInt(sharedPref.getString(SettingsPreferenceActivity.KEY_FONTSIZE, "16"));
-        return fontSize;
-    }
-
     private void updateNote() {
         EditText edit = (EditText) this.findViewById(R.id.note);
         this.note.setText(edit.getText().toString());
@@ -91,8 +69,8 @@ public class EditActivity extends ThemedActivity {
             }
         });
 
-        this.noteText.setTypeface(this.getTypeface());
-        this.noteText.setTextSize(this.getTextSize());
+        this.noteText.setTypeface(this.getSettings().getFontFace());
+        this.noteText.setTextSize(this.getSettings().getFontSize());
         this.noteText.clearFocus();
     }
 
