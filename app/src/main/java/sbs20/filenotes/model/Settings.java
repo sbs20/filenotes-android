@@ -9,12 +9,13 @@ public class Settings {
 
     private SharedPreferences sharedPreferences;
 
-    public static final String STORAGE_DIRECTORY = "pref_storagedir";
+    public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
     public static final String FONTFACE = "pref_font";
     public static final String FONTSIZE = "pref_font_size";
     public static final String THEME = "pref_theme";
     public static final String DROPBOX_ACCESS_TOKEN = "pref_dbx_access_token";
     public static final String CLOUD_SYNC_SERVICE = "pref_cloud";
+    public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
 
     public Settings(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
@@ -46,7 +47,6 @@ public class Settings {
             default:
                 return R.style.AppTheme_Dark;
         }
-
     }
 
     public String getCloudSyncName() {
@@ -57,8 +57,8 @@ public class Settings {
         this.remove(CLOUD_SYNC_SERVICE);
     }
 
-    public String getStorageDirectory() {
-        return this.get(STORAGE_DIRECTORY, "");
+    public String getLocalStoragePath() {
+        return this.get(LOCAL_STORAGE_PATH, "");
     }
 
     public Typeface getFontFace() {
@@ -90,5 +90,9 @@ public class Settings {
 
     public void clearDropboxAccessToken() {
         this.remove(DROPBOX_ACCESS_TOKEN);
+    }
+
+    public String getRemoteStoragePath() {
+        return this.get(REMOTE_STORAGE_PATH);
     }
 }

@@ -33,6 +33,7 @@
     <string name="rename_failed">Rename failed: name already exists?</string>
     <string name="no">no</string>
     <string name="yes">yes</string>
+    <string name="logged_out">Logged out</string>
 
     <string-array name="pref_font_list_text">
         <item>Monospace</item>

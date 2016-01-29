@@ -74,6 +74,7 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
                     this.serviceManager.getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud_logout");
                     this.serviceManager.getCloudSync().logout();
                     this.serviceManager.getSettings().clearCloudSyncName();
+                    this.serviceManager.toast(R.string.logged_out);
                     break;
             }
 

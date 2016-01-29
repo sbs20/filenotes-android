@@ -91,6 +91,10 @@ public class ServiceManager {
         Toast.makeText(application.getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
+    public void toast(int resId) {
+        this.toast(this.application.getString(resId));
+    }
+
     public Context getContext() {
         return this.application.getBaseContext();
     }

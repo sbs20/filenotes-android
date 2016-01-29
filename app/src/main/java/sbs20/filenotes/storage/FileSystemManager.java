@@ -30,7 +30,7 @@ public class FileSystemManager implements IDirectoryListProvider {
     }
 
     private File getStorageDirectory() {
-        String directoryPath = ServiceManager.getInstance().getSettings().getStorageDirectory();
+        String directoryPath = ServiceManager.getInstance().getSettings().getLocalStoragePath();
         return new File(directoryPath);
     }
 

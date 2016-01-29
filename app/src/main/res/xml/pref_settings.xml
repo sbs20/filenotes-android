@@ -36,17 +36,23 @@
 
         <sbs20.filenotes.DirectoryPicker
             android:key="pref_storagedir"
-            android:title="Storage Directory"
-            android:dialogTitle="Storage Directory"
+            android:title="Local Storage Directory"
+            android:dialogTitle="Local Storage Directory"
             android:summary="Filesystem location where notes are stored" />
 
         <ListPreference
             android:key="pref_cloud"
-            android:title="Cloud option"
+            android:title="Cloud service"
             android:summary="Choose a cloud service"
             android:dialogTitle="Choose a cloud service"
             android:entries="@array/pref_cloud_text"
             android:entryValues="@array/pref_cloud_values" />
+
+        <sbs20.filenotes.DropboxFolderPicker
+            android:key="pref_cloudstoragedir"
+            android:title="Remote Folder"
+            android:dialogTitle="Remote Folder"
+            android:summary="Remote location where notes are synced" />
 
         <Preference
             android:key="pref_cloud_logout"

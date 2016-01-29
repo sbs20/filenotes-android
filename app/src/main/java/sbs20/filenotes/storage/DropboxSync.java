@@ -55,6 +55,7 @@ public class DropboxSync extends CloudSync implements IDirectoryListProvider {
 
     @Override
     public void login() {
+        this.getLogger().info(this, "login()");
         if (!this.isAuthenticated()) {
             this.getLogger().verbose(this, "login():!Authenticated");
             Auth.startOAuth2Authentication(this.serviceManager.getContext(), APP_KEY);
@@ -64,32 +65,25 @@ public class DropboxSync extends CloudSync implements IDirectoryListProvider {
     @Override
     public void logout() {
         this.settings.clearDropboxAccessToken();
-        this.getLogger().verbose(this, "logout()");
+        this.getLogger().info(this, "logout()");
     }
 
     @Override
     public DropboxSync trySync() {
-        this.getLogger().verbose(this, "trySync():Start");
+        this.getLogger().info(this, "trySync():Start");
 
         if (this.isAuthenticated()) {
             this.getLogger().verbose(this, "trySync():Authenticated");
             String result;
 
             try {
-                DbxFiles.ListFolderResult r = client.files.listFolder("");
+                DbxFiles.ListFolderResult r = client.files.listFolder(this.settings.getRemoteStoragePath());
 
                 for (DbxFiles.Metadata m : r.entries) {
                     if (m instanceof DbxFiles.FileMetadata) {
                         DbxFiles.FileMetadata f = (DbxFiles.FileMetadata)m;
                         this.getLogger().verbose(this, "trySync():File:" + f.name);
-
-                    } else if (m instanceof DbxFiles.FolderMetadata) {
-                        DbxFiles.FolderMetadata f = (DbxFiles.FolderMetadata)m;
-                        this.getLogger().verbose(this, "trySync():Folder:" + f.name);
-                    } else {
-                        this.getLogger().verbose(this, "trySync():" + m.getClass().getName() + ":" + m.name);
                     }
-
                 }
 
                 result = "";//r.toJson(true);
@@ -112,27 +106,32 @@ public class DropboxSync extends CloudSync implements IDirectoryListProvider {
     @Override
     public List<String> getChildDirectoryPaths(String path) {
         List<String> dirs = new ArrayList<>();
-        this.getLogger().verbose(this, "getChildDirectoryPaths():");
+        this.getLogger().info(this, "getChildDirectoryPaths():");
 
-        try {
-            if (!path.equals(this.getRootDirectoryPath())) {
-                // We need to add the parent... to do that...
-                String parent = path.substring(0, path.lastIndexOf("/"));
-                dirs.add(parent);
-            }
-
-            DbxFiles.ListFolderResult result = client.files.listFolder(path);
-
-            for (DbxFiles.Metadata entry : result.entries) {
-                if (entry instanceof DbxFiles.FolderMetadata) {
-                    DbxFiles.FolderMetadata folder = (DbxFiles.FolderMetadata)entry;
-                    dirs.add(folder.pathLower);
+        if (this.isAuthenticated()) {
+            try {
+                if (!path.equals(this.getRootDirectoryPath())) {
+                    // We need to add the parent... to do that...
+                    String parent = path.substring(0, path.lastIndexOf("/"));
+                    dirs.add(parent);
                 }
+
+                DbxFiles.ListFolderResult result = client.files.listFolder(path);
+
+                for (DbxFiles.Metadata entry : result.entries) {
+                    if (entry instanceof DbxFiles.FolderMetadata) {
+                        DbxFiles.FolderMetadata folder = (DbxFiles.FolderMetadata) entry;
+                        dirs.add(folder.pathLower);
+                        this.getLogger().info(this, folder.toJson(true));
+                    }
+                }
+
+                Collections.sort(dirs);
+
+            } catch (Exception e) {
+                this.getLogger().info(this, e.toString());
             }
-
-            Collections.sort(dirs);
-
-        } catch (Exception e) {}
+        }
 
         return dirs;
     }
