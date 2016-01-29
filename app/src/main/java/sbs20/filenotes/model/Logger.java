@@ -2,7 +2,7 @@ package sbs20.filenotes.model;
 
 import android.util.Log;
 
-import sbs20.filenotes.FilenotesApplication;
+import sbs20.filenotes.ServiceManager;
 
 public class Logger {
 
@@ -12,9 +12,9 @@ public class Logger {
     private static final String WARN = "Warn";
     private static final String ERROR = "Error";
 
-    private FilenotesApplication application;
+    private ServiceManager application;
 
-    public Logger(FilenotesApplication application) {
+    public Logger(ServiceManager application) {
         this.application = application;
     }
 

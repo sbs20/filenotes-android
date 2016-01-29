@@ -14,12 +14,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import sbs20.filenotes.FilenotesApplication;
-import sbs20.filenotes.SettingsPreferenceActivity;
+import sbs20.filenotes.ServiceManager;
 
 public class FileSystemManager implements IDirectoryListProvider {
-
-    private FilenotesApplication application;
 
     private String getFilepath(String filename) {
         return this.getStorageDirectory().getAbsolutePath() + "/" + filename;
@@ -29,12 +26,11 @@ public class FileSystemManager implements IDirectoryListProvider {
         return new File(this.getFilepath(name));
     }
 
-    public FileSystemManager(FilenotesApplication application) {
-        this.application = application;
+    public FileSystemManager() {
     }
 
     private File getStorageDirectory() {
-        String directoryPath = this.application.getSettings().getStorageDirectory();
+        String directoryPath = ServiceManager.getInstance().getSettings().getStorageDirectory();
         return new File(directoryPath);
     }
 
@@ -49,12 +45,8 @@ public class FileSystemManager implements IDirectoryListProvider {
             }
             reader.close();
         } catch (IOException e) {
-            this.application
-                    .getLogger()
-                    .error(this, e.toString());
-
+            ServiceManager.getInstance().getLogger().error(this, e.toString());
         } finally {
-
         }
 
         return stringBuffer.toString();
@@ -101,9 +93,9 @@ public class FileSystemManager implements IDirectoryListProvider {
             bufferedWriter.write(text);
             bufferedWriter.close();
             fileWriter.close();
-            this.application.toast("Saved");
+            ServiceManager.getInstance().toast("Saved");
         } catch (IOException ex) {
-            this.application.getLogger().error(this, ex.toString());
+            ServiceManager.getInstance().getLogger().error(this, ex.toString());
         }
     }
 
@@ -170,5 +162,4 @@ public class FileSystemManager implements IDirectoryListProvider {
     public String getRootDirectoryPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
-
 }

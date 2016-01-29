@@ -3,8 +3,6 @@ package sbs20.filenotes;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.text.Editable;
@@ -44,7 +42,7 @@ public class EditActivity extends ThemedActivity {
         setupActionBar();
 
         // Load the note
-        this.note = this.getNotesManager().getSelectedNote();
+        this.note = ServiceManager.getInstance().getNotesManager().getSelectedNote();
         this.noteText = (EditText) this.findViewById(R.id.note);
         this.noteText.setText(this.note.getText());
         this.setTitle(this.note.getName());
@@ -69,8 +67,8 @@ public class EditActivity extends ThemedActivity {
             }
         });
 
-        this.noteText.setTypeface(this.getSettings().getFontFace());
-        this.noteText.setTextSize(this.getSettings().getFontSize());
+        this.noteText.setTypeface(ServiceManager.getInstance().getSettings().getFontFace());
+        this.noteText.setTextSize(ServiceManager.getInstance().getSettings().getFontSize());
         this.noteText.clearFocus();
     }
 
@@ -79,7 +77,7 @@ public class EditActivity extends ThemedActivity {
         super.onPostCreate(savedInstanceState);
 
         // Hide the keyboard if on disk (if it's new you want to type!)
-        if (this.getNotesManager().isStored(this.note)) {
+        if (ServiceManager.getInstance().getNotesManager().isStored(this.note)) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(this.noteText.getWindowToken(), 0);
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -103,7 +101,7 @@ public class EditActivity extends ThemedActivity {
             case android.R.id.home:
                 // This ID represents the Home or Up button. In the case of this
                 // activity, the Up button is shown. Use NavUtils to allow users
-                // to navigate up one level in the application structure. For
+                // to navigate up one level in the serviceManager structure. For
                 // more details, see the Navigation pattern on Android Design:
                 //
                 // http://developer.android.com/design/patterns/navigation.html#up-vs-back
@@ -162,8 +160,8 @@ public class EditActivity extends ThemedActivity {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Do you want to save your changes?")
-                    .setPositiveButton(android.R.string.yes, dialogClickListener)
-                    .setNegativeButton(android.R.string.no, dialogClickListener)
+                    .setPositiveButton(R.string.yes, dialogClickListener)
+                    .setNegativeButton(R.string.no, dialogClickListener)
                     .setNeutralButton(android.R.string.cancel, dialogClickListener)
                     .show();
         } else {
@@ -191,7 +189,7 @@ public class EditActivity extends ThemedActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         // If nothing has changed...
                         if (renameEditText.getText().toString().equals(activity.note.getName())) {
-                            activity.getFilenotesApplication()
+                            ServiceManager.getInstance()
                                     .getLogger()
                                     .verbose(activity, "File renamed to same name");
 
@@ -199,13 +197,13 @@ public class EditActivity extends ThemedActivity {
                             return;
                         }
 
-                        boolean succeeded = activity.getNotesManager()
+                        boolean succeeded = ServiceManager.getInstance().getNotesManager()
                                 .renameNote(activity.note, renameEditText.getText().toString());
 
                         if (succeeded) {
                             activity.setTitle(activity.note.getName());
                         } else {
-                            activity.getFilenotesApplication().toast(getString(R.string.rename_failed));
+                            ServiceManager.getInstance().toast(getString(R.string.rename_failed));
                         }
                         break;
 
@@ -219,34 +217,29 @@ public class EditActivity extends ThemedActivity {
         new AlertDialog.Builder(this)
                 .setMessage(R.string.action_rename)
                 .setView(renameEditText)
-                .setPositiveButton(android.R.string.yes, dialogClickListener)
-                .setNeutralButton(android.R.string.no, dialogClickListener)
+                .setPositiveButton(R.string.yes, dialogClickListener)
+                .setNeutralButton(R.string.no, dialogClickListener)
                 .show();
     }
 
     public void save() {
         String content = this.noteText.getText().toString();
         this.note.setText(content);
-        this.getNotesManager().writeToStorage(this.note);
+        ServiceManager.getInstance().getNotesManager().writeToStorage(this.note);
         this.setTitle(this.note.getName());
     }
 
     public void delete() {
-        this.getNotesManager().deleteNote(this.note);
+        ServiceManager.getInstance().getNotesManager().deleteNote(this.note);
         this.finishClose();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         this.updateNote();
-        this.getFilenotesApplication()
-                .getLogger()
-                .verbose(this, "onSaveInstanceState");
-
+        ServiceManager.getInstance().getLogger().verbose(this, "onSaveInstanceState");
         if (this.note.isDirty()) {
-            this.getFilenotesApplication()
-                    .getLogger()
-                    .verbose(this, "onSaveInstanceState.savingNote");
+            ServiceManager.getInstance().getLogger().verbose(this, "onSaveInstanceState.savingNote");
 
             savedInstanceState.putString(UNSAVEDNOTE, this.note.getName());
             savedInstanceState.putCharSequence(UNSAVEDTEXT, this.note.getText());
@@ -260,14 +253,14 @@ public class EditActivity extends ThemedActivity {
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 
-        this.getFilenotesApplication()
+        ServiceManager.getInstance()
                 .getLogger()
                 .verbose(this, "onRestoreInstanceState");
 
         // Restore state members from saved instance
         if (this.note == null) {
 
-            this.getFilenotesApplication()
+            ServiceManager.getInstance()
                     .getLogger()
                     .verbose(this, "onRestoreInstanceState.restoreNote");
 
@@ -275,11 +268,11 @@ public class EditActivity extends ThemedActivity {
             String name = savedInstanceState.getString(UNSAVEDNOTE);
 
             // Reload all notes
-            this.getNotesManager()
+            ServiceManager.getInstance().getNotesManager()
                     .readAllFromStorage();
 
             // Now get that note
-            this.note = this.getNotesManager()
+            this.note = ServiceManager.getInstance().getNotesManager()
                     .getNotes()
                     .getByName(name);
 

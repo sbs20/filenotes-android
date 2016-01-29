@@ -3,19 +3,19 @@ package sbs20.filenotes.storage;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import sbs20.filenotes.FilenotesApplication;
+import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Settings;
 import sbs20.filenotes.model.Logger;
 
 public abstract class CloudSync {
 
-    protected FilenotesApplication application;
+    protected ServiceManager serviceManager;
     protected Settings settings;
     protected Queue<String> messages;
 
-    public CloudSync(FilenotesApplication application) {
-        this.application = application;
-        this.settings = application.getSettings();
+    public CloudSync(ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
+        this.settings = serviceManager.getSettings();
         this.messages = new LinkedList<String>();
     }
 
@@ -24,7 +24,7 @@ public abstract class CloudSync {
     }
 
     protected Logger getLogger() {
-        return this.application.getLogger();
+        return this.serviceManager.getLogger();
     }
 
     public abstract void login();

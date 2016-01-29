@@ -14,13 +14,9 @@ import sbs20.filenotes.model.Settings;
 
 public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
 
-    protected FilenotesApplication getFilenotesApplication() {
-        return (FilenotesApplication)this.getApplication();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.setTheme(this.getFilenotesApplication().getActiveThemeId());
+        this.setTheme(ServiceManager.getInstance().getActiveThemeId());
         super.onCreate(savedInstanceState);
         setupActionBar();
 
@@ -61,10 +57,6 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
 
     public static class SettingsPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private FilenotesApplication getFilenotesApplication() {
-            return (FilenotesApplication)this.getActivity().getApplication();
-        }
-
         @Override
         public void onCreate(final Bundle savedInstanceState)
         {
@@ -77,9 +69,9 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
             switch (preference.getKey()) {
                 case "pref_cloud_logout":
-                    this.getFilenotesApplication().getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud_logout");
-                    this.getFilenotesApplication().getCloudSync().logout();
-                    this.getFilenotesApplication().getSettings().clearCloudSyncName();
+                    ServiceManager.getInstance().getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud_logout");
+                    ServiceManager.getInstance().getCloudSync().logout();
+                    ServiceManager.getInstance().getSettings().clearCloudSyncName();
                     break;
             }
 
@@ -101,9 +93,9 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(Settings.CLOUD_SYNC_SERVICE)) {
-                this.getFilenotesApplication().getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
-                this.getFilenotesApplication().resetCloudSync();
-                this.getFilenotesApplication().getCloudSync().login();
+                ServiceManager.getInstance().getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
+                ServiceManager.getInstance().resetCloudSync();
+                ServiceManager.getInstance().getCloudSync().login();
             }
         }
     }

@@ -1,10 +1,10 @@
 package sbs20.filenotes.storage;
 
-import sbs20.filenotes.FilenotesApplication;
+import sbs20.filenotes.ServiceManager;
 
 public class NoopCloudSync extends CloudSync {
 
-    public NoopCloudSync(FilenotesApplication application) {
+    public NoopCloudSync(ServiceManager application) {
         super(application);
     }
 

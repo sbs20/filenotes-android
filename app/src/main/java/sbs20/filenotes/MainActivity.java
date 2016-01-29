@@ -33,10 +33,10 @@ public class MainActivity extends ThemedActivity {
 
 	private void loadNotes() {
 		TextView message = (TextView) this.findViewById(R.id.noteListMessage);
-        NoteCollection notes = this.getNotesManager().getNotes();
+        NoteCollection notes = ServiceManager.getInstance().getNotesManager().getNotes();
 
 		try {
-			this.getNotesManager().readAllFromStorage();
+            ServiceManager.getInstance().getNotesManager().readAllFromStorage();
 		}
 		catch (Exception ex) {
 			message.setText(R.string.error_storage_does_not_exist);
@@ -116,6 +116,7 @@ public class MainActivity extends ThemedActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 
         // Setup the drawer
@@ -144,9 +145,9 @@ public class MainActivity extends ThemedActivity {
         this.loadNotes();
 
         // Select a note if applicable
-        Note selected = this.getNotesManager().getSelectedNote();
+        Note selected = ServiceManager.getInstance().getNotesManager().getSelectedNote();
         if (selected != null) {
-            int index = this.getNotesManager().getNotes().indexOf(selected);
+            int index = ServiceManager.getInstance().getNotesManager().getNotes().indexOf(selected);
             this.filelist.setSelection(index);
         }
 
@@ -171,7 +172,7 @@ public class MainActivity extends ThemedActivity {
                     }
                 };
 
-                CloudSync cloudSync = activity.getFilenotesApplication().getCloudSync();
+                CloudSync cloudSync = ServiceManager.getInstance().getCloudSync();
                 task.execute(cloudSync);
             }
         });
@@ -199,12 +200,12 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	public void createNew() {
-        Note note = this.getNotesManager().createNote();
+        Note note = ServiceManager.getInstance().getNotesManager().createNote();
 		this.edit(note);
 	}
 	
 	public void edit(Note note) {
-        this.getNotesManager().setSelectedNote(note);
+        ServiceManager.getInstance().getNotesManager().setSelectedNote(note);
 		Intent intent = new Intent(this, EditActivity.class);
 		this.startActivity(intent);
 	}

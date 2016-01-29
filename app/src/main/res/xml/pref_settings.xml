@@ -34,7 +34,7 @@
     <PreferenceCategory
         android:title="Storage">
 
-        <sbs20.filenotes.DirectoryPickerDialog
+        <sbs20.filenotes.DirectoryPicker
             android:key="pref_storagedir"
             android:title="Storage Directory"
             android:dialogTitle="Storage Directory"

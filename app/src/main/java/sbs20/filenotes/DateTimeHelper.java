@@ -1,21 +1,22 @@
 package sbs20.filenotes;
 
+import android.content.Context;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateTimeHelper {
 
-    private FilenotesApplication application;
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
 
-    public DateTimeHelper(FilenotesApplication application) {
-        this.application = application;
+    public DateTimeHelper() {
+        Context context = ServiceManager.getInstance().getContext();
         SimpleDateFormat simpleDateFormat = (SimpleDateFormat)android.text.format.DateFormat
-                .getDateFormat(application.getBaseContext());
+                .getDateFormat(context);
 
         SimpleDateFormat simpleTimeFormat = (SimpleDateFormat)android.text.format.DateFormat
-                .getTimeFormat(application.getBaseContext());
+                .getTimeFormat(context);
 
         this.dateFormat = new SimpleDateFormat(simpleDateFormat.toLocalizedPattern());
         this.timeFormat = new SimpleDateFormat(simpleTimeFormat.toLocalizedPattern());

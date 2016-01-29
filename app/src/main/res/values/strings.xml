@@ -31,6 +31,8 @@
     <string name="storage_is_empty">No matching files in storage directory</string>
     <string name="new_note_file_stem">New Note%s.txt</string>
     <string name="rename_failed">Rename failed: name already exists?</string>
+    <string name="no">no</string>
+    <string name="yes">yes</string>
 
     <string-array name="pref_font_list_text">
         <item>Monospace</item>

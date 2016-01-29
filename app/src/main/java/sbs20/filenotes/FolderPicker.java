@@ -16,25 +16,30 @@ import android.widget.TextView;
 import sbs20.filenotes.adapters.DirectoryArrayAdapter;
 import sbs20.filenotes.storage.IDirectoryListProvider;
 
-public abstract class FolderPickerDialog extends DialogPreference {
+public abstract class FolderPicker extends DialogPreference {
 
     protected Context context;
     protected String currentDirectory;
     protected IDirectoryListProvider provider;
 
-    public FolderPickerDialog(Context context, AttributeSet attrs) {
+    public FolderPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         setPositiveButtonText(android.R.string.ok);
         setNegativeButtonText(android.R.string.cancel);
 
+        this.provider = this.CreateProvider();
+        this.currentDirectory = this.provider.getRootDirectoryPath();
+
         this.context = context;
     }
+
+    public abstract IDirectoryListProvider CreateProvider();
 
     @Override
     protected View onCreateDialogView() {
 
-        final FolderPickerDialog dialog = this;
+        final FolderPicker dialog = this;
         LinearLayout layout = (LinearLayout) LayoutInflater.from(this.context).inflate(R.layout.dialog_preference_directory, null);
         final TextView textView = (TextView) layout.findViewById(R.id.currentDirectory);
         final ListView listView = (ListView) layout.findViewById(R.id.directoryList);

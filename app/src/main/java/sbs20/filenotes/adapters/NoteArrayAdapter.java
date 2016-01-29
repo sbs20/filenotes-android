@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import sbs20.filenotes.DateTimeHelper;
+import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.MainActivity;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.R;
@@ -35,7 +36,7 @@ public class NoteArrayAdapter extends GenericBaseAdpater<Note> {
 
         TextView lastModified = (TextView) row.findViewById(R.id.listnode_lastModified);
         MainActivity activity = (MainActivity)this.context;
-        DateTimeHelper dateTimeHelper = activity.getFilenotesApplication().getDateTimeHelper();
+        DateTimeHelper dateTimeHelper = ServiceManager.getInstance().getDateTimeHelper();
 
         String date = dateTimeHelper.formatDate(note.getLastModified());
         date += "\n" + dateTimeHelper.formatTime(note.getLastModified());

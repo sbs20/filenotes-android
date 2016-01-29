@@ -3,20 +3,17 @@ package sbs20.filenotes.model;
 import java.io.File;
 import java.util.Date;
 
-import sbs20.filenotes.FilenotesApplication;
+import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.R;
 import sbs20.filenotes.storage.FileSystemManager;
 
 public class NotesManager {
-
-    private FilenotesApplication application;
     private FileSystemManager storage;
 	private Note selectedNote;
 	private NoteCollection notes;
 
-    public NotesManager(FilenotesApplication application) {
-        this.application = application;
-        this.storage = new FileSystemManager(application);
+    public NotesManager() {
+        this.storage = new FileSystemManager();
         this.notes = new NoteCollection();
     }
 
@@ -48,10 +45,8 @@ public class NotesManager {
     }
 
     public void readAllFromStorage() {
-        this.application
-                .getLogger()
-                .verbose(this, "readAllFromStorage.Start");
 
+        ServiceManager.getInstance().getLogger().verbose(this, "readAllFromStorage.Start");
         File[] files = this.storage.readAllFilesFromStorage();
 
         // Ensure all files are in notes and up to date
@@ -76,9 +71,7 @@ public class NotesManager {
 
         notes.sort();
 
-        this.application
-                .getLogger()
-                .verbose(this, "readAllFromStorage.Finish");
+        ServiceManager.getInstance().getLogger().verbose(this, "readAllFromStorage.Finish");
     }
 
     public void writeToStorage(Note note) {
@@ -116,7 +109,7 @@ public class NotesManager {
     }
 
     public Note createNote() {
-        String stem = this.application.getString(R.string.new_note_file_stem);
+        String stem = ServiceManager.getInstance().getContext().getString(R.string.new_note_file_stem);
         Note note = new Note();
         note.setName(this.createUniqueNewName(stem));
         this.notes.add(note);

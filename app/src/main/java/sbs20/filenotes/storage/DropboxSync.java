@@ -4,9 +4,13 @@ import com.dropbox.core.*;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.*;
 
-import sbs20.filenotes.FilenotesApplication;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class DropboxSync extends CloudSync {
+import sbs20.filenotes.ServiceManager;
+
+public class DropboxSync extends CloudSync implements IDirectoryListProvider {
 
     private static final String APP_KEY = "q1p3jfhnraz1k7l";
     private static final String CLIENT_IDENTIFER = "sbs20.filenotes/1.0";
@@ -14,8 +18,8 @@ public class DropboxSync extends CloudSync {
 
     private static DbxClientV2 client;
 
-    public DropboxSync(FilenotesApplication application) {
-        super(application);
+    public DropboxSync(ServiceManager serviceManager) {
+        super(serviceManager);
     }
 
     private String getAuthenticationToken() {
@@ -53,7 +57,7 @@ public class DropboxSync extends CloudSync {
     public void login() {
         if (!this.isAuthenticated()) {
             this.getLogger().verbose(this, "login():!Authenticated");
-            Auth.startOAuth2Authentication(this.application, APP_KEY);
+            Auth.startOAuth2Authentication(this.serviceManager.getContext(), APP_KEY);
         }
     }
 
@@ -103,5 +107,38 @@ public class DropboxSync extends CloudSync {
         }
 
         return this;
+    }
+
+    @Override
+    public List<String> getChildDirectoryPaths(String path) {
+        List<String> dirs = new ArrayList<>();
+        this.getLogger().verbose(this, "getChildDirectoryPaths():");
+
+        try {
+            if (!path.equals(this.getRootDirectoryPath())) {
+                // We need to add the parent... to do that...
+                String parent = path.substring(0, path.lastIndexOf("/"));
+                dirs.add(parent);
+            }
+
+            DbxFiles.ListFolderResult result = client.files.listFolder(path);
+
+            for (DbxFiles.Metadata entry : result.entries) {
+                if (entry instanceof DbxFiles.FolderMetadata) {
+                    DbxFiles.FolderMetadata folder = (DbxFiles.FolderMetadata)entry;
+                    dirs.add(folder.pathLower);
+                }
+            }
+
+            Collections.sort(dirs);
+
+        } catch (Exception e) {}
+
+        return dirs;
+    }
+
+    @Override
+    public String getRootDirectoryPath() {
+        return "";
     }
 }
