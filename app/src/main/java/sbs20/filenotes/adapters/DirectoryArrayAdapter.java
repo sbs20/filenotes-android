@@ -1,6 +1,7 @@
 package sbs20.filenotes.adapters;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +23,29 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
     private IDirectoryListProvider provider;
     private String currentDirectory;
 
-    public DirectoryArrayAdapter(Context context, IDirectoryListProvider provider, String directory) {
+    public DirectoryArrayAdapter(Context context, IDirectoryListProvider provider) {
         super(context);
         this.provider = provider;
-        this.setCurrentDirectory(directory);
     }
 
-    public void setCurrentDirectory(String directory) {
-
+    public void setCurrentDirectory(final String directory) {
+        final DirectoryArrayAdapter adapter = this;
         this.currentDirectory = directory;
-        List<String> dirs = this.provider.getChildDirectoryPaths(this.currentDirectory);
-        this.updateItems(dirs);
+
+        AsyncTask<IDirectoryListProvider, Void, List<String>> query = new AsyncTask<IDirectoryListProvider, Void, List<String>>() {
+            @Override
+            protected List<String> doInBackground(IDirectoryListProvider... params) {
+                return params[0].getChildDirectoryPaths(directory);
+            }
+
+            @Override
+            protected void onPostExecute(List<String> dirs) {
+                super.onPostExecute(dirs);
+                adapter.updateItems(dirs);
+            }
+        };
+
+        query.execute(this.provider);
     }
 
     @Override

@@ -1,10 +1,7 @@
 package sbs20.filenotes;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Environment;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -45,9 +42,9 @@ public class DirectoryPickerDialog extends DialogPreference {
         LinearLayout layout = (LinearLayout) LayoutInflater.from(this.context).inflate(R.layout.dialog_preference_directory, null);
         final TextView textView = (TextView) layout.findViewById(R.id.currentDirectory);
         final ListView listView = (ListView) layout.findViewById(R.id.directoryList);
-        final DirectoryArrayAdapter directoryAdapter = new DirectoryArrayAdapter(this.context,
-                this.provider,
-                this.currentDirectory);
+
+        final DirectoryArrayAdapter directoryAdapter = new DirectoryArrayAdapter(this.context, this.provider);
+        directoryAdapter.setCurrentDirectory(dialog.currentDirectory);
 
         textView.setText(dialog.currentDirectory);
         listView.setAdapter(directoryAdapter);
