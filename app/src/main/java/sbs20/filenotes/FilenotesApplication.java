@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import sbs20.filenotes.cloud.CloudStorage;
+import sbs20.filenotes.cloud.Dropbox;
 import sbs20.filenotes.cloud.NoopCloud;
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.NotesManager;
@@ -31,10 +32,22 @@ public class FilenotesApplication extends Application {
 
     public CloudStorage getCloudStorage() {
         if (this.cloudStorage == null) {
-            this.cloudStorage = new NoopCloud(this);
+            switch (this.getPreferences().getString("pref_cloud", null)) {
+                case "dropbox":
+                    this.cloudStorage = new Dropbox(this);
+                    break;
+
+                default:
+                    this.cloudStorage = new NoopCloud(this);
+                    break;
+            }
         }
 
         return this.cloudStorage;
+    }
+
+    public void resetCloudStorage() {
+        this.cloudStorage = null;
     }
 
     public DateTimeHelper getDateTimeHelper() {

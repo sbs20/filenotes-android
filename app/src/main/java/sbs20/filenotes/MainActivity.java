@@ -159,7 +159,7 @@ public class MainActivity extends ThemedActivity {
                 AsyncTask<CloudStorage, Void, CloudStorage> task = new AsyncTask<CloudStorage, Void, CloudStorage>() {
                     @Override
                     protected CloudStorage doInBackground(CloudStorage... params) {
-                        params[0].sync();
+                        params[0].trySync();
                         return params[0];
                     }
 
@@ -183,7 +183,7 @@ public class MainActivity extends ThemedActivity {
 				activity.createNew();
 			}
 		});
-	}
+    }
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {

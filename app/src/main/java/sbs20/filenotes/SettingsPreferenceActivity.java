@@ -1,7 +1,10 @@
 package sbs20.filenotes;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.view.MenuItem;
@@ -13,6 +16,7 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
     public static final String KEY_FONTFACE = "pref_font";
     public static final String KEY_FONTSIZE = "pref_font_size";
     public static final String KEY_THEME = "pref_theme";
+    public static final String KEY_DROPBOX_ACCESS_TOKEN = "pref_dbx_access_token";
 
     protected FilenotesApplication getFilenotesApplication() {
         return (FilenotesApplication)this.getApplication();
@@ -62,12 +66,51 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
                 || SettingsPreferenceFragment.class.getName().equals(fragmentName);
     }
 
-    public static class SettingsPreferenceFragment extends PreferenceFragment {
+    public static class SettingsPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        private FilenotesApplication getFilenotesApplication() {
+            return (FilenotesApplication)this.getActivity().getApplication();
+        }
+
         @Override
         public void onCreate(final Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_settings);
+        }
+
+        // This fires on initial click rather than selection....
+        @Override
+        public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+            switch (preference.getKey()) {
+                case "pref_cloud":
+                    this.getFilenotesApplication().getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud");
+                    break;
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            this.getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            this.getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("pref_cloud")) {
+                this.getFilenotesApplication().getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
+                String value = sharedPreferences.getString(key, null);
+                this.getFilenotesApplication().resetCloudStorage();
+                this.getFilenotesApplication().getCloudStorage().login();
+            }
         }
     }
 }

@@ -20,12 +20,13 @@ public abstract class CloudStorage {
         return this.messages;
     }
 
+    public abstract void login();
+    public abstract void logout();
+    public abstract boolean isAuthenticated();
+
     protected Logger getLogger() {
         return this.application.getLogger();
     }
 
-    public CloudStorage sync() {
-        this.getLogger().verbose(this, "sync()");
-        return this;
-    }
+    public abstract CloudStorage trySync();
 }

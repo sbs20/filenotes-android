@@ -18,7 +18,6 @@
     <!-- Strings related to Settings -->
     <string name="pref_header_file_location">File location</string>
     <string name="pref_header_appearance">Appearance</string>
-
     <string name="pref_font_default">Monospace</string>
 
     <string name="about_overview_header">Overview</string>
@@ -32,7 +31,6 @@
     <string name="storage_is_empty">No matching files in storage directory</string>
     <string name="new_note_file_stem">New Note%s.txt</string>
     <string name="rename_failed">Rename failed: name already exists?</string>
-    <string name="rename">Rename</string>
 
     <string-array name="pref_font_list_text">
         <item>Monospace</item>
@@ -70,4 +68,14 @@
         <item>light</item>
         <item>dark</item>
     </string-array>
+
+    <string-array name="pref_cloud_text">
+        <item>None</item>
+        <item>Dropbox</item>
+    </string-array>
+    <string-array name="pref_cloud_values">
+        <item>none</item>
+        <item>dropbox</item>
+    </string-array>
+
 </resources>

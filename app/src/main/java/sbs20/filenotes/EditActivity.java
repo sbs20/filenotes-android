@@ -239,7 +239,7 @@ public class EditActivity extends ThemedActivity {
         };
 
         new AlertDialog.Builder(this)
-                .setMessage(R.string.rename)
+                .setMessage(R.string.action_rename)
                 .setView(renameEditText)
                 .setPositiveButton(android.R.string.yes, dialogClickListener)
                 .setNeutralButton(android.R.string.no, dialogClickListener)
