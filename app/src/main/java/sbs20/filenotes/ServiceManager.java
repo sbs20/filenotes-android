@@ -87,18 +87,6 @@ public class ServiceManager {
         return this.settings;
     }
 
-    public int getActiveThemeId() {
-        String theme = this.getSettings().getThemeId();
-        switch (theme) {
-            case "light":
-                return R.style.AppTheme;
-
-            case "dark":
-            default:
-                return R.style.AppTheme_Dark;
-        }
-    }
-
     public void toast(String s) {
         Toast.makeText(application.getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }

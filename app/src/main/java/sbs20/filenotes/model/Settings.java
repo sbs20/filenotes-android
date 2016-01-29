@@ -3,6 +3,8 @@ package sbs20.filenotes.model;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
+import sbs20.filenotes.R;
+
 public class Settings {
 
     private SharedPreferences sharedPreferences;
@@ -34,8 +36,17 @@ public class Settings {
         this.sharedPreferences.edit().remove(key).commit();
     }
 
-    public String getThemeId() {
-        return this.get(THEME, "light");
+    public int getThemeId() {
+        String theme = this.get(THEME, "light");
+        switch (theme) {
+            case "light":
+                return R.style.AppTheme;
+
+            case "dark":
+            default:
+                return R.style.AppTheme_Dark;
+        }
+
     }
 
     public String getCloudSyncName() {

@@ -7,7 +7,7 @@ abstract class ThemedActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.setTheme(ServiceManager.getInstance().getActiveThemeId());
+        this.setTheme(ServiceManager.getInstance().getSettings().getThemeId());
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setElevation(0);

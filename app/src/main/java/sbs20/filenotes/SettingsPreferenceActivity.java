@@ -16,7 +16,7 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.setTheme(ServiceManager.getInstance().getActiveThemeId());
+        this.setTheme(ServiceManager.getInstance().getSettings().getThemeId());
         super.onCreate(savedInstanceState);
         setupActionBar();
 
@@ -57,6 +57,8 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
 
     public static class SettingsPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+        private ServiceManager serviceManager = ServiceManager.getInstance();
+
         @Override
         public void onCreate(final Bundle savedInstanceState)
         {
@@ -69,9 +71,9 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
             switch (preference.getKey()) {
                 case "pref_cloud_logout":
-                    ServiceManager.getInstance().getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud_logout");
-                    ServiceManager.getInstance().getCloudSync().logout();
-                    ServiceManager.getInstance().getSettings().clearCloudSyncName();
+                    this.serviceManager.getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud_logout");
+                    this.serviceManager.getCloudSync().logout();
+                    this.serviceManager.getSettings().clearCloudSyncName();
                     break;
             }
 
@@ -93,9 +95,9 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(Settings.CLOUD_SYNC_SERVICE)) {
-                ServiceManager.getInstance().getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
-                ServiceManager.getInstance().resetCloudSync();
-                ServiceManager.getInstance().getCloudSync().login();
+                this.serviceManager.getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
+                this.serviceManager.resetCloudSync();
+                this.serviceManager.getCloudSync().login();
             }
         }
     }
