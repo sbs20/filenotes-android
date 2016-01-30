@@ -10,6 +10,8 @@ import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
+import java.util.Set;
+
 import sbs20.filenotes.model.Settings;
 
 public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
@@ -72,8 +74,9 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
             switch (preference.getKey()) {
                 case "pref_cloud_logout":
                     this.serviceManager.getLogger().verbose(this, "onPreferenceTreeClick():pref_cloud_logout");
-                    this.serviceManager.getCloudSync().logout();
-                    this.serviceManager.getSettings().clearCloudSyncName();
+                    this.serviceManager.getCloudService().logout();
+                    this.serviceManager.getSettings().clearCloudServiceName();
+                    this.serviceManager.getSettings().clearLastSync();
                     this.serviceManager.toast(R.string.logged_out);
                     break;
             }
@@ -95,10 +98,14 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(Settings.CLOUD_SYNC_SERVICE)) {
+            if (key.equals(Settings.CLOUD_SERVICE)) {
                 this.serviceManager.getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
                 this.serviceManager.resetCloudSync();
-                this.serviceManager.getCloudSync().login();
+                this.serviceManager.getSettings().clearLastSync();
+                this.serviceManager.getCloudService().login();
+            } else if (key.equals(Settings.REMOTE_STORAGE_PATH) || key.equals(Settings.LOCAL_STORAGE_PATH)) {
+                this.serviceManager.getLogger().verbose(this, "onSharedPreferenceChanged:" + key);
+                this.serviceManager.getSettings().clearLastSync();
             }
         }
     }

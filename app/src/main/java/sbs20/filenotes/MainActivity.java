@@ -17,9 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
-import sbs20.filenotes.storage.CloudSync;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
+import sbs20.filenotes.storage.Syncotron;
 
 public class MainActivity extends ThemedActivity {
 
@@ -72,18 +72,18 @@ public class MainActivity extends ThemedActivity {
 		final MainActivity activity = this;
 
 		this.drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String selection = drawerItems[position];
-				if (selection.compareTo(getString(R.string.title_activity_settings)) == 0) {
-					Intent intent = new Intent(activity, SettingsPreferenceActivity.class);
-					startActivity(intent);
-				} else if (selection.compareTo(getString(R.string.title_activity_about)) == 0) {
-					Intent intent = new Intent(activity, AboutActivity.class);
-					startActivity(intent);
-				}
-			}
-		});
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selection = drawerItems[position];
+                if (selection.compareTo(getString(R.string.title_activity_settings)) == 0) {
+                    Intent intent = new Intent(activity, SettingsPreferenceActivity.class);
+                    startActivity(intent);
+                } else if (selection.compareTo(getString(R.string.title_activity_about)) == 0) {
+                    Intent intent = new Intent(activity, AboutActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
 	}
 
 	private void setupDrawer() {
@@ -157,23 +157,23 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onRefresh() {
 
-                AsyncTask<CloudSync, Void, CloudSync> task = new AsyncTask<CloudSync, Void, CloudSync>() {
+                AsyncTask<Syncotron, Void, Void> task = new AsyncTask<Syncotron, Void, Void>() {
                     @Override
-                    protected CloudSync doInBackground(CloudSync... params) {
-                        params[0].trySync();
-                        return params[0];
+                    protected Void doInBackground(Syncotron... params) {
+                        params[0].invoke();
+                        return null;
                     }
 
                     @Override
-                    protected void onPostExecute(CloudSync cloudSync) {
-                        super.onPostExecute(cloudSync);
+                    protected void onPostExecute(Void v) {
+                        super.onPostExecute(null);
                         activity.loadNotes();
                         swipeLayout.setRefreshing(false);
                     }
                 };
 
-                CloudSync cloudSync = ServiceManager.getInstance().getCloudSync();
-                task.execute(cloudSync);
+                Syncotron syncotron = new Syncotron();
+                task.execute(syncotron);
             }
         });
 
@@ -184,6 +184,8 @@ public class MainActivity extends ThemedActivity {
 				activity.createNew();
 			}
 		});
+
+        this.syncWithCloud();
     }
 
 	@Override
@@ -218,4 +220,25 @@ public class MainActivity extends ThemedActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+
+    private void syncWithCloud() {
+
+        final MainActivity activity = this;
+        AsyncTask<Syncotron, Void, Void> task = new AsyncTask<Syncotron, Void, Void>() {
+            @Override
+            protected Void doInBackground(Syncotron... params) {
+                params[0].invoke();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+                super.onPostExecute(null);
+                activity.loadNotes();
+            }
+        };
+
+        Syncotron syncotron = new Syncotron();
+        task.execute(syncotron);
+    }
 }

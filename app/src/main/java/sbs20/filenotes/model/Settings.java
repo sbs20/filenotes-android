@@ -3,25 +3,33 @@ package sbs20.filenotes.model;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
+import java.util.Date;
+
+import sbs20.filenotes.DateTime;
 import sbs20.filenotes.R;
+import sbs20.filenotes.ServiceManager;
 
 public class Settings {
 
     private SharedPreferences sharedPreferences;
+    private Logger logger;
 
     public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
     public static final String FONTFACE = "pref_font";
     public static final String FONTSIZE = "pref_font_size";
     public static final String THEME = "pref_theme";
     public static final String DROPBOX_ACCESS_TOKEN = "pref_dbx_access_token";
-    public static final String CLOUD_SYNC_SERVICE = "pref_cloud";
+    public static final String CLOUD_SERVICE = "pref_cloud";
     public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
+    public static final String LAST_SYNC = "last_sync";
 
     public Settings(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
+        this.logger = ServiceManager.getInstance().getLogger();
     }
 
     public String get(String key, String dflt) {
+        this.logger.verbose(this, "get(" + key + ")");
         return this.sharedPreferences.getString(key, dflt);
     }
 
@@ -30,10 +38,12 @@ public class Settings {
     }
 
     public void set(String key, String value) {
+        this.logger.verbose(this, "set(" + key + ", " + value + ")");
         this.sharedPreferences.edit().putString(key, value).apply();
     }
 
     public void remove(String key) {
+        this.logger.verbose(this, "remove(" + key + ")");
         this.sharedPreferences.edit().remove(key).commit();
     }
 
@@ -49,12 +59,12 @@ public class Settings {
         }
     }
 
-    public String getCloudSyncName() {
-        return this.get(CLOUD_SYNC_SERVICE, "none");
+    public String getCloudServiceName() {
+        return this.get(CLOUD_SERVICE, "none");
     }
 
-    public void clearCloudSyncName() {
-        this.remove(CLOUD_SYNC_SERVICE);
+    public void clearCloudServiceName() {
+        this.remove(CLOUD_SERVICE);
     }
 
     public String getLocalStoragePath() {
@@ -94,5 +104,19 @@ public class Settings {
 
     public String getRemoteStoragePath() {
         return this.get(REMOTE_STORAGE_PATH);
+    }
+
+    public Date getLastSync() {
+        String s = this.get(LAST_SYNC);
+        return DateTime.from8601String(s);
+    }
+
+    public void setLastSync(Date date) {
+        String s = DateTime.to8601String(date);
+        this.set(LAST_SYNC, s);
+    }
+
+    public void clearLastSync() {
+        this.remove(LAST_SYNC);
     }
 }

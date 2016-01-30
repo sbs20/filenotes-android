@@ -5,9 +5,13 @@ import android.os.Environment;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -22,7 +26,7 @@ public class FileSystemManager implements IDirectoryListProvider {
         return this.getStorageDirectory().getAbsolutePath() + "/" + filename;
     }
 
-    private File getFile(String name) {
+    public File getFile(String name) {
         return new File(this.getFilepath(name));
     }
 
@@ -106,15 +110,41 @@ public class FileSystemManager implements IDirectoryListProvider {
         }
     }
 
+    public void copy(String srcname, String destname) {
+        File src = this.getFile(srcname);
+        File dst = this.getFile(destname);
+
+        try {
+            InputStream in = new FileInputStream(src);
+            OutputStream out = new FileOutputStream(dst);
+
+            // Transfer bytes from in to out
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            in.close();
+            out.close();
+        } catch (IOException ex) {
+            ServiceManager.getInstance().getLogger().error(this, ex.toString());
+        }
+    }
+
     public boolean rename(String name, String desiredName) {
         File desiredFile = new File(this.getFilepath(desiredName));
         if (desiredFile.exists()) {
             return false;
         }
 
-        File file = this.getFile(name);
-        return file.renameTo(desiredFile);
+        this.copy(name, desiredName);
+        this.delete(name);
+
+        File old = this.getFile(name);
+        return (!old.exists() && desiredFile.exists());
     }
+
 
     public boolean exists(String name) {
         File file = new File(this.getFilepath(name));

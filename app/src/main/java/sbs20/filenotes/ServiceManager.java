@@ -5,9 +5,9 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import sbs20.filenotes.storage.CloudSync;
-import sbs20.filenotes.storage.DropboxSync;
-import sbs20.filenotes.storage.NoopCloudSync;
+import sbs20.filenotes.storage.CloudService;
+import sbs20.filenotes.storage.DropboxService;
+import sbs20.filenotes.storage.NoopCloudService;
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Settings;
@@ -18,9 +18,9 @@ public class ServiceManager {
 
     private Application application;
     private Settings settings;
-    private CloudSync cloudSync;
+    private CloudService cloudService;
     private NotesManager notesManager;
-    private DateTimeHelper dateTimeHelper;
+    private DateTime dateTime;
     private Logger logger;
 
     private ServiceManager() {}
@@ -45,32 +45,32 @@ public class ServiceManager {
         return this.notesManager;
     }
 
-    public CloudSync getCloudSync() {
-        if (this.cloudSync == null) {
-            switch (this.getSettings().getCloudSyncName()) {
+    public CloudService getCloudService() {
+        if (this.cloudService == null) {
+            switch (this.getSettings().getCloudServiceName()) {
                 case "dropbox":
-                    this.cloudSync = new DropboxSync(this);
+                    this.cloudService = new DropboxService(this);
                     break;
 
                 default:
-                    this.cloudSync = new NoopCloudSync(this);
+                    this.cloudService = new NoopCloudService(this);
                     break;
             }
         }
 
-        return this.cloudSync;
+        return this.cloudService;
     }
 
     public void resetCloudSync() {
-        this.cloudSync = null;
+        this.cloudService = null;
     }
 
-    public DateTimeHelper getDateTimeHelper() {
-        if (this.dateTimeHelper == null) {
-            this.dateTimeHelper = new DateTimeHelper();
+    public DateTime getDateTime() {
+        if (this.dateTime == null) {
+            this.dateTime = new DateTime();
         }
 
-        return this.dateTimeHelper;
+        return this.dateTime;
     }
 
     public Logger getLogger() {
