@@ -14,14 +14,13 @@ public class Logger {
 
     private ServiceManager serviceManager;
 
-    public Logger(ServiceManager serviceManager) {
-        this.serviceManager = serviceManager;
+    private Logger() {
     }
 
-    private void log(String level, String tag, String msg) {
+    private static void log(String level, String tag, String msg) {
         // TODO - write somewhere better
         if (level.equals(ERROR)) {
-            this.serviceManager.toast(level + ":" + tag + ":" + msg);
+            ServiceManager.getInstance().toast(level + ":" + tag + ":" + msg);
             Log.e(tag, msg);
         } else {
             switch (level) {
@@ -41,35 +40,35 @@ public class Logger {
         }
     }
 
-    public void verbose(String tag, String msg) {
-        this.log(VERBOSE, tag, msg);
+    public static void verbose(String tag, String msg) {
+        log(VERBOSE, tag, msg);
     }
-    public void debug(String tag, String msg) {
-        this.log(DEBUG, tag, msg);
+    public static void debug(String tag, String msg) {
+        log(DEBUG, tag, msg);
     }
-    public void info(String tag, String msg) {
-        this.log(INFORMATION, tag, msg);
+    public static void info(String tag, String msg) {
+        log(INFORMATION, tag, msg);
     }
-    public void warn(String tag, String msg) {
-        this.log(WARN, tag, msg);
+    public static void warn(String tag, String msg) {
+        log(WARN, tag, msg);
     }
-    public void error(String tag, String msg) {
-        this.log(ERROR, tag, msg);
+    public static void error(String tag, String msg) {
+        log(ERROR, tag, msg);
     }
 
-    public void verbose(Object source, String msg) {
-        this.log(VERBOSE, source.getClass().getName(), msg);
+    public static void verbose(Object source, String msg) {
+        log(VERBOSE, source.getClass().getName(), msg);
     }
-    public void debug(Object source, String msg) {
-        this.log(DEBUG, source.getClass().getName(), msg);
+    public static void debug(Object source, String msg) {
+        log(DEBUG, source.getClass().getName(), msg);
     }
-    public void info(Object source, String msg) {
-        this.log(INFORMATION, source.getClass().getName(), msg);
+    public static void info(Object source, String msg) {
+        log(INFORMATION, source.getClass().getName(), msg);
     }
-    public void warn(Object source, String msg) {
-        this.log(WARN, source.getClass().getName(), msg);
+    public static void warn(Object source, String msg) {
+        log(WARN, source.getClass().getName(), msg);
     }
-    public void error(Object source, String msg) {
-        this.log(ERROR, source.getClass().getName(), msg);
+    public static void error(Object source, String msg) {
+        log(ERROR, source.getClass().getName(), msg);
     }
 }

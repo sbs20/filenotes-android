@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import sbs20.filenotes.ServiceManager;
+import sbs20.filenotes.model.Logger;
 
 public class DropboxService extends CloudService implements IDirectoryListProvider {
 
@@ -59,9 +60,9 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
 
     @Override
     public void login() {
-        this.getLogger().info(this, "login()");
+        Logger.info(this, "login()");
         if (!this.isAuthenticated()) {
-            this.getLogger().verbose(this, "login():!Authenticated");
+            Logger.verbose(this, "login():!Authenticated");
             Auth.startOAuth2Authentication(this.serviceManager.getContext(), APP_KEY);
         }
     }
@@ -69,17 +70,17 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
     @Override
     public void logout() {
         this.settings.clearDropboxAccessToken();
-        this.getLogger().info(this, "logout()");
+        Logger.info(this, "logout()");
     }
 
     @Override
     public List<File> files() throws IOException {
-        this.getLogger().info(this, "files():Start");
+        Logger.info(this, "files():Start");
 
         List<File> files = new ArrayList<>();
 
         if (this.isAuthenticated()) {
-            this.getLogger().verbose(this, "files():Authenticated");
+            Logger.verbose(this, "files():Authenticated");
 
             try {
                 DbxFiles.ListFolderResult result = client.files.listFolder(this.settings.getRemoteStoragePath());
@@ -103,7 +104,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
             }
 
         } else {
-            this.getLogger().verbose(this, "files():!Authenticated");
+            Logger.verbose(this, "files():!Authenticated");
         }
 
         return files;
@@ -111,7 +112,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
 
     @Override
     public void upload(File file) {
-        this.getLogger().info(this, "upload():Start");
+        Logger.info(this, "upload():Start");
         java.io.File localFile = (java.io.File) file.getFile();
 
         if (localFile != null) {
@@ -125,16 +126,16 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
                 client.files.uploadBuilder(remoteFolderPath + "/" + remoteFileName)
                         .mode(DbxFiles.WriteMode.overwrite())
                         .run(inputStream);
-                this.getLogger().verbose(this, "upload():done");
+                Logger.verbose(this, "upload():done");
             } catch (Exception e) {
-                this.getLogger().error(this, "upload():" + e.toString());
+                Logger.error(this, "upload():" + e.toString());
             }
         }
     }
 
     @Override
     public void download(File file, String localName) {
-        this.getLogger().info(this, "download():Start");
+        Logger.info(this, "download():Start");
         DbxFiles.FileMetadata remoteFile = (DbxFiles.FileMetadata) file.getFile();
 
         if (remoteFile != null) {
@@ -155,9 +156,9 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
                 // http://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file
                 localFile.setLastModified(remoteFile.serverModified.getTime());
 
-                this.getLogger().verbose(this, "download():done");
+                Logger.verbose(this, "download():done");
             } catch (Exception e) {
-                this.getLogger().error(this, "download():" + e.toString());
+                Logger.error(this, "download():" + e.toString());
             }
         }
     }
@@ -169,16 +170,16 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
 
     @Override
     public void delete(File file) {
-        this.getLogger().info(this, "delete():Start");
+        Logger.info(this, "delete():Start");
         DbxFiles.FileMetadata remoteFile = (DbxFiles.FileMetadata) file.getFile();
 
         if (remoteFile != null) {
 
             try {
                 client.files.delete(remoteFile.pathLower);
-                this.getLogger().verbose(this, "delete():done");
+                Logger.verbose(this, "delete():done");
             } catch (Exception e) {
-                this.getLogger().error(this, "delete():" + e.toString());
+                Logger.error(this, "delete():" + e.toString());
             }
         }
     }
@@ -186,7 +187,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
     @Override
     public List<String> getChildDirectoryPaths(String path) {
         List<String> dirs = new ArrayList<>();
-        this.getLogger().info(this, "getChildDirectoryPaths():");
+        Logger.info(this, "getChildDirectoryPaths():");
 
         if (this.isAuthenticated()) {
             try {
@@ -202,14 +203,14 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
                     if (entry instanceof DbxFiles.FolderMetadata) {
                         DbxFiles.FolderMetadata folder = (DbxFiles.FolderMetadata) entry;
                         dirs.add(folder.pathLower);
-                        this.getLogger().info(this, folder.toJson(true));
+                        Logger.info(this, folder.toJson(true));
                     }
                 }
 
                 Collections.sort(dirs);
 
             } catch (Exception e) {
-                this.getLogger().info(this, e.toString());
+                Logger.info(this, e.toString());
             }
         }
 

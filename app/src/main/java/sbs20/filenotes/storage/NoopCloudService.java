@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.ServiceManager;
+import sbs20.filenotes.model.Logger;
 
 public class NoopCloudService extends CloudService {
 
@@ -22,7 +23,7 @@ public class NoopCloudService extends CloudService {
 
     @Override
     public List<File> files() throws IOException {
-        this.getLogger().verbose(this, "files()");
+        Logger.verbose(this, "files()");
         throw new IOException("NoopService has no remote files");
     }
 

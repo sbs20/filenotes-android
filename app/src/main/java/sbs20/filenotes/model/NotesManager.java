@@ -49,7 +49,7 @@ public class NotesManager {
 
     public void readAllFromStorage() {
 
-        ServiceManager.getInstance().getLogger().verbose(this, "readAllFromStorage.Start");
+        Logger.verbose(this, "readAllFromStorage.Start");
         File[] files = this.storage.readAllFilesFromStorage();
 
         // Ensure all files are in notes and up to date
@@ -74,7 +74,7 @@ public class NotesManager {
 
         notes.sort();
 
-        ServiceManager.getInstance().getLogger().verbose(this, "readAllFromStorage.Finish");
+        Logger.verbose(this, "readAllFromStorage.Finish");
     }
 
     private void registerUpdate() {

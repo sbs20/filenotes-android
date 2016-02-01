@@ -25,7 +25,6 @@ public class Replicator {
     public Replicator() {
         this.localFiles = new ArrayList<>();
         this.remoteFiles = new ArrayList<>();
-        this.logger = ServiceManager.getInstance().getLogger();
         this.cloudService = ServiceManager.getInstance().getCloudService();
         this.downloads = new ArrayList<>();
         this.uploads = new ArrayList<>();

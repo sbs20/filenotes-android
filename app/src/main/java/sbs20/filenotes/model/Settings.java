@@ -12,7 +12,6 @@ import sbs20.filenotes.ServiceManager;
 public class Settings {
 
     private SharedPreferences sharedPreferences;
-    private Logger logger;
 
     public static final String THEME = "pref_theme";
     public static final String FONTFACE = "pref_font";
@@ -30,11 +29,10 @@ public class Settings {
 
     public Settings(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
-        this.logger = ServiceManager.getInstance().getLogger();
     }
 
     public String get(String key, String dflt) {
-        this.logger.verbose(this, "get(" + key + ")");
+        Logger.verbose(this, "get(" + key + ")");
         return this.sharedPreferences.getString(key, dflt);
     }
 
@@ -43,12 +41,12 @@ public class Settings {
     }
 
     public void set(String key, String value) {
-        this.logger.verbose(this, "set(" + key + ", " + value + ")");
+        Logger.verbose(this, "set(" + key + ", " + value + ")");
         this.sharedPreferences.edit().putString(key, value).apply();
     }
 
     public void remove(String key) {
-        this.logger.verbose(this, "remove(" + key + ")");
+        Logger.verbose(this, "remove(" + key + ")");
         this.sharedPreferences.edit().remove(key).commit();
     }
 

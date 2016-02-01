@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import sbs20.filenotes.ServiceManager;
+import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Settings;
 
 public class FileSystemManager implements IDirectoryListProvider {
@@ -50,7 +51,7 @@ public class FileSystemManager implements IDirectoryListProvider {
             }
             reader.close();
         } catch (IOException e) {
-            ServiceManager.getInstance().getLogger().error(this, e.toString());
+            Logger.error(this, e.toString());
         } finally {
         }
 
@@ -97,7 +98,7 @@ public class FileSystemManager implements IDirectoryListProvider {
             fileWriter.close();
             ServiceManager.getInstance().toast("Saved");
         } catch (IOException ex) {
-            ServiceManager.getInstance().getLogger().error(this, ex.toString());
+            Logger.error(this, ex.toString());
         }
     }
 
@@ -126,7 +127,7 @@ public class FileSystemManager implements IDirectoryListProvider {
             in.close();
             out.close();
         } catch (IOException ex) {
-            ServiceManager.getInstance().getLogger().error(this, ex.toString());
+            Logger.error(this, ex.toString());
         }
     }
 

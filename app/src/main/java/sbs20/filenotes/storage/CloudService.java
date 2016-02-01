@@ -19,10 +19,6 @@ public abstract class CloudService {
         this.settings = serviceManager.getSettings();
     }
 
-    protected Logger getLogger() {
-        return this.serviceManager.getLogger();
-    }
-
     public abstract void login();
     public abstract void logout();
     public abstract List<File> files() throws IOException;

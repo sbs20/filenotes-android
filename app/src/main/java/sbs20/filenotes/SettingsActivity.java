@@ -13,6 +13,7 @@ import android.support.v4.app.NavUtils;
 
 import java.util.Set;
 
+import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Settings;
 
 public class SettingsActivity extends ThemedActivity {
@@ -60,7 +61,7 @@ public class SettingsActivity extends ThemedActivity {
         @Override
         // This fires on initial click rather than selection....
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-            this.serviceManager.getLogger().verbose(this, "onPreferenceTreeClick():" + preference.getKey());
+            Logger.verbose(this, "onPreferenceTreeClick():" + preference.getKey());
             switch (preference.getKey()) {
                 case "pref_cloud_logout":
                     this.serviceManager.getCloudService().logout();
@@ -90,10 +91,10 @@ public class SettingsActivity extends ThemedActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            this.serviceManager.getLogger().verbose(this, "onSharedPreferenceChanged:" + key);
+            Logger.verbose(this, "onSharedPreferenceChanged:" + key);
 
             if (key.equals(Settings.CLOUD_SERVICE)) {
-                this.serviceManager.getLogger().verbose(this, "onSharedPreferenceChanged:pref_cloud");
+                Logger.verbose(this, "onSharedPreferenceChanged:pref_cloud");
                 this.serviceManager.resetCloudSync();
                 this.serviceManager.getSettings().clearLastSync();
                 this.serviceManager.getCloudService().login();

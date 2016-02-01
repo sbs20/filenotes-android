@@ -21,7 +21,6 @@ public class ServiceManager {
     private CloudService cloudService;
     private NotesManager notesManager;
     private DateTime dateTime;
-    private Logger logger;
 
     private ServiceManager() {}
 
@@ -71,13 +70,6 @@ public class ServiceManager {
         }
 
         return this.dateTime;
-    }
-
-    public Logger getLogger() {
-        if (this.logger == null) {
-            this.logger = new Logger(this);
-        }
-        return this.logger;
     }
 
     public Settings getSettings() {

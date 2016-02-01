@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Note;
 
 public class EditActivity extends ThemedActivity {
@@ -188,9 +189,7 @@ public class EditActivity extends ThemedActivity {
                     case DialogInterface.BUTTON_POSITIVE:
                         // If nothing has changed...
                         if (renameEditText.getText().toString().equals(activity.note.getName())) {
-                            ServiceManager.getInstance()
-                                    .getLogger()
-                                    .verbose(activity, "File renamed to same name");
+                            Logger.verbose(activity, "File renamed to same name");
 
                             // don't do anything
                             return;
@@ -236,9 +235,9 @@ public class EditActivity extends ThemedActivity {
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         this.updateNote();
-        ServiceManager.getInstance().getLogger().verbose(this, "onSaveInstanceState");
+        Logger.verbose(this, "onSaveInstanceState");
         if (this.note.isDirty()) {
-            ServiceManager.getInstance().getLogger().verbose(this, "onSaveInstanceState.savingNote");
+            Logger.verbose(this, "onSaveInstanceState.savingNote");
 
             savedInstanceState.putString(UNSAVEDNOTE, this.note.getName());
             savedInstanceState.putCharSequence(UNSAVEDTEXT, this.note.getText());
@@ -252,16 +251,12 @@ public class EditActivity extends ThemedActivity {
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
 
-        ServiceManager.getInstance()
-                .getLogger()
-                .verbose(this, "onRestoreInstanceState");
+        Logger.verbose(this, "onRestoreInstanceState");
 
         // Restore state members from saved instance
         if (this.note == null) {
 
-            ServiceManager.getInstance()
-                    .getLogger()
-                    .verbose(this, "onRestoreInstanceState.restoreNote");
+            Logger.verbose(this, "onRestoreInstanceState.restoreNote");
 
             // Get the current note name
             String name = savedInstanceState.getString(UNSAVEDNOTE);
