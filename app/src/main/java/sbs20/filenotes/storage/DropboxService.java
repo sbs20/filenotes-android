@@ -151,6 +151,11 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
                         .rev(remoteFile.rev)
                         .run(outputStream);
 
+                // For cosmetic purposes we will attempt to set the last modified time
+                // That said it doesn't seem to work. Shame!
+                // http://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file
+                localFile.setLastModified(remoteFile.serverModified.getTime());
+
                 this.getLogger().verbose(this, "download():done");
             } catch (Exception e) {
                 this.getLogger().error(this, "download():" + e.toString());

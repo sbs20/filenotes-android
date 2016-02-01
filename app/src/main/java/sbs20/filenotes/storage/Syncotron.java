@@ -218,6 +218,8 @@ public class Syncotron {
             this.sync(lastSync);
         }
 
+        // Files just downloaded will have new dates - and there is no workaround to this. So
+        // we need to record the date time as of now to avoid unnecessary uploading of files
         Date now = DateTime.now();
         ServiceManager.getInstance().getSettings().setLastSync(now);
     }
