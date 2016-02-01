@@ -18,8 +18,8 @@ import android.widget.TextView;
 import sbs20.filenotes.adapters.NoteArrayAdapter;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
-import sbs20.filenotes.storage.Syncotron;
-import sbs20.filenotes.storage.SyncotronicTask;
+import sbs20.filenotes.storage.Replicator;
+import sbs20.filenotes.storage.ReplicatorTask;
 
 public class MainActivity extends ThemedActivity {
 
@@ -162,13 +162,13 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onRefresh() {
                 noteListView.setEnabled(false);
-                new SyncotronicTask() {
+                new ReplicatorTask() {
                     @Override
-                    protected void onPostExecute(Syncotron syncotron) {
-                        super.onPostExecute(syncotron);
-                        finishSyncWithCloud(syncotron);
+                    protected void onPostExecute(Replicator replicator) {
+                        super.onPostExecute(replicator);
+                        finishSyncWithCloud(replicator);
                     }
-                }.execute(new Syncotron());
+                }.execute(new Replicator());
             }
         });
 
@@ -216,13 +216,13 @@ public class MainActivity extends ThemedActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-    private void finishSyncWithCloud(Syncotron syncotron) {
+    private void finishSyncWithCloud(Replicator replicator) {
         this.loadNotes();
         this.swipeLayout.setRefreshing(false);
         this.noteListView.setEnabled(true);
 
         // Post any toasty messages here too
-        int updates = syncotron.getUpdateCount();
+        int updates = replicator.getUpdateCount();
         if (updates > 0) {
             ServiceManager.getInstance().toast(getString(R.string.replication_notes_updated) + ": " + updates);
         }
@@ -239,12 +239,12 @@ public class MainActivity extends ThemedActivity {
 
         this.noteListView.setEnabled(false);
 
-        new SyncotronicTask() {
+        new ReplicatorTask() {
             @Override
-            protected void onPostExecute(Syncotron syncotron) {
-                super.onPostExecute(syncotron);
-                finishSyncWithCloud(syncotron);
+            protected void onPostExecute(Replicator replicator) {
+                super.onPostExecute(replicator);
+                finishSyncWithCloud(replicator);
             }
-        }.execute(new Syncotron());
+        }.execute(new Replicator());
     }
 }

@@ -9,7 +9,7 @@ import sbs20.filenotes.DateTime;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
 
-public class Syncotron {
+public class Replicator {
     private static boolean isRunning = false;
     private List<File> localFiles;
     private List<File> remoteFiles;
@@ -21,7 +21,7 @@ public class Syncotron {
     private List<File> localDeletes;
     private List<File> remoteDeletes;
 
-    public Syncotron() {
+    public Replicator() {
         this.localFiles = new ArrayList<>();
         this.remoteFiles = new ArrayList<>();
         this.logger = ServiceManager.getInstance().getLogger();
