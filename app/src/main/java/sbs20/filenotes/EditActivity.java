@@ -178,7 +178,6 @@ public class EditActivity extends ThemedActivity {
     public void rename() {
         final EditActivity activity = this;
         final EditText renameEditText = new EditText(this);
-        boolean isRenamed = false;
 
         renameEditText.setText(this.note.getName());
 

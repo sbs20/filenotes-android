@@ -34,6 +34,7 @@
     <string name="no">no</string>
     <string name="yes">yes</string>
     <string name="logged_out">Logged out</string>
+    <string name="replication_notes_updated">Notes updated</string>
 
     <string-array name="pref_font_list_text">
         <item>Monospace</item>

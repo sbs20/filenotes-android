@@ -21,11 +21,6 @@ public class NoopCloudService extends CloudService {
     }
 
     @Override
-    public boolean isAuthenticated() {
-        return true;
-    }
-
-    @Override
     public List<File> files() throws IOException {
         this.getLogger().verbose(this, "files()");
         throw new IOException("NoopService has no remote files");

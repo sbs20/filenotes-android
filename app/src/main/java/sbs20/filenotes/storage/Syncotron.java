@@ -14,6 +14,7 @@ public class Syncotron {
     private List<File> localFiles;
     private List<File> remoteFiles;
     private Logger logger;
+    private CloudService cloudService;
 
     private List<File> downloads;
     private List<File> uploads;
@@ -24,6 +25,11 @@ public class Syncotron {
         this.localFiles = new ArrayList<>();
         this.remoteFiles = new ArrayList<>();
         this.logger = ServiceManager.getInstance().getLogger();
+        this.cloudService = ServiceManager.getInstance().getCloudService();
+        this.downloads = new ArrayList<>();
+        this.uploads = new ArrayList<>();
+        this.localDeletes = new ArrayList<>();
+        this.remoteDeletes = new ArrayList<>();
     }
 
     private void add(java.io.File localfile) {
@@ -51,7 +57,7 @@ public class Syncotron {
     }
 
     private void loadRemoteFiles() throws IOException {
-        this.add(ServiceManager.getInstance().getCloudService().files());
+        this.add(cloudService.files());
     }
 
     private File findLocal(File remoteFile) {
@@ -74,28 +80,32 @@ public class Syncotron {
 
     private void download(File remoteFile) {
         logger.info(this, "download(" + remoteFile.getName() + ")");
-        ServiceManager.getInstance().getCloudService().download(remoteFile);
+        cloudService.download(remoteFile);
+        downloads.add(remoteFile);
     }
     
     private void upload(File localFile) {
         logger.info(this, "upload(" + localFile.getName() + ")");
-        ServiceManager.getInstance().getCloudService().upload(localFile);
+        cloudService.upload(localFile);
+        uploads.add(localFile);
     }
 
     private void deleteLocal(File localFile) {
         logger.info(this, "deleteLocal(" + localFile.getName() + ")");
         new FileSystemManager().delete(localFile.getName());
+        localDeletes.add(localFile);
     }
 
     private void deleteRemote(File remoteFile) {
         logger.info(this, "deleteRemote(" + remoteFile.getName() + ")");
-        ServiceManager.getInstance().getCloudService().delete(remoteFile);
+        cloudService.delete(remoteFile);
+        remoteDeletes.add(remoteFile);
     }
 
     private void resolveConflict(File localFile, File remoteFile) {
         logger.info(this, "resolveConflict(" + remoteFile.getName() + ")");
         // We already have the local file. So download the server one but call it <file>.server-conflict
-        ServiceManager.getInstance().getCloudService().download(remoteFile, localFile.getName() + ".conflict");
+        cloudService.download(remoteFile, localFile.getName() + ".conflict");
     }
 
     private void firstSync() {
@@ -108,12 +118,17 @@ public class Syncotron {
             File remoteFile = this.findRemote(localFile);
 
             if (remoteFile == null) {
+
                 logger.debug(this, "firstSync:" + localFile.getName() + ":remote is null");
                 this.upload(localFile);
+
             } else if (localFile.getLastModified().compareTo(remoteFile.getLastModified()) > 0) {
+
                 logger.debug(this, "firstSync:" + localFile.getName() + ":local is newer");
                 this.upload(localFile);
+
             } else if (localFile.getLastModified().compareTo(remoteFile.getLastModified()) == 0) {
+
                 logger.debug(this, "firstSync:" + localFile.getName() + ":local and remote same age");
                 if (localFile.getSize() == remoteFile.getSize()) {
                     logger.debug(this, "firstSync:" + localFile.getName() + ":local and remote same size");
@@ -121,9 +136,12 @@ public class Syncotron {
                     logger.debug(this, "firstSync:" + localFile.getName() + ":local and remote different sizes");
                     this.resolveConflict(localFile, remoteFile);
                 }
+
             } else if (localFile.getLastModified().compareTo(remoteFile.getLastModified()) < 0) {
+
                 logger.debug(this, "firstSync:" + localFile.getName() + ":remote is newer");
                 this.download(remoteFile);
+
             }
         }
 
@@ -232,5 +250,9 @@ public class Syncotron {
         } else {
             logger.debug(this, "invoke():already running!");
         }
+    }
+
+    public int getUpdateCount() {
+        return downloads.size() + uploads.size() + localDeletes.size() + remoteDeletes.size();
     }
 }

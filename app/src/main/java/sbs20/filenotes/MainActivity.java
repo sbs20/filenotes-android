@@ -222,6 +222,10 @@ public class MainActivity extends ThemedActivity {
         this.noteListView.setEnabled(true);
 
         // Post any toasty messages here too
+        int updates = syncotron.getUpdateCount();
+        if (updates > 0) {
+            ServiceManager.getInstance().toast(getString(R.string.replication_notes_updated) + ": " + updates);
+        }
     }
 
     private void startSyncWithCloud() {

@@ -25,7 +25,6 @@ public abstract class CloudService {
 
     public abstract void login();
     public abstract void logout();
-    public abstract boolean isAuthenticated();
     public abstract List<File> files() throws IOException;
     public abstract void upload(File file);
     public abstract void download(File file);

@@ -138,6 +138,8 @@ public class FileSystemManager implements IDirectoryListProvider {
             return false;
         }
 
+        // Do a copy and delete rather than rename. Rename doesn't tickle
+        // the file's lastModified and makes replication bad.
         this.copy(name, desiredName);
         this.delete(name);
 

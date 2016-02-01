@@ -53,8 +53,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
         return client;
     }
 
-    @Override
-    public boolean isAuthenticated() {
+    private boolean isAuthenticated() {
         return this.getClient() != null;
     }
 
