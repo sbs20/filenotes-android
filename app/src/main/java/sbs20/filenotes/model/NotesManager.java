@@ -82,9 +82,10 @@ public class NotesManager {
     }
 
     public boolean isReplicationRequired() {
-        Date lastSync = ServiceManager.getInstance().getSettings().getLastSync();
-        boolean isOverFiveMinutesSinceLastSync = DateTime.now().getTime() - lastSync.getTime() > 5 * 60 * 1000;
-        return this.isReplicationRequired || isOverFiveMinutesSinceLastSync;
+        Settings settings = ServiceManager.getInstance().getSettings();
+        Date lastSync = settings.getLastSync();
+        boolean isOverThreshold = DateTime.now().getTime() - lastSync.getTime() > settings.replicationThresholdInMilliseconds();
+        return this.isReplicationRequired || isOverThreshold;
     }
 
     public void setReplicationRequired(boolean value) {

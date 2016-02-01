@@ -119,4 +119,16 @@ public class Settings {
     public void clearLastSync() {
         this.remove(LAST_SYNC);
     }
+
+    public boolean excludeHiddenFile() {
+        return true;
+    }
+
+    public boolean excludeNonTextFile() {
+        return false;
+    }
+
+    public long replicationThresholdInMilliseconds() {
+        return 5 * 60 * 1000;
+    }
 }

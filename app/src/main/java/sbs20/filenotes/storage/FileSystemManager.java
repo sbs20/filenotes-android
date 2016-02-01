@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import sbs20.filenotes.ServiceManager;
+import sbs20.filenotes.model.Settings;
 
 public class FileSystemManager implements IDirectoryListProvider {
 
@@ -57,24 +58,21 @@ public class FileSystemManager implements IDirectoryListProvider {
     }
 
     public File[] readAllFilesFromStorage() {
+        final Settings settings = ServiceManager.getInstance().getSettings();
         if (this.getStorageDirectory().exists()) {
             if (this.getStorageDirectory().isDirectory()) {
                 return this.getStorageDirectory().listFiles(new FileFilter() {
                     @Override
                     public boolean accept(File file) {
                         if (file.canRead() && file.isFile()) {
-                            // TODO move these to preferences
-                            boolean showAllFiles = true;
-                            boolean showHiddenFiles = false;
-
                             Locale locale = Locale.getDefault();
                             String filename = file.getName().toLowerCase(locale);
 
-                            if (filename.startsWith(".") && !showHiddenFiles) {
+                            if (filename.startsWith(".") && settings.excludeHiddenFile()) {
                                 return false;
                             }
 
-                            if (!filename.endsWith(".txt") && !showAllFiles) {
+                            if (!filename.endsWith(".txt") && settings.excludeNonTextFile()) {
                                 return false;
                             }
 
