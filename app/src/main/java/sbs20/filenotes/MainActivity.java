@@ -2,7 +2,6 @@ package sbs20.filenotes;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
@@ -20,19 +19,21 @@ import sbs20.filenotes.adapters.NoteArrayAdapter;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.storage.Syncotron;
+import sbs20.filenotes.storage.SyncotronicTask;
 
 public class MainActivity extends ThemedActivity {
 
-	private ListView drawerList;
-	private ArrayAdapter<String> drawerAdapter;
-	private ActionBarDrawerToggle drawerToggle;
+    private ListView drawerList;
 	private DrawerLayout drawerLayout;
+    private SwipeRefreshLayout swipeLayout;
+	private ListView noteListView;
 
-	private ListView filelist;
+    private ArrayAdapter<String> drawerAdapter;
+    private ActionBarDrawerToggle drawerToggle;
     private NoteArrayAdapter notesAdapter;
 
-	private void loadNotes() {
-		TextView message = (TextView) this.findViewById(R.id.noteListMessage);
+    private void loadNotes() {
+		TextView message = (TextView) this.findViewById(R.id.note_list_message);
         NoteCollection notes = ServiceManager.getInstance().getNotesManager().getNotes();
 
 		try {
@@ -119,9 +120,13 @@ public class MainActivity extends ThemedActivity {
 
 		setContentView(R.layout.activity_main);
 
+        // Set up our main objects
+        this.drawerList = (ListView)findViewById(R.id.drawer_list);
+        this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        this.noteListView = (ListView)this.findViewById(R.id.note_list);
+        this.swipeLayout = (SwipeRefreshLayout) findViewById(R.id.note_swiper);
+
         // Setup the drawer
-		this.drawerList = (ListView)findViewById(R.id.navList);
-		this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 		this.addDrawerItems();
 		this.setupDrawer();
 
@@ -132,52 +137,42 @@ public class MainActivity extends ThemedActivity {
         // Note list
 		final MainActivity activity = this;
         this.notesAdapter = new NoteArrayAdapter(this);
-		this.filelist = (ListView)this.findViewById(R.id.noteList);
-		this.filelist.setAdapter(this.notesAdapter);
-		this.filelist.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Note note = (Note) view.getTag();
-				activity.edit(note);
-			}
-		});
+		this.noteListView.setAdapter(this.notesAdapter);
+		this.noteListView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Note note = (Note) view.getTag();
+                activity.edit(note);
+            }
+        });
 
-        // load the notes
+        // load the notes ... to be honest, this call is sort of pointless because
+        // we're about to try and sync and then do it again.... but it gives the
+        // user the illusion of performance.
         this.loadNotes();
 
         // Select a note if applicable
         Note selected = ServiceManager.getInstance().getNotesManager().getSelectedNote();
         if (selected != null) {
             int index = ServiceManager.getInstance().getNotesManager().getNotes().indexOf(selected);
-            this.filelist.setSelection(index);
+            this.noteListView.setSelection(index);
         }
 
         // Swipe handling
-		final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.noteListSwipeContainer);
 		swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                AsyncTask<Syncotron, Void, Void> task = new AsyncTask<Syncotron, Void, Void>() {
+                noteListView.setEnabled(false);
+                new SyncotronicTask() {
                     @Override
-                    protected Void doInBackground(Syncotron... params) {
-                        params[0].invoke();
-                        return null;
+                    protected void onPostExecute(Syncotron syncotron) {
+                        super.onPostExecute(syncotron);
+                        finishSyncWithCloud(syncotron);
                     }
-
-                    @Override
-                    protected void onPostExecute(Void v) {
-                        super.onPostExecute(null);
-                        activity.loadNotes();
-                        swipeLayout.setRefreshing(false);
-                    }
-                };
-
-                Syncotron syncotron = new Syncotron();
-                task.execute(syncotron);
+                }.execute(new Syncotron());
             }
         });
 
-		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.createNew);
+		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.note_create);
 		createNew.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -185,7 +180,7 @@ public class MainActivity extends ThemedActivity {
 			}
 		});
 
-        this.syncWithCloud();
+        this.startSyncWithCloud();
     }
 
 	@Override
@@ -221,24 +216,31 @@ public class MainActivity extends ThemedActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-    private void syncWithCloud() {
+    private void finishSyncWithCloud(Syncotron syncotron) {
+        this.loadNotes();
+        this.swipeLayout.setRefreshing(false);
+        this.noteListView.setEnabled(true);
 
-        final MainActivity activity = this;
-        AsyncTask<Syncotron, Void, Void> task = new AsyncTask<Syncotron, Void, Void>() {
+        // Post any toasty messages here too
+    }
+
+    private void startSyncWithCloud() {
+        // See: http://stackoverflow.com/a/26910973/1229065
+        swipeLayout.post(new Runnable() {
             @Override
-            protected Void doInBackground(Syncotron... params) {
-                params[0].invoke();
-                return null;
+            public void run() {
+                swipeLayout.setRefreshing(true);
             }
+        });
 
+        this.noteListView.setEnabled(false);
+
+        new SyncotronicTask() {
             @Override
-            protected void onPostExecute(Void v) {
-                super.onPostExecute(null);
-                activity.loadNotes();
+            protected void onPostExecute(Syncotron syncotron) {
+                super.onPostExecute(syncotron);
+                finishSyncWithCloud(syncotron);
             }
-        };
-
-        Syncotron syncotron = new Syncotron();
-        task.execute(syncotron);
+        }.execute(new Syncotron());
     }
 }
