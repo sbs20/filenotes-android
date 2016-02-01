@@ -3,6 +3,7 @@ package sbs20.filenotes.model;
 import java.io.File;
 import java.util.Date;
 
+import sbs20.filenotes.DateTime;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.R;
 import sbs20.filenotes.storage.FileSystemManager;
@@ -11,10 +12,12 @@ public class NotesManager {
     private FileSystemManager storage;
 	private Note selectedNote;
 	private NoteCollection notes;
+    private boolean isReplicationRequired;
 
     public NotesManager() {
         this.storage = new FileSystemManager();
         this.notes = new NoteCollection();
+        this.isReplicationRequired = false;
     }
 
 	public void setSelectedNote(Note file) {
@@ -74,20 +77,37 @@ public class NotesManager {
         ServiceManager.getInstance().getLogger().verbose(this, "readAllFromStorage.Finish");
     }
 
+    private void registerUpdate() {
+        this.isReplicationRequired = true;
+    }
+
+    public boolean isReplicationRequired() {
+        Date lastSync = ServiceManager.getInstance().getSettings().getLastSync();
+        boolean isOverFiveMinutesSinceLastSync = DateTime.now().getTime() - lastSync.getTime() > 5 * 60 * 1000;
+        return this.isReplicationRequired || isOverFiveMinutesSinceLastSync;
+    }
+
+    public void setReplicationRequired(boolean value) {
+        this.isReplicationRequired = value;
+    }
+
     public void writeToStorage(Note note) {
         this.storage.write(note.getName(), note.getText());
         note.reset();
+        this.registerUpdate();
     }
 
     public void deleteNote(Note note) {
         this.storage.delete(note.getName());
         this.notes.remove(note);
+        this.registerUpdate();
     }
 
     public boolean renameNote(Note note, String desiredName) {
         boolean succeeded = this.storage.rename(note.getName(), desiredName);
         if (succeeded) {
             note.setName(desiredName);
+            this.registerUpdate();
         }
 
         return succeeded;

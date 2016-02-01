@@ -242,6 +242,9 @@ public class Replicator {
                 Date now = DateTime.now();
                 ServiceManager.getInstance().getSettings().setLastSync(now);
 
+                // Also clear the need for further replications
+                ServiceManager.getInstance().getNotesManager().setReplicationRequired(false);
+
             } catch (IOException ex) {
                 logger.debug(this, "invoke():error:loadRemoteFiles:" + ex.toString());
             }

@@ -18,10 +18,13 @@ import android.widget.TextView;
 import sbs20.filenotes.adapters.NoteArrayAdapter;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
+import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.storage.Replicator;
 import sbs20.filenotes.storage.ReplicatorTask;
 
 public class MainActivity extends ThemedActivity {
+
+    private NotesManager notesManager;
 
     private ListView drawerList;
 	private DrawerLayout drawerLayout;
@@ -34,10 +37,10 @@ public class MainActivity extends ThemedActivity {
 
     private void loadNotes() {
 		TextView message = (TextView) this.findViewById(R.id.note_list_message);
-        NoteCollection notes = ServiceManager.getInstance().getNotesManager().getNotes();
+        NoteCollection notes = this.notesManager.getNotes();
 
 		try {
-            ServiceManager.getInstance().getNotesManager().readAllFromStorage();
+            this.notesManager.readAllFromStorage();
 		}
 		catch (Exception ex) {
 			message.setText(R.string.error_storage_does_not_exist);
@@ -121,6 +124,7 @@ public class MainActivity extends ThemedActivity {
 		setContentView(R.layout.activity_main);
 
         // Set up our main objects
+        this.notesManager = ServiceManager.getInstance().getNotesManager();
         this.drawerList = (ListView)findViewById(R.id.drawer_list);
         this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         this.noteListView = (ListView)this.findViewById(R.id.note_list);
@@ -147,13 +151,13 @@ public class MainActivity extends ThemedActivity {
 
         // load the notes ... to be honest, this call is sort of pointless because
         // we're about to try and sync and then do it again.... but it gives the
-        // user the illusion of performance.
+        // user the illusion of progress.
         this.loadNotes();
 
         // Select a note if applicable
-        Note selected = ServiceManager.getInstance().getNotesManager().getSelectedNote();
+        Note selected = this.notesManager.getSelectedNote();
         if (selected != null) {
-            int index = ServiceManager.getInstance().getNotesManager().getNotes().indexOf(selected);
+            int index = this.notesManager.getNotes().indexOf(selected);
             this.noteListView.setSelection(index);
         }
 
@@ -166,7 +170,7 @@ public class MainActivity extends ThemedActivity {
                     @Override
                     protected void onPostExecute(Replicator replicator) {
                         super.onPostExecute(replicator);
-                        finishSyncWithCloud(replicator);
+                        finishReplication(replicator);
                     }
                 }.execute(new Replicator());
             }
@@ -174,13 +178,15 @@ public class MainActivity extends ThemedActivity {
 
 		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.note_create);
 		createNew.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				activity.createNew();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                activity.createNew();
+            }
+        });
 
-        this.startSyncWithCloud();
+        if (this.notesManager.isReplicationRequired()) {
+            this.startReplication();
+        }
     }
 
 	@Override
@@ -197,12 +203,12 @@ public class MainActivity extends ThemedActivity {
 	}
 
 	public void createNew() {
-        Note note = ServiceManager.getInstance().getNotesManager().createNote();
+        Note note = this.notesManager.createNote();
 		this.edit(note);
 	}
 	
 	public void edit(Note note) {
-        ServiceManager.getInstance().getNotesManager().setSelectedNote(note);
+        this.notesManager.setSelectedNote(note);
 		Intent intent = new Intent(this, EditActivity.class);
 		this.startActivity(intent);
 	}
@@ -216,7 +222,7 @@ public class MainActivity extends ThemedActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-    private void finishSyncWithCloud(Replicator replicator) {
+    private void finishReplication(Replicator replicator) {
         this.loadNotes();
         this.swipeLayout.setRefreshing(false);
         this.noteListView.setEnabled(true);
@@ -228,7 +234,7 @@ public class MainActivity extends ThemedActivity {
         }
     }
 
-    private void startSyncWithCloud() {
+    private void startReplication() {
         // See: http://stackoverflow.com/a/26910973/1229065
         swipeLayout.post(new Runnable() {
             @Override
@@ -243,7 +249,7 @@ public class MainActivity extends ThemedActivity {
             @Override
             protected void onPostExecute(Replicator replicator) {
                 super.onPostExecute(replicator);
-                finishSyncWithCloud(replicator);
+                finishReplication(replicator);
             }
         }.execute(new Replicator());
     }
