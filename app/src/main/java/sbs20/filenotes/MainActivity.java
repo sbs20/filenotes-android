@@ -7,15 +7,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import sbs20.filenotes.adapters.NoteArrayAdapter;
+import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
@@ -146,6 +154,62 @@ public class MainActivity extends ThemedActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Note note = (Note) view.getTag();
                 activity.edit(note);
+            }
+        });
+
+        this.noteListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        this.noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                noteListView.setItemChecked(position, true);
+                return true;
+            }
+        });
+
+        this.noteListView.setMultiChoiceModeListener(new ListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                getMenuInflater().inflate(R.menu.select_notes, menu);
+                return true;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return true;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.select_notes_delete:
+                        // delete here.....
+                        SparseBooleanArray checked = noteListView.getCheckedItemPositions();
+                        List<Note> toBeDeleted = new ArrayList<>();
+                        for (int i = 0; i < checked.size(); i++) {
+                            if(checked.valueAt(i) == true) {
+                                Note note = (Note) noteListView.getItemAtPosition(checked.keyAt(i));
+                                toBeDeleted.add(note);
+                            }
+                        }
+
+                        for (Note note : toBeDeleted) {
+                            notesManager.deleteNote(note);
+                        }
+                        mode.finish();
+                        startReplication();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
             }
         });
 
