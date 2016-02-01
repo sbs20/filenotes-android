@@ -40,6 +40,21 @@
             android:dialogTitle="Local Storage Directory"
             android:summary="Filesystem location where notes are stored" />
 
+        <SwitchPreference
+            android:key="pref_exclude_hidden"
+            android:title="Exclude hidden files"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="pref_exclude_nontext"
+            android:title="Exclude non-text files"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Cloud">
+
         <ListPreference
             android:key="pref_cloud"
             android:title="Cloud service"
@@ -61,4 +76,13 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="Replication">
+
+        <Preference
+            android:key="pref_replication_clearlast"
+            android:title="Clear last replication"
+            android:summary="This forces filenotes to replicate every file it finds."/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -68,4 +68,12 @@ public class File {
     }
 
     public Object getFile() {return this.file;}
+
+    public boolean isHidden() {
+        return this.name.startsWith(".");
+    }
+
+    public boolean isNonTextFile() {
+        return !this.name.toLowerCase().endsWith(".txt");
+    }
 }

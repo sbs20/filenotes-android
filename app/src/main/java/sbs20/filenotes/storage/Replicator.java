@@ -8,6 +8,7 @@ import java.util.List;
 import sbs20.filenotes.DateTime;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
+import sbs20.filenotes.model.Settings;
 
 public class Replicator {
     private static boolean isRunning = false;
@@ -51,8 +52,14 @@ public class Replicator {
     }
 
     private void add(List<File> files) {
+        Settings settings = ServiceManager.getInstance().getSettings();
         for (File file: files) {
-            this.add(file);
+            boolean excludeFile = (settings.excludeHiddenFile() && file.isHidden()) ||
+                    (settings.excludeNonTextFile() && file.isNonTextFile());
+
+            if (!excludeFile) {
+                this.add(file);
+            }
         }
     }
 

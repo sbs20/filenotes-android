@@ -14,14 +14,19 @@ public class Settings {
     private SharedPreferences sharedPreferences;
     private Logger logger;
 
-    public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
+    public static final String THEME = "pref_theme";
     public static final String FONTFACE = "pref_font";
     public static final String FONTSIZE = "pref_font_size";
-    public static final String THEME = "pref_theme";
-    public static final String DROPBOX_ACCESS_TOKEN = "pref_dbx_access_token";
+
+    public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
+    public static final String STORAGE_EXCLUDE_HIDDEN = "pref_exclude_hidden";
+    public static final String STORAGE_EXCLUDE_NONTEXT = "pref_exclude_nontext";
+
     public static final String CLOUD_SERVICE = "pref_cloud";
     public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
     public static final String LAST_SYNC = "last_sync";
+
+    public static final String DROPBOX_ACCESS_TOKEN = "pref_dbx_access_token";
 
     public Settings(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
@@ -121,11 +126,11 @@ public class Settings {
     }
 
     public boolean excludeHiddenFile() {
-        return true;
+        return this.sharedPreferences.getBoolean(STORAGE_EXCLUDE_HIDDEN, true);
     }
 
     public boolean excludeNonTextFile() {
-        return false;
+        return this.sharedPreferences.getBoolean(STORAGE_EXCLUDE_NONTEXT, false);
     }
 
     public long replicationThresholdInMilliseconds() {
