@@ -15,11 +15,10 @@ import java.util.Set;
 
 import sbs20.filenotes.model.Settings;
 
-public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
+public class SettingsActivity extends ThemedActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.setTheme(ServiceManager.getInstance().getSettings().getThemeId());
         super.onCreate(savedInstanceState);
         setupActionBar();
 
@@ -37,18 +36,6 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
             actionBar.setElevation(0);
         }
     }
-    
-    @Override
-    public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            if (!super.onMenuItemSelected(featureId, item)) {
-                NavUtils.navigateUpFromSameTask(this);
-            }
-            return true;
-        }
-        return super.onMenuItemSelected(featureId, item);
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -57,16 +44,6 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-
-    /**
-     * This method stops fragment injection in malicious applications.
-     * Make sure to deny any unknown fragments here.
-     */
-    protected boolean isValidFragment(String fragmentName) {
-        return PreferenceFragment.class.getName().equals(fragmentName)
-                || SettingsPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     public static class SettingsPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {

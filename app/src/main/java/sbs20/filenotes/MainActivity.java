@@ -80,7 +80,7 @@ public class MainActivity extends ThemedActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selection = drawerItems[position];
                 if (selection.compareTo(getString(R.string.title_activity_settings)) == 0) {
-                    Intent intent = new Intent(activity, SettingsPreferenceActivity.class);
+                    Intent intent = new Intent(activity, SettingsActivity.class);
                     startActivity(intent);
                 } else if (selection.compareTo(getString(R.string.title_activity_about)) == 0) {
                     Intent intent = new Intent(activity, AboutActivity.class);
