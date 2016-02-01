@@ -12,7 +12,6 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
-import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
