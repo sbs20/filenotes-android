@@ -14,19 +14,19 @@
 
         <android.support.v4.widget.SwipeRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/noteListSwipeContainer"
+            android:id="@+id/note_swiper"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ListView
-                android:id="@+id/noteList"
+                android:id="@+id/note_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <TextView
-            android:id="@+id/noteListMessage"
+            android:id="@+id/note_list_message"
             android:visibility="gone"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -36,22 +36,22 @@
             android:layout_height="match_parent" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/createNew"
+            android:id="@+id/note_create"
             android:src="@drawable/ic_add"
             app:elevation="0dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/noteListSwipeContainer"
-            android:layout_alignEnd="@+id/noteListSwipeContainer"
+            android:layout_alignRight="@+id/note_swiper"
+            android:layout_alignEnd="@+id/note_swiper"
             android:layout_marginRight="@dimen/activity_horizontal_margin_double"
             android:layout_marginEnd="@dimen/activity_horizontal_margin_double"
             android:layout_marginBottom="@dimen/activity_horizontal_margin_double" />
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/navList"
+        android:id="@+id/drawer_list"
         android:layout_width="240dp"
         android:theme="@style/Drawer"
         android:layout_height="match_parent"

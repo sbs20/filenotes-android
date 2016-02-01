@@ -10,9 +10,15 @@ import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
 
 public class Syncotron {
+    private static boolean isRunning = false;
     private List<File> localFiles;
     private List<File> remoteFiles;
     private Logger logger;
+
+    private List<File> downloads;
+    private List<File> uploads;
+    private List<File> localDeletes;
+    private List<File> remoteDeletes;
 
     public Syncotron() {
         this.localFiles = new ArrayList<>();
@@ -184,43 +190,47 @@ public class Syncotron {
     }
 
     public void invoke() {
-        logger.info(this, "invoke()");
 
-        if (ServiceManager.getInstance().getCloudService() == null ||
-                ServiceManager.getInstance().getCloudService() instanceof NoopCloudService) {
-            return;
-        }
+        if (!isRunning) {
+            isRunning = true;
 
-        // Load local files
-        this.loadLocalFiles();
+            logger.info(this, "invoke()");
 
-        // Load remote files
-        try {
-            this.loadRemoteFiles();
-        } catch (IOException ex) {
-            logger.debug(this, "invoke():error:loadRemoteFiles:" + ex.toString());
-            return;
-        }
+            try {
+                // Load local files
+                this.loadLocalFiles();
 
-        // Look at everything that's happened since the last sync
-        Date lastSync = ServiceManager.getInstance().getSettings().getLastSync();
+                // Load remote files
+                this.loadRemoteFiles();
 
-        if (lastSync.equals(DateTime.min())) {
-            // This is the first sync. We lack data. One would hope that either one or both 
-            // nodes of this is completely empty. If both are populated then we don't delete
-            // anything and we go last update wins
-            logger.debug(this, "First sync");
-            this.firstSync();
+                // Look at everything that's happened since the last sync
+                Date lastSync = ServiceManager.getInstance().getSettings().getLastSync();
 
+                if (lastSync.equals(DateTime.min())) {
+                    // This is the first sync. We lack data. One would hope that either one or both
+                    // nodes of this is completely empty. If both are populated then we don't delete
+                    // anything and we go last update wins
+                    logger.debug(this, "First sync");
+                    this.firstSync();
+
+                } else {
+
+                    logger.debug(this, "sync (previous success:" + DateTime.to8601String(lastSync) + ")");
+                    this.sync(lastSync);
+                }
+
+                // Files just downloaded will have new dates - and there is no workaround to this. So
+                // we need to record the date time as of now to avoid unnecessary uploading of files
+                Date now = DateTime.now();
+                ServiceManager.getInstance().getSettings().setLastSync(now);
+
+            } catch (IOException ex) {
+                logger.debug(this, "invoke():error:loadRemoteFiles:" + ex.toString());
+            }
+
+            isRunning = false;
         } else {
-
-            logger.debug(this, "sync (previous success:" + DateTime.to8601String(lastSync) + ")");
-            this.sync(lastSync);
+            logger.debug(this, "invoke():already running!");
         }
-
-        // Files just downloaded will have new dates - and there is no workaround to this. So
-        // we need to record the date time as of now to avoid unnecessary uploading of files
-        Date now = DateTime.now();
-        ServiceManager.getInstance().getSettings().setLastSync(now);
     }
 }
