@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
@@ -47,6 +48,16 @@ public class SettingsPreferenceActivity extends AppCompatPreferenceActivity {
         }
         return super.onMenuItemSelected(featureId, item);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     /**
      * This method stops fragment injection in malicious applications.
