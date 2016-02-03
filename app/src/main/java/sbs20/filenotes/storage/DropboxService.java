@@ -141,7 +141,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
         if (remoteFile != null) {
 
             // Local file
-            java.io.File localFile = new FileSystemManager().getFile(localName);
+            java.io.File localFile = new FileSystemService().getFile(localName);
 
             try {
                 OutputStream outputStream = new FileOutputStream(localFile);

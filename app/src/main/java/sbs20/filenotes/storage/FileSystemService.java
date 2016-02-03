@@ -22,7 +22,7 @@ import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Settings;
 
-public class FileSystemManager implements IDirectoryListProvider {
+public class FileSystemService implements IDirectoryListProvider {
 
     private String getFilepath(String filename) {
         return this.getStorageDirectory().getAbsolutePath() + "/" + filename;
@@ -32,7 +32,7 @@ public class FileSystemManager implements IDirectoryListProvider {
         return new File(this.getFilepath(name));
     }
 
-    public FileSystemManager() {
+    public FileSystemService() {
     }
 
     private File getStorageDirectory() {

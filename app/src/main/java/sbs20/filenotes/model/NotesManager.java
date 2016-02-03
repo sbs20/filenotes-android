@@ -6,16 +6,16 @@ import java.util.Date;
 import sbs20.filenotes.DateTime;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.R;
-import sbs20.filenotes.storage.FileSystemManager;
+import sbs20.filenotes.storage.FileSystemService;
 
 public class NotesManager {
-    private FileSystemManager storage;
+    private FileSystemService storage;
 	private Note selectedNote;
 	private NoteCollection notes;
     private boolean isReplicationRequired;
 
     public NotesManager() {
-        this.storage = new FileSystemManager();
+        this.storage = new FileSystemService();
         this.notes = new NoteCollection();
         this.isReplicationRequired = false;
     }

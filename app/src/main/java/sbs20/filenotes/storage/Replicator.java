@@ -36,14 +36,14 @@ public class Replicator {
         this.localFiles.add(new File(localfile));
     }
 
-    private void add(java.io.File[] localfiles) {
-        for (java.io.File f : localfiles) {
+    private void add(java.io.File[] localFiles) {
+        for (java.io.File f : localFiles) {
             this.add(f);
         }
     }
 
     private void loadLocalFiles() {
-        this.add(new FileSystemManager().readAllFilesFromStorage());
+        this.add(new FileSystemService().readAllFilesFromStorage());
     }
 
     private void add(File file) {
@@ -98,7 +98,7 @@ public class Replicator {
 
     private void deleteLocal(File localFile) {
         logger.info(this, "deleteLocal(" + localFile.getName() + ")");
-        new FileSystemManager().delete(localFile.getName());
+        new FileSystemService().delete(localFile.getName());
         localDeletes.add(localFile);
     }
 
