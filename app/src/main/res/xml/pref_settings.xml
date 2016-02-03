@@ -43,7 +43,7 @@
         <SwitchPreference
             android:key="pref_exclude_hidden"
             android:title="Exclude hidden files"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
 
         <SwitchPreference
             android:key="pref_exclude_nontext"

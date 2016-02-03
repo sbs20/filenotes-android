@@ -52,7 +52,7 @@ public class Replicator {
 
     private void add(List<File> files) {
         Settings settings = ServiceManager.getInstance().getSettings();
-        for (File file: files) {
+        for (File file : files) {
             boolean excludeFile = (settings.excludeHiddenFile() && file.isHidden()) ||
                     (settings.excludeNonTextFile() && file.isNonTextFile());
 
@@ -84,13 +84,13 @@ public class Replicator {
         return null;
     }
 
-    private void download(File remoteFile) {
+    private void download(File remoteFile) throws Exception {
         logger.info(this, "download(" + remoteFile.getName() + ")");
         cloudService.download(remoteFile);
         downloads.add(remoteFile);
     }
-    
-    private void upload(File localFile) {
+
+    private void upload(File localFile) throws Exception {
         logger.info(this, "upload(" + localFile.getName() + ")");
         cloudService.upload(localFile);
         uploads.add(localFile);
@@ -102,19 +102,19 @@ public class Replicator {
         localDeletes.add(localFile);
     }
 
-    private void deleteRemote(File remoteFile) {
+    private void deleteRemote(File remoteFile) throws Exception {
         logger.info(this, "deleteRemote(" + remoteFile.getName() + ")");
         cloudService.delete(remoteFile);
         remoteDeletes.add(remoteFile);
     }
 
-    private void resolveConflict(File localFile, File remoteFile) {
+    private void resolveConflict(File localFile, File remoteFile) throws Exception {
         logger.info(this, "resolveConflict(" + remoteFile.getName() + ")");
         // We already have the local file. So download the server one but call it <file>.server-conflict
         cloudService.download(remoteFile, localFile.getName() + ".conflict");
     }
 
-    private void firstSync() {
+    private void firstSync() throws Exception {
         logger.info(this, "firstSync:Start");
 
         // Start with local stuff
@@ -165,7 +165,7 @@ public class Replicator {
         }
     }
 
-    private void sync(Date lastSync) {
+    private void sync(Date lastSync) throws Exception {
 
         // Start with local stuff
         for (File localFile : this.localFiles) {
@@ -251,7 +251,7 @@ public class Replicator {
                 // Also clear the need for further replications
                 ServiceManager.getInstance().getNotesManager().setReplicationRequired(false);
 
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 logger.debug(this, "invoke():error:loadRemoteFiles:" + ex.toString());
             }
 

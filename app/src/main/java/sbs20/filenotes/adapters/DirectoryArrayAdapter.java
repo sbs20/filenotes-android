@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.R;
@@ -29,7 +30,11 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
         AsyncTask<IDirectoryListProvider, Void, List<String>> query = new AsyncTask<IDirectoryListProvider, Void, List<String>>() {
             @Override
             protected List<String> doInBackground(IDirectoryListProvider... params) {
-                return params[0].getChildDirectoryPaths(directory);
+                try {
+                    return params[0].getChildDirectoryPaths(directory);
+                } catch (Exception e) {
+                    return new ArrayList<>();
+                }
             }
 
             @Override

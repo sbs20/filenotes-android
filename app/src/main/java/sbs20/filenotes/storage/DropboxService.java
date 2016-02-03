@@ -111,7 +111,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
     }
 
     @Override
-    public void upload(File file) {
+    public void upload(File file) throws Exception {
         Logger.info(this, "upload():Start");
         java.io.File localFile = (java.io.File) file.getFile();
 
@@ -121,20 +121,16 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
             // Note - this is not ensuring the name is a valid dropbox file name
             String remoteFileName = localFile.getName();
 
-            try {
-                InputStream inputStream = new FileInputStream(localFile);
-                client.files.uploadBuilder(remoteFolderPath + "/" + remoteFileName)
-                        .mode(DbxFiles.WriteMode.overwrite())
-                        .run(inputStream);
-                Logger.verbose(this, "upload():done");
-            } catch (Exception e) {
-                Logger.error(this, "upload():" + e.toString());
-            }
+            InputStream inputStream = new FileInputStream(localFile);
+            client.files.uploadBuilder(remoteFolderPath + "/" + remoteFileName)
+                    .mode(DbxFiles.WriteMode.overwrite())
+                    .run(inputStream);
+            Logger.verbose(this, "upload():done");
         }
     }
 
     @Override
-    public void download(File file, String localName) {
+    public void download(File file, String localName) throws Exception {
         Logger.info(this, "download():Start");
         DbxFiles.FileMetadata remoteFile = (DbxFiles.FileMetadata) file.getFile();
 
@@ -143,75 +139,62 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
             // Local file
             java.io.File localFile = new FileSystemService().getFile(localName);
 
-            try {
-                OutputStream outputStream = new FileOutputStream(localFile);
+            OutputStream outputStream = new FileOutputStream(localFile);
 
-                client.files
-                        .downloadBuilder(remoteFile.pathLower)
-                        .rev(remoteFile.rev)
-                        .run(outputStream);
+            client.files
+                    .downloadBuilder(remoteFile.pathLower)
+                    .rev(remoteFile.rev)
+                    .run(outputStream);
 
-                // For cosmetic purposes we will attempt to set the last modified time
-                // That said it doesn't seem to work. Shame!
-                // http://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file
-                localFile.setLastModified(remoteFile.serverModified.getTime());
+            // For cosmetic purposes we will attempt to set the last modified time
+            // That said it doesn't seem to work. Shame!
+            // http://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file
+            localFile.setLastModified(remoteFile.serverModified.getTime());
 
-                Logger.verbose(this, "download():done");
-            } catch (Exception e) {
-                Logger.error(this, "download():" + e.toString());
-            }
+            Logger.verbose(this, "download():done");
         }
     }
 
     @Override
-    public void download(File file) {
+    public void download(File file) throws Exception {
         this.download(file, file.getName());
     }
 
     @Override
-    public void delete(File file) {
+    public void delete(File file) throws DbxException {
         Logger.info(this, "delete():Start");
         DbxFiles.FileMetadata remoteFile = (DbxFiles.FileMetadata) file.getFile();
 
         if (remoteFile != null) {
-
-            try {
-                client.files.delete(remoteFile.pathLower);
-                Logger.verbose(this, "delete():done");
-            } catch (Exception e) {
-                Logger.error(this, "delete():" + e.toString());
-            }
+            client.files.delete(remoteFile.pathLower);
+            Logger.verbose(this, "delete():done");
         }
     }
 
     @Override
-    public List<String> getChildDirectoryPaths(String path) {
+    public List<String> getChildDirectoryPaths(String path) throws DbxException {
         List<String> dirs = new ArrayList<>();
         Logger.info(this, "getChildDirectoryPaths():");
 
         if (this.isAuthenticated()) {
-            try {
-                if (!path.equals(this.getRootDirectoryPath())) {
-                    // We need to add the parent... to do that...
-                    String parent = path.substring(0, path.lastIndexOf("/"));
-                    dirs.add(parent);
-                }
 
-                DbxFiles.ListFolderResult result = client.files.listFolder(path);
-
-                for (DbxFiles.Metadata entry : result.entries) {
-                    if (entry instanceof DbxFiles.FolderMetadata) {
-                        DbxFiles.FolderMetadata folder = (DbxFiles.FolderMetadata) entry;
-                        dirs.add(folder.pathLower);
-                        Logger.info(this, folder.toJson(true));
-                    }
-                }
-
-                Collections.sort(dirs);
-
-            } catch (Exception e) {
-                Logger.info(this, e.toString());
+            if (!path.equals(this.getRootDirectoryPath())) {
+                // We need to add the parent... to do that...
+                String parent = path.substring(0, path.lastIndexOf("/"));
+                dirs.add(parent);
             }
+
+            DbxFiles.ListFolderResult result = client.files.listFolder(path);
+
+            for (DbxFiles.Metadata entry : result.entries) {
+                if (entry instanceof DbxFiles.FolderMetadata) {
+                    DbxFiles.FolderMetadata folder = (DbxFiles.FolderMetadata) entry;
+                    dirs.add(folder.pathLower);
+                    Logger.info(this, folder.toJson(true));
+                }
+            }
+
+            Collections.sort(dirs);
         }
 
         return dirs;

@@ -1,13 +1,10 @@
 package sbs20.filenotes.storage;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Settings;
-import sbs20.filenotes.model.Logger;
 
 public abstract class CloudService {
 
@@ -22,8 +19,8 @@ public abstract class CloudService {
     public abstract void login();
     public abstract void logout();
     public abstract List<File> files() throws IOException;
-    public abstract void upload(File file);
-    public abstract void download(File file);
-    public abstract void download(File file, String localName);
-    public abstract void delete(File file);
+    public abstract void upload(File file) throws Exception;
+    public abstract void download(File file) throws Exception ;
+    public abstract void download(File file, String localName) throws Exception ;
+    public abstract void delete(File file) throws Exception ;
 }
