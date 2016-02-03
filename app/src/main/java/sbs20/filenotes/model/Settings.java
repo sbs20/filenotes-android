@@ -18,8 +18,8 @@ public class Settings {
     public static final String FONTSIZE = "pref_font_size";
 
     public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
-    public static final String STORAGE_EXCLUDE_HIDDEN = "pref_exclude_hidden";
-    public static final String STORAGE_EXCLUDE_NONTEXT = "pref_exclude_nontext";
+    public static final String STORAGE_SHOW_HIDDEN = "pref_show_hidden";
+    public static final String STORAGE_SHOW_NONTEXT = "pref_show_nontext";
 
     public static final String CLOUD_SERVICE = "pref_cloud";
     public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
@@ -123,12 +123,12 @@ public class Settings {
         this.remove(LAST_SYNC);
     }
 
-    public boolean excludeHiddenFile() {
-        return this.sharedPreferences.getBoolean(STORAGE_EXCLUDE_HIDDEN, true);
+    public boolean showHiddenFile() {
+        return this.sharedPreferences.getBoolean(STORAGE_SHOW_HIDDEN, true);
     }
 
-    public boolean excludeNonTextFile() {
-        return this.sharedPreferences.getBoolean(STORAGE_EXCLUDE_NONTEXT, false);
+    public boolean showNonTextFile() {
+        return this.sharedPreferences.getBoolean(STORAGE_SHOW_NONTEXT, false);
     }
 
     public long replicationThresholdInMilliseconds() {

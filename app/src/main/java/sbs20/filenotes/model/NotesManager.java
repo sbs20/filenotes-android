@@ -72,6 +72,18 @@ public class NotesManager {
             }
         }
 
+        // Now filter for preferences
+        Settings settings = ServiceManager.getInstance().getSettings();
+        for (int index = 0; index < notes.size(); index++) {
+            if (notes.get(index).isHidden() && !settings.showHiddenFile()) {
+                notes.remove(index);
+                index--;
+            } else if (!notes.get(index).isText() && !settings.showNonTextFile()) {
+                notes.remove(index);
+                index--;
+            }
+        }
+
         notes.sort();
 
         Logger.verbose(this, "readAllFromStorage.Finish");

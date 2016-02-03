@@ -53,12 +53,7 @@ public class Replicator {
     private void add(List<File> files) {
         Settings settings = ServiceManager.getInstance().getSettings();
         for (File file : files) {
-            boolean excludeFile = (settings.excludeHiddenFile() && file.isHidden()) ||
-                    (settings.excludeNonTextFile() && file.isNonTextFile());
-
-            if (!excludeFile) {
-                this.add(file);
-            }
+            this.add(file);
         }
     }
 

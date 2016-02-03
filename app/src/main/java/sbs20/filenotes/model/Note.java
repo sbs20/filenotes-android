@@ -108,4 +108,12 @@ public class Note implements Comparable<Note> {
         String r = another.getName().toLowerCase(locale);
         return l.compareTo(r);
     }
+
+    public boolean isHidden() {
+        return this.name.startsWith(".");
+    }
+
+    public boolean isText() {
+        return this.name.toLowerCase().endsWith(".txt");
+    }
 }

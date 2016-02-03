@@ -77,17 +77,6 @@ public class FileSystemService implements IDirectoryListProvider {
                     @Override
                     public boolean accept(File file) {
                         if (file.canRead() && file.isFile()) {
-                            Locale locale = Locale.getDefault();
-                            String filename = file.getName().toLowerCase(locale);
-
-                            if (filename.startsWith(".") && settings.excludeHiddenFile()) {
-                                return false;
-                            }
-
-                            if (!filename.endsWith(".txt") && settings.excludeNonTextFile()) {
-                                return false;
-                            }
-
                             return true;
                         }
 

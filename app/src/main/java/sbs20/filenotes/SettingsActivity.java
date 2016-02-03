@@ -99,9 +99,7 @@ public class SettingsActivity extends ThemedActivity {
                 this.serviceManager.getSettings().clearLastSync();
                 this.serviceManager.getCloudService().login();
             } else if (key.equals(Settings.REMOTE_STORAGE_PATH) ||
-                    key.equals(Settings.LOCAL_STORAGE_PATH) ||
-                    key.equals(Settings.STORAGE_EXCLUDE_HIDDEN) ||
-                    key.equals(Settings.STORAGE_EXCLUDE_NONTEXT)) {
+                    key.equals(Settings.LOCAL_STORAGE_PATH)) {
                 this.serviceManager.getSettings().clearLastSync();
             }
         }

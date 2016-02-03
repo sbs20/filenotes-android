@@ -2,6 +2,7 @@ package sbs20.filenotes;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
@@ -20,11 +21,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
+import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
+import sbs20.filenotes.storage.NoopCloudService;
 import sbs20.filenotes.storage.Replicator;
 import sbs20.filenotes.storage.ReplicatorTask;
 
@@ -287,6 +291,7 @@ public class MainActivity extends ThemedActivity {
     private void finishReplication(Replicator replicator) {
         this.loadNotes();
         this.swipeLayout.setRefreshing(false);
+        Logger.debug(this, "b");
         this.noteListView.setEnabled(true);
 
         // Post any toasty messages here too
@@ -297,14 +302,6 @@ public class MainActivity extends ThemedActivity {
     }
 
     private void startReplication() {
-        // See: http://stackoverflow.com/a/26910973/1229065
-        swipeLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeLayout.setRefreshing(true);
-            }
-        });
-
         this.noteListView.setEnabled(false);
 
         new ReplicatorTask() {
