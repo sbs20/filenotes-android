@@ -40,7 +40,7 @@ public class FileSystemManager implements IDirectoryListProvider {
         return new File(directoryPath);
     }
 
-    public String readFileAsString(File file) {
+    public String readFileAsString(File file, int length) {
         StringBuffer stringBuffer = new StringBuffer();
         try {
             FileReader reader = new FileReader(file);
@@ -48,6 +48,9 @@ public class FileSystemManager implements IDirectoryListProvider {
             int read;
             while ((read = reader.read(buffer)) != -1) {
                 stringBuffer.append(buffer, 0, read);
+                if (length > -1 && stringBuffer.length() > length) {
+                    break;
+                }
             }
             reader.close();
         } catch (IOException e) {
@@ -55,7 +58,15 @@ public class FileSystemManager implements IDirectoryListProvider {
         } finally {
         }
 
+        if (length > -1 && stringBuffer.length() > length) {
+            return stringBuffer.substring(0, length);
+        }
+
         return stringBuffer.toString();
+    }
+
+    public String readFileAsString(File file) {
+        return readFileAsString(file, -1);
     }
 
     public File[] readAllFilesFromStorage() {

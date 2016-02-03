@@ -20,8 +20,8 @@ public class NotesManager {
         this.isReplicationRequired = false;
     }
 
-	public void setSelectedNote(Note file) {
-		this.selectedNote = file;
+	private void setSelectedNote(Note note) {
+		this.selectedNote = note;
 	}
 	public Note getSelectedNote() {
 		return this.selectedNote;
@@ -32,9 +32,9 @@ public class NotesManager {
 	}
 
     private void mergeFileIntoNote(File file, Note note) {
-        note.setText(this.storage.readFileAsString(file));
+        note.setTextSummary(this.storage.readFileAsString(file, 128));
+        note.setSize(file.length());
         note.setLastModified(new Date(file.lastModified()));
-        note.reset();
     }
 
     private static boolean fileArrayContainsName(File[] files, String name) {
@@ -96,6 +96,16 @@ public class NotesManager {
         this.storage.write(note.getName(), note.getText());
         note.reset();
         this.registerUpdate();
+    }
+
+    public void editNote(Note note) {
+        File file = this.storage.getFile(note.getName());
+        if (file.exists()) {
+            note.setText(this.storage.readFileAsString(file));
+            note.reset();
+        }
+
+        this.setSelectedNote(note);
     }
 
     public void deleteNote(Note note) {

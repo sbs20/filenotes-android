@@ -7,6 +7,8 @@ public class Note implements Comparable<Note> {
 
     private String name;
     private String text;
+    private String textSummary;
+    private long size;
     private Date lastModified;
 
     private String originalText;
@@ -14,12 +16,18 @@ public class Note implements Comparable<Note> {
     public Note() {
         this.name = "";
         this.text = "";
+        this.textSummary = "";
+        this.size = 0;
         this.originalText = "";
         this.lastModified = new Date();
     }
 
     public long getSize() {
-        return this.getText().length();
+        return this.size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 
     public String getSizeString() {
@@ -47,6 +55,25 @@ public class Note implements Comparable<Note> {
         this.name = name;
     }
 
+    public String getTextSummary() {
+        int summaryLength = 27;
+        StringBuffer buffer = new StringBuffer();
+        String value = this.text.length() > 0 ? this.text : this.textSummary;
+        for (int index = 0; index < value.length() && index < summaryLength && value.charAt(index) != '\n'; index++) {
+            buffer.append(value.charAt(index));
+        }
+
+        if (buffer.length() == summaryLength) {
+            buffer.append("...");
+        }
+
+        return buffer.toString();
+    }
+
+    public void setTextSummary(String value) {
+        this.textSummary = value;
+    }
+
     public String getText() {
         return text;
     }
@@ -57,20 +84,6 @@ public class Note implements Comparable<Note> {
         }
 
         this.text = text;
-    }
-
-    public String getTextSummary() {
-        int summaryLength = 27;
-        StringBuffer buffer = new StringBuffer();
-        for (int index = 0; index < this.text.length() && index < summaryLength && this.text.charAt(index) != '\n'; index++) {
-            buffer.append(this.text.charAt(index));
-        }
-
-        if (buffer.length() == summaryLength) {
-            buffer.append("...");
-        }
-
-        return buffer.toString();
     }
 
     public Date getLastModified() {
@@ -87,10 +100,6 @@ public class Note implements Comparable<Note> {
 
     public void reset() {
         this.originalText = this.text;
-    }
-
-    public String getLastModifiedString() {
-        return this.getLastModified().toString();
     }
 
     public int compareTo(Note another) {

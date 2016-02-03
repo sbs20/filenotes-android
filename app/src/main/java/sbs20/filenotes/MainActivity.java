@@ -270,7 +270,7 @@ public class MainActivity extends ThemedActivity {
 	}
 	
 	public void edit(Note note) {
-        this.notesManager.setSelectedNote(note);
+        this.notesManager.editNote(note);
 		Intent intent = new Intent(this, EditActivity.class);
 		this.startActivity(intent);
 	}

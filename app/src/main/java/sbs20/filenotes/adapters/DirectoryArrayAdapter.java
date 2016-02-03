@@ -7,13 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import sbs20.filenotes.R;
 import sbs20.filenotes.storage.IDirectoryListProvider;
@@ -55,7 +49,7 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
 
         if(row == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
-            row = inflater.inflate(R.layout.listview_directories, parent, false);
+            row = inflater.inflate(R.layout.listview_folders, parent, false);
         }
 
         TextView directoryItem = (TextView) row.findViewById(R.id.directoryItem);
