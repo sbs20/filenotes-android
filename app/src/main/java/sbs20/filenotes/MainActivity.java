@@ -304,18 +304,32 @@ public class MainActivity extends ThemedActivity {
     }
 
     private void startReplication() {
-        new ReplicatorTask() {
-            @Override
-            protected void onProgressUpdate(Void... values) {
-                super.onProgressUpdate(values);
-                loadNotes();
-            }
 
+        swipeLayout.post(new Runnable() {
             @Override
-            protected void onPostExecute(Replicator replicator) {
-                super.onPostExecute(replicator);
-                finishReplication(replicator);
+            public void run() {
+
+                // We have to put this in a runnable because of this....
+                // See: http://stackoverflow.com/a/26910973/1229065
+                swipeLayout.setRefreshing(true);
+
+                // And the rest of it has to stay here otherwise onPostExecute
+                // might finish before we've started refreshing and leave
+                // a busy cursor
+                new ReplicatorTask() {
+                    @Override
+                    protected void onProgressUpdate(Void... values) {
+                        super.onProgressUpdate(values);
+                        loadNotes();
+                    }
+
+                    @Override
+                    protected void onPostExecute(Replicator replicator) {
+                        super.onPostExecute(replicator);
+                        finishReplication(replicator);
+                    }
+                }.execute(new Replicator());
             }
-        }.execute(new Replicator());
+        });
     }
 }

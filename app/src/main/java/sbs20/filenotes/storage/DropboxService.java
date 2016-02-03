@@ -174,7 +174,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
     @Override
     public List<String> getChildDirectoryPaths(String path) throws DbxException {
         List<String> dirs = new ArrayList<>();
-        Logger.info(this, "getChildDirectoryPaths():");
+        Logger.info(this, "getChildDirectoryPaths(" + path + ")");
 
         if (this.isAuthenticated()) {
 
@@ -190,7 +190,7 @@ public class DropboxService extends CloudService implements IDirectoryListProvid
                 if (entry instanceof DbxFiles.FolderMetadata) {
                     DbxFiles.FolderMetadata folder = (DbxFiles.FolderMetadata) entry;
                     dirs.add(folder.pathLower);
-                    Logger.info(this, folder.toJson(true));
+                    Logger.info(this, "getChildDirectoryPaths() - " + folder.pathLower);
                 }
             }
 
