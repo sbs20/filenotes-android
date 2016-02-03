@@ -12,8 +12,44 @@ import sbs20.filenotes.model.Settings;
 
 public class Replicator {
 
+    public enum EventType {
+        LocalUpdate,
+        LocalDelete,
+        RemoteUpdate,
+        RemoteDelete
+    }
+
+    public class Event {
+        private EventType type;
+        private String filePath;
+
+        public Event(EventType type, String filePath) {
+            this.type = type;
+            this.filePath = filePath;
+        }
+
+        private String toString(EventType type) {
+            switch (type) {
+                case LocalDelete:
+                    return "Local delete";
+                case LocalUpdate:
+                    return "Local update";
+                case RemoteDelete:
+                    return "Remote delete";
+                case RemoteUpdate:
+                    return "Remote update";
+                default:
+                    return "Unknown";
+            }
+        }
+
+        public String message() {
+            return toString(this.type) + ": " + this.filePath;
+        }
+    }
+
     public interface IReplicatorObserver {
-        void localChange();
+        void update(Replicator source, Event event);
     }
 
     private static boolean isRunning = false;
@@ -90,26 +126,28 @@ public class Replicator {
         logger.info(this, "download(" + remoteFile.getName() + ")");
         cloudService.download(remoteFile);
         downloads.add(remoteFile);
-        this.onLocalChange();
+        this.raiseEvent(new Event(EventType.LocalUpdate, remoteFile.getPath()));
     }
 
     private void upload(File localFile) throws Exception {
         logger.info(this, "upload(" + localFile.getName() + ")");
         cloudService.upload(localFile);
         uploads.add(localFile);
+        this.raiseEvent(new Event(EventType.RemoteUpdate, localFile.getPath()));
     }
 
     private void deleteLocal(File localFile) {
         logger.info(this, "deleteLocal(" + localFile.getName() + ")");
         new FileSystemService().delete(localFile.getName());
         localDeletes.add(localFile);
-        this.onLocalChange();
+        this.raiseEvent(new Event(EventType.LocalDelete, localFile.getPath()));
     }
 
     private void deleteRemote(File remoteFile) throws Exception {
         logger.info(this, "deleteRemote(" + remoteFile.getName() + ")");
         cloudService.delete(remoteFile);
         remoteDeletes.add(remoteFile);
+        this.raiseEvent(new Event(EventType.RemoteDelete, remoteFile.getPath()));
     }
 
     private void resolveConflict(File localFile, File remoteFile) throws Exception {
@@ -265,9 +303,9 @@ public class Replicator {
         }
     }
 
-    private void onLocalChange() {
+    private void raiseEvent(Event event) {
         for (IReplicatorObserver observer : this.observers) {
-            observer.localChange();
+            observer.update(this, event);
         }
     }
 

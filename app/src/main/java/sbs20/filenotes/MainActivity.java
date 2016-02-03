@@ -17,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,14 +232,15 @@ public class MainActivity extends ThemedActivity {
                 noteListView.setEnabled(false);
                 new ReplicatorTask() {
                     @Override
-                    protected void onProgressUpdate(Void... values) {
-                        super.onProgressUpdate(values);
+                    protected void onProgressUpdate(Replicator.Event... events) {
                         loadNotes();
+                        Toast.makeText(getApplicationContext(),
+                                events[0].message(),
+                                Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     protected void onPostExecute(Replicator replicator) {
-                        super.onPostExecute(replicator);
                         finishReplication(replicator);
                     }
                 }.execute(new Replicator());
@@ -297,10 +299,10 @@ public class MainActivity extends ThemedActivity {
         this.noteListView.setEnabled(true);
 
         // Post any toasty messages here too
-        int updates = replicator.getUpdateCount();
-        if (updates > 0) {
-            ServiceManager.getInstance().toast(getString(R.string.replication_notes_updated) + ": " + updates);
-        }
+//        int updates = replicator.getUpdateCount();
+//        if (updates > 0) {
+//            ServiceManager.getInstance().toast(getString(R.string.replication_notes_updated) + ": " + updates);
+//        }
     }
 
     private void startReplication() {
@@ -318,14 +320,15 @@ public class MainActivity extends ThemedActivity {
                 // a busy cursor
                 new ReplicatorTask() {
                     @Override
-                    protected void onProgressUpdate(Void... values) {
-                        super.onProgressUpdate(values);
+                    protected void onProgressUpdate(Replicator.Event... events) {
                         loadNotes();
+                        Toast.makeText(getApplicationContext(),
+                                events[0].message(),
+                                Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     protected void onPostExecute(Replicator replicator) {
-                        super.onPostExecute(replicator);
                         finishReplication(replicator);
                     }
                 }.execute(new Replicator());
