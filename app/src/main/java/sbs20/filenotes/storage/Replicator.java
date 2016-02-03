@@ -11,12 +11,18 @@ import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Settings;
 
 public class Replicator {
+
+    public interface IReplicatorObserver {
+        void localChange();
+    }
+
     private static boolean isRunning = false;
     private List<File> localFiles;
     private List<File> remoteFiles;
     private Logger logger;
     private CloudService cloudService;
 
+    private List<IReplicatorObserver> observers;
     private List<File> downloads;
     private List<File> uploads;
     private List<File> localDeletes;
@@ -26,6 +32,7 @@ public class Replicator {
         this.localFiles = new ArrayList<>();
         this.remoteFiles = new ArrayList<>();
         this.cloudService = ServiceManager.getInstance().getCloudService();
+        this.observers = new ArrayList<>();
         this.downloads = new ArrayList<>();
         this.uploads = new ArrayList<>();
         this.localDeletes = new ArrayList<>();
@@ -83,6 +90,7 @@ public class Replicator {
         logger.info(this, "download(" + remoteFile.getName() + ")");
         cloudService.download(remoteFile);
         downloads.add(remoteFile);
+        this.onLocalChange();
     }
 
     private void upload(File localFile) throws Exception {
@@ -95,6 +103,7 @@ public class Replicator {
         logger.info(this, "deleteLocal(" + localFile.getName() + ")");
         new FileSystemService().delete(localFile.getName());
         localDeletes.add(localFile);
+        this.onLocalChange();
     }
 
     private void deleteRemote(File remoteFile) throws Exception {
@@ -228,7 +237,7 @@ public class Replicator {
                 if (lastSync.equals(DateTime.min())) {
                     // This is the first sync. We lack data. One would hope that either one or both
                     // nodes of this is completely empty. If both are populated then we don't delete
-                    // anything and we go last update wins
+                    // anything and we go last localChange wins
                     logger.debug(this, "First sync");
                     this.firstSync();
 
@@ -254,6 +263,16 @@ public class Replicator {
         } else {
             logger.debug(this, "invoke():already running!");
         }
+    }
+
+    private void onLocalChange() {
+        for (IReplicatorObserver observer : this.observers) {
+            observer.localChange();
+        }
+    }
+
+    public void addObserver(IReplicatorObserver observer) {
+        this.observers.add(observer);
     }
 
     public int getUpdateCount() {

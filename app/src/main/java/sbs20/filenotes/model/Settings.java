@@ -32,7 +32,6 @@ public class Settings {
     }
 
     public String get(String key, String dflt) {
-        Logger.verbose(this, "get(" + key + ")");
         return this.sharedPreferences.getString(key, dflt);
     }
 
