@@ -8,7 +8,6 @@ import android.widget.Toast;
 import sbs20.filenotes.storage.CloudService;
 import sbs20.filenotes.storage.DropboxService;
 import sbs20.filenotes.storage.NoopCloudService;
-import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Settings;
 
@@ -84,10 +83,12 @@ public class ServiceManager {
     }
 
     public void toast(int resId) {
-        this.toast(this.application.getString(resId));
+        this.toast(this.getString(resId));
     }
 
     public Context getContext() {
         return this.application.getBaseContext();
     }
+
+    public String getString(int resId) { return  this.application.getString(resId);}
 }

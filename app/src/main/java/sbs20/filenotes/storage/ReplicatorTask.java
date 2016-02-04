@@ -2,18 +2,47 @@ package sbs20.filenotes.storage;
 
 import android.os.AsyncTask;
 
-public class ReplicatorTask extends AsyncTask<Replicator, Replicator.Event, Replicator> {
+public class ReplicatorTask  {
 
-    @Override
-    protected Replicator doInBackground(Replicator... params) {
-        Replicator replicator = params[0];
-        replicator.addObserver(new Replicator.IReplicatorObserver() {
+    protected Replicator replicator;
+
+    public ReplicatorTask() {
+        this.replicator = new Replicator();
+    }
+
+    protected void onProgressUpdate(Replicator.Action action) {
+    }
+
+    protected void onPostExecute() {
+    }
+
+    public void execute() {
+        final ReplicatorTask container = this;
+        AsyncTask<Replicator, Replicator.Action, Replicator> task = new AsyncTask<Replicator, Replicator.Action, Replicator>() {
+
             @Override
-            public void update(Replicator source, Replicator.Event event) {
-                publishProgress(event);
+            protected Replicator doInBackground(Replicator... params) {
+                Replicator replicator = params[0];
+                replicator.addObserver(new Replicator.IReplicatorObserver() {
+                    @Override
+                    public void update(Replicator source, Replicator.Action action) {
+                        publishProgress(action);
+                    }
+                });
+                replicator.invoke();
+                return replicator;
             }
-        });
-        replicator.invoke();
-        return replicator;
+
+            @Override
+            protected void onProgressUpdate(Replicator.Action... actions) {
+                container.onProgressUpdate(actions[0]);
+            }
+
+            @Override
+            protected void onPostExecute(Replicator replicator) {
+                container.onPostExecute();
+            }
+
+        }.execute(this.replicator);
     }
 }

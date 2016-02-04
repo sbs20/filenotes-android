@@ -3,15 +3,13 @@
 
     <!-- Fixed values - never translate -->
     <string name="app_name">filenotes</string>
+
     <string name="action_new">New</string>
     <string name="action_delete">Delete</string>
     <string name="action_save">Save</string>
     <string name="action_rename">Rename</string>
     <string name="action_settings">Settings</string>
-    <string name="version">Filenotes 1.0</string>
-    <string name="version_summary">Sam Strachan</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
+
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about">About</string>
 
@@ -27,6 +25,7 @@
     <string name="about_license_header">License</string>
     <string name="about_license_body">This software is free to use
         for business or personal use. It is open source and released under the GPL2 license. Copyright Sam Strachan 2015-16</string>
+
     <string name="error_storage_does_not_exist">Storage directory does not exist</string>
     <string name="storage_is_empty">No matching files in storage directory</string>
     <string name="new_note_file_stem">New Note%s.txt</string>
@@ -34,7 +33,23 @@
     <string name="no">no</string>
     <string name="yes">yes</string>
     <string name="logged_out">Logged out</string>
+    <string name="replication_replicating">Replicating</string>
+    <string name="replication_analysing">Analysing...</string>
+    <string name="replication_delete_local">Delete (local)</string>
+    <string name="replication_delete_remote">Delete (remote)</string>
+    <string name="replication_download">Download</string>
+    <string name="replication_upload">Upload</string>
+    <string name="replication_resolve_conflict">Resolve conflict</string>
+    <string name="replication_unknown">Unknown</string>
+
+    <!-- Used? -->
+    <string name="version">Filenotes 1.0</string>
+    <string name="version_summary">Sam Strachan</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
     <string name="replication_notes_updated">Notes updated</string>
+    <string name="replication_conflict_extension">.conflict</string>
+
 
     <string-array name="pref_font_list_text">
         <item>Monospace</item>

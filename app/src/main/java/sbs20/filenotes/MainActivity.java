@@ -1,5 +1,6 @@
 package sbs20.filenotes;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,18 +13,18 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
-import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
@@ -230,20 +231,7 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onRefresh() {
                 noteListView.setEnabled(false);
-                new ReplicatorTask() {
-                    @Override
-                    protected void onProgressUpdate(Replicator.Event... events) {
-                        loadNotes();
-                        Toast.makeText(getApplicationContext(),
-                                events[0].message(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    protected void onPostExecute(Replicator replicator) {
-                        finishReplication(replicator);
-                    }
-                }.execute(new Replicator());
+                startReplication();
             }
         });
 
@@ -293,46 +281,38 @@ public class MainActivity extends ThemedActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-    private void finishReplication(Replicator replicator) {
-        this.loadNotes();
-        this.swipeLayout.setRefreshing(false);
-        this.noteListView.setEnabled(true);
-
-        // Post any toasty messages here too
-//        int updates = replicator.getUpdateCount();
-//        if (updates > 0) {
-//            ServiceManager.getInstance().toast(getString(R.string.replication_notes_updated) + ": " + updates);
-//        }
-    }
-
     private void startReplication() {
 
-        swipeLayout.post(new Runnable() {
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setTitle(getString(R.string.replication_replicating));
+        progressDialog.setMessage(getString(R.string.replication_analysing));
+        progressDialog.setMax(this.noteListView.getCount());
+        progressDialog.show();
+
+        int width = WindowManager.LayoutParams.MATCH_PARENT;
+        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+        progressDialog.getWindow().setLayout(width, height);
+
+        // And the rest of it has to stay here otherwise onPostExecute
+        // might finish before we've started refreshing and leave
+        // a busy cursor
+        new ReplicatorTask() {
             @Override
-            public void run() {
-
-                // We have to put this in a runnable because of this....
-                // See: http://stackoverflow.com/a/26910973/1229065
-                swipeLayout.setRefreshing(true);
-
-                // And the rest of it has to stay here otherwise onPostExecute
-                // might finish before we've started refreshing and leave
-                // a busy cursor
-                new ReplicatorTask() {
-                    @Override
-                    protected void onProgressUpdate(Replicator.Event... events) {
-                        loadNotes();
-                        Toast.makeText(getApplicationContext(),
-                                events[0].message(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    protected void onPostExecute(Replicator replicator) {
-                        finishReplication(replicator);
-                    }
-                }.execute(new Replicator());
+            protected void onProgressUpdate(Replicator.Action action) {
+                loadNotes();
+                progressDialog.setMax(this.replicator.getActionCount());
+                progressDialog.setMessage(action.message());
+                progressDialog.incrementProgressBy(1);
             }
-        });
+
+            @Override
+            protected void onPostExecute() {
+                loadNotes();
+                swipeLayout.setRefreshing(false);
+                noteListView.setEnabled(true);
+                progressDialog.dismiss();
+            }
+        }.execute();
     }
 }
