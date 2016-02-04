@@ -287,16 +287,16 @@ public class MainActivity extends ThemedActivity {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setTitle(getString(R.string.replication_replicating));
         progressDialog.setMessage(getString(R.string.replication_analysing));
+
+        // Have a guess at the max for now... we'll correct later
         progressDialog.setMax(this.noteListView.getCount());
         progressDialog.show();
 
+        // Fix the size too so it doesn't bounce around
         int width = WindowManager.LayoutParams.MATCH_PARENT;
         int height = WindowManager.LayoutParams.WRAP_CONTENT;
         progressDialog.getWindow().setLayout(width, height);
 
-        // And the rest of it has to stay here otherwise onPostExecute
-        // might finish before we've started refreshing and leave
-        // a busy cursor
         new ReplicatorTask() {
             @Override
             protected void onProgressUpdate(Replicator.Action action) {
