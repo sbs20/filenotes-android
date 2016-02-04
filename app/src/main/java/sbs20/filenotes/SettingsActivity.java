@@ -8,10 +8,11 @@ import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.view.KeyEvent;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.support.v4.app.NavUtils;
-
-import java.util.Set;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Settings;
@@ -58,6 +59,15 @@ public class SettingsActivity extends ThemedActivity {
             addPreferencesFromResource(R.xml.pref_settings);
         }
 
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View v = super.onCreateView(inflater, container, savedInstanceState);
+            if(v != null) {
+                ListView lv = (ListView) v.findViewById(android.R.id.list);
+                lv.setPadding(0, 0, 0, 0);
+            }
+            return v;
+        }
         @Override
         // This fires on initial click rather than selection....
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
