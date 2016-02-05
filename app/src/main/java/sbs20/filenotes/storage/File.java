@@ -12,6 +12,7 @@ public class File {
     private String rev;
     private long size;
     private Date lastModified;
+    private Date clientModified;
     private Object file;
     private boolean isLocal;
 
@@ -23,6 +24,7 @@ public class File {
         this.rev = dbxfile.rev;
         this.size = dbxfile.size;
         this.lastModified = dbxfile.serverModified;
+        this.clientModified = dbxfile.clientModified;
         this.file = dbxfile;
         this.isLocal = false;
     }
@@ -35,6 +37,7 @@ public class File {
         this.rev = "";
         this.size = file.length();
         this.lastModified = new Date(file.lastModified());
+        this.clientModified = new Date(file.lastModified());
         this.file = file;
         this.isLocal = true;
     }
@@ -67,5 +70,15 @@ public class File {
         return lastModified;
     }
 
+    public Date getClientModified() {
+        return clientModified;
+    }
+
     public Object getFile() {return this.file;}
+
+    public String key() {
+        return name;
+    }
+
+    public boolean isLocal() { return this.isLocal; }
 }

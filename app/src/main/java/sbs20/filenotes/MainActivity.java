@@ -27,7 +27,7 @@ import sbs20.filenotes.adapters.NoteArrayAdapter;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
-import sbs20.filenotes.replication.Replicator;
+import sbs20.filenotes.replication.Action;
 import sbs20.filenotes.replication.ReplicatorTask;
 
 public class MainActivity extends ThemedActivity {
@@ -299,7 +299,7 @@ public class MainActivity extends ThemedActivity {
 
         new ReplicatorTask() {
             @Override
-            protected void onProgressUpdate(Replicator.Action action) {
+            protected void onProgressUpdate(Action action) {
                 loadNotes();
                 progressDialog.setMax(this.replicator.getActionCount());
                 progressDialog.setMessage(action.message());

@@ -3,7 +3,7 @@ package sbs20.filenotes;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-abstract class ThemedActivity extends AppCompatActivity {
+public abstract class ThemedActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

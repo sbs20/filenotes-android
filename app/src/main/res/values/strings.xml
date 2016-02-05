@@ -40,6 +40,8 @@
     <string name="replication_download">Download</string>
     <string name="replication_upload">Upload</string>
     <string name="replication_resolve_conflict">Resolve conflict</string>
+    <string name="replication_none">No action</string>
+    <string name="replication_error">Sync error - aborted</string>
     <string name="replication_unknown">Unknown</string>
 
     <!-- Used? -->
