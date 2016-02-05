@@ -24,7 +24,6 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
     }
 
     public void setCurrentDirectory(final String directory) {
-        final DirectoryArrayAdapter adapter = this;
         this.currentDirectory = directory;
 
         AsyncTask<IDirectoryListProvider, Void, List<String>> query = new AsyncTask<IDirectoryListProvider, Void, List<String>>() {
@@ -40,7 +39,7 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
             @Override
             protected void onPostExecute(List<String> dirs) {
                 super.onPostExecute(dirs);
-                adapter.updateItems(dirs);
+                updateItems(dirs);
             }
         };
 

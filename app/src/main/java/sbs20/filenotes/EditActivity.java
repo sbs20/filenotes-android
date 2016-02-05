@@ -36,9 +36,6 @@ public class EditActivity extends ThemedActivity {
 
         setContentView(R.layout.activity_edit);
 
-        // Keep a note of this
-        final EditActivity activity = this;
-
         // Show the Up button in the action bar.
         setupActionBar();
 
@@ -51,11 +48,11 @@ public class EditActivity extends ThemedActivity {
         // Listen for changes so we can mark this as dirty
         this.noteText.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence one, int a, int b, int c) {
-                activity.updateNote();
-                if (activity.note.isDirty()) {
-                    String title = activity.getTitle().toString();
+                updateNote();
+                if (note.isDirty()) {
+                    String title = getTitle().toString();
                     if (!title.startsWith("* ")) {
-                        activity.setTitle("* " + title);
+                        setTitle("* " + title);
                     }
                 }
             }
@@ -137,7 +134,6 @@ public class EditActivity extends ThemedActivity {
     public void startClose() {
 
         this.updateNote();
-        final EditActivity activity = this;
 
         if (this.note.isDirty()) {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -145,12 +141,12 @@ public class EditActivity extends ThemedActivity {
                 public void onClick(DialogInterface dialog, int result) {
                     switch (result) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            activity.save();
-                            activity.finishClose();
+                            save();
+                            finishClose();
                             break;
 
                         case DialogInterface.BUTTON_NEGATIVE:
-                            activity.finishClose();
+                            finishClose();
                             break;
 
                         case DialogInterface.BUTTON_NEUTRAL:
@@ -177,7 +173,6 @@ public class EditActivity extends ThemedActivity {
     }
 
     public void rename() {
-        final EditActivity activity = this;
         final EditText renameEditText = new EditText(this);
 
         renameEditText.setText(this.note.getName());
@@ -188,18 +183,18 @@ public class EditActivity extends ThemedActivity {
                 switch (result) {
                     case DialogInterface.BUTTON_POSITIVE:
                         // If nothing has changed...
-                        if (renameEditText.getText().toString().equals(activity.note.getName())) {
-                            Logger.verbose(activity, "File renamed to same name");
+                        if (renameEditText.getText().toString().equals(note.getName())) {
+                            Logger.verbose(EditActivity.this, "File renamed to same name");
 
                             // don't do anything
                             return;
                         }
 
                         boolean succeeded = ServiceManager.getInstance().getNotesManager()
-                                .renameNote(activity.note, renameEditText.getText().toString());
+                                .renameNote(note, renameEditText.getText().toString());
 
                         if (succeeded) {
-                            activity.setTitle(activity.note.getName());
+                            setTitle(note.getName());
                         } else {
                             ServiceManager.getInstance().toast(getString(R.string.rename_failed));
                         }

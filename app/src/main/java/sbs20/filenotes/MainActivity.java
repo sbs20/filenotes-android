@@ -148,13 +148,12 @@ public class MainActivity extends ThemedActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);
 
         // Note list
-		final MainActivity activity = this;
         this.notesAdapter = new NoteArrayAdapter(this);
 		this.noteListView.setAdapter(this.notesAdapter);
 		this.noteListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Note note = (Note) view.getTag();
-                activity.edit(note);
+                MainActivity.this.edit(note);
             }
         });
 
@@ -239,7 +238,7 @@ public class MainActivity extends ThemedActivity {
 		createNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.createNew();
+                MainActivity.this.createNew();
             }
         });
 

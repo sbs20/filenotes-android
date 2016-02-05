@@ -17,7 +17,6 @@ public class ReplicatorTask  {
     }
 
     public void execute() {
-        final ReplicatorTask container = this;
         AsyncTask<Replicator, Replicator.Action, Replicator> task = new AsyncTask<Replicator, Replicator.Action, Replicator>() {
 
             @Override
@@ -35,12 +34,12 @@ public class ReplicatorTask  {
 
             @Override
             protected void onProgressUpdate(Replicator.Action... actions) {
-                container.onProgressUpdate(actions[0]);
+                ReplicatorTask.this.onProgressUpdate(actions[0]);
             }
 
             @Override
             protected void onPostExecute(Replicator replicator) {
-                container.onPostExecute();
+                ReplicatorTask.this.onPostExecute();
             }
 
         }.execute(this.replicator);
