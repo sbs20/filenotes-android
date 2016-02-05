@@ -5,7 +5,7 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import sbs20.filenotes.storage.CloudService;
+import sbs20.filenotes.storage.ICloudService;
 import sbs20.filenotes.storage.DropboxService;
 import sbs20.filenotes.storage.NoopCloudService;
 import sbs20.filenotes.model.NotesManager;
@@ -17,7 +17,7 @@ public class ServiceManager {
 
     private Application application;
     private Settings settings;
-    private CloudService cloudService;
+    private ICloudService cloudService;
     private NotesManager notesManager;
     private DateTime dateTime;
 
@@ -43,15 +43,15 @@ public class ServiceManager {
         return this.notesManager;
     }
 
-    public CloudService getCloudService() {
+    public ICloudService getCloudService() {
         if (this.cloudService == null) {
             switch (this.getSettings().getCloudServiceName()) {
                 case "dropbox":
-                    this.cloudService = new DropboxService(this);
+                    this.cloudService = new DropboxService();
                     break;
 
                 default:
-                    this.cloudService = new NoopCloudService(this);
+                    this.cloudService = new NoopCloudService();
                     break;
             }
         }

@@ -15,17 +15,22 @@ import java.util.List;
 
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
+import sbs20.filenotes.model.Settings;
 
-public class DropboxService extends CloudService implements IDirectoryListProvider {
+public class DropboxService implements ICloudService, IDirectoryListProvider {
 
     private static final String APP_KEY = "q1p3jfhnraz1k7l";
     private static final String CLIENT_IDENTIFER = "sbs20.filenotes/1.0";
     private static final String LOCALE = "en_UK";
 
+    protected ServiceManager serviceManager;
+    protected Settings settings;
+
     private static DbxClientV2 client;
 
-    public DropboxService(ServiceManager serviceManager) {
-        super(serviceManager);
+    public DropboxService() {
+        this.serviceManager = ServiceManager.getInstance();
+        this.settings = serviceManager.getSettings();
     }
 
     private String getAuthenticationToken() {

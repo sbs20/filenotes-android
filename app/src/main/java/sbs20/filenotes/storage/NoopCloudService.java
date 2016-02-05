@@ -1,16 +1,13 @@
 package sbs20.filenotes.storage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
 
-public class NoopCloudService extends CloudService {
+public class NoopCloudService implements ICloudService {
 
-    public NoopCloudService(ServiceManager application) {
-        super(application);
+    public NoopCloudService() {
     }
 
     @Override

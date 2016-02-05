@@ -9,7 +9,7 @@ import sbs20.filenotes.DateTime;
 import sbs20.filenotes.R;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
-import sbs20.filenotes.storage.CloudService;
+import sbs20.filenotes.storage.ICloudService;
 import sbs20.filenotes.storage.File;
 import sbs20.filenotes.storage.FileSystemService;
 
@@ -17,7 +17,7 @@ public class Replicator {
 
     private static boolean isRunning = false;
     private FilePairCollection files;
-    private CloudService cloudService;
+    private ICloudService cloudService;
     private List<Action> actions;
 
     private List<IObserver> observers;

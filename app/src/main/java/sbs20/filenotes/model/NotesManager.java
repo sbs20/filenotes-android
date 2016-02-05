@@ -2,6 +2,7 @@ package sbs20.filenotes.model;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import sbs20.filenotes.DateTime;
 import sbs20.filenotes.ServiceManager;
@@ -37,7 +38,7 @@ public class NotesManager {
         note.setLastModified(new Date(file.lastModified()));
     }
 
-    private static boolean fileArrayContainsName(File[] files, String name) {
+    private static boolean fileListContainsName(List<File> files, String name) {
         for (File file : files) {
             if (name.equals(file.getName())) {
                 return true;
@@ -50,7 +51,7 @@ public class NotesManager {
     public void readAllFromStorage() {
 
         Logger.verbose(this, "readAllFromStorage.Start");
-        File[] files = this.storage.readAllFilesFromStorage();
+        List<File> files = this.storage.readAllFilesFromStorage();
 
         // Ensure all files are in notes and up to date
         for (File file : files) {
@@ -66,7 +67,7 @@ public class NotesManager {
 
         // Now ensure that any notes NOT in a file is removed
         for (int index = 0; index < notes.size(); index++) {
-            if (!fileArrayContainsName(files, notes.get(index).getName())) {
+            if (!fileListContainsName(files, notes.get(index).getName())) {
                 notes.remove(index);
                 index--;
             }

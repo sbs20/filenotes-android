@@ -13,6 +13,6 @@ public class DropboxFolderPicker extends FolderPicker {
 
     @Override
     public IDirectoryListProvider CreateProvider() {
-        return new DropboxService(ServiceManager.getInstance());
+        return new DropboxService();
     }
 }

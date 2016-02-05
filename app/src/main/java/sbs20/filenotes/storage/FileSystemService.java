@@ -69,24 +69,26 @@ public class FileSystemService implements IDirectoryListProvider {
         return readFileAsString(file, -1);
     }
 
-    public File[] readAllFilesFromStorage() {
+    public List<File> readAllFilesFromStorage() {
         final Settings settings = ServiceManager.getInstance().getSettings();
+        List<File> files = new ArrayList<>();
+
         if (this.getStorageDirectory().exists()) {
             if (this.getStorageDirectory().isDirectory()) {
-                return this.getStorageDirectory().listFiles(new FileFilter() {
+                File[] array = this.getStorageDirectory().listFiles(new FileFilter() {
                     @Override
                     public boolean accept(File file) {
-                        if (file.canRead() && file.isFile()) {
-                            return true;
-                        }
-
-                        return false;
+                        return file.canRead() && file.isFile();
                     }
                 });
+
+                for (File file : array) {
+                    files.add(file);
+                }
             }
         }
 
-        return new File[0];
+        return files;
     }
 
     public void write(String name, String text) {
