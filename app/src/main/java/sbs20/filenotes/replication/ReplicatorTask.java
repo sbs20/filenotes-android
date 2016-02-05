@@ -1,4 +1,4 @@
-package sbs20.filenotes.storage;
+package sbs20.filenotes.replication;
 
 import android.os.AsyncTask;
 

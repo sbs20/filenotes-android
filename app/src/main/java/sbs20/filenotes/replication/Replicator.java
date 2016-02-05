@@ -1,4 +1,4 @@
-package sbs20.filenotes.storage;
+package sbs20.filenotes.replication;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +9,9 @@ import sbs20.filenotes.DateTime;
 import sbs20.filenotes.R;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
+import sbs20.filenotes.storage.CloudService;
+import sbs20.filenotes.storage.File;
+import sbs20.filenotes.storage.FileSystemService;
 
 public class Replicator {
 
@@ -59,6 +62,11 @@ public class Replicator {
 
     public interface IReplicatorObserver {
         void update(Replicator source, Action action);
+    }
+
+    private class FilePair {
+        private File local;
+        private File remote;
     }
 
     private static boolean isRunning = false;
@@ -297,6 +305,11 @@ public class Replicator {
                 for (Action action : this.actions) {
                     this.doAction(action);
                 }
+
+                // Pause briefly. If the local clock is slightly behind the cloud server's then
+                // then the next time we replicate we might end up downloading something we just
+                // uploaded. This doesn't fix it, but it might help a bit and is mostly harmless
+                Thread.sleep(500);
 
                 // Files just downloaded will have new dates - and there is no workaround to this. So
                 // we need to record the date time as of now to avoid unnecessary uploading of files

@@ -13,7 +13,6 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,8 +27,8 @@ import sbs20.filenotes.adapters.NoteArrayAdapter;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
-import sbs20.filenotes.storage.Replicator;
-import sbs20.filenotes.storage.ReplicatorTask;
+import sbs20.filenotes.replication.Replicator;
+import sbs20.filenotes.replication.ReplicatorTask;
 
 public class MainActivity extends ThemedActivity {
 
@@ -284,6 +283,8 @@ public class MainActivity extends ThemedActivity {
 
         final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
         progressDialog.setTitle(getString(R.string.replication_replicating));
         progressDialog.setMessage(getString(R.string.replication_analysing));
 
@@ -307,6 +308,7 @@ public class MainActivity extends ThemedActivity {
 
             @Override
             protected void onPostExecute() {
+                progressDialog.setProgress(progressDialog.getMax());
                 loadNotes();
                 swipeLayout.setRefreshing(false);
                 noteListView.setEnabled(true);
