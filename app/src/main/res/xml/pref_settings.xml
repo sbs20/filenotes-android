@@ -105,4 +105,19 @@
             android:summary="This forces filenotes to re-examine and sync every file it finds."/>
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/title_activity_about">
+
+        <Preference
+            android:key="pref_about_overview"
+            android:title="@string/about_overview_header"
+            android:summary="@string/about_overview_body"/>
+
+        <Preference
+            android:key="pref_about_license"
+            android:title="@string/about_license_header"
+            android:summary="@string/about_license_body"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

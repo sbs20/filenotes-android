@@ -1,5 +1,6 @@
 package sbs20.filenotes;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -81,6 +82,13 @@ public class SettingsActivity extends ThemedActivity {
 
                 case "pref_replication_clearlast":
                     this.serviceManager.getSettings().clearLastSync();
+                    break;
+
+                case "pref_about_overview":
+                case "pref_about_license":
+                    Intent intent = new Intent(this.getActivity(), AboutActivity.class);
+                    this.startActivity(intent);
+                    break;
             }
 
             return false;
