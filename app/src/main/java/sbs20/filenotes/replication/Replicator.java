@@ -20,6 +20,8 @@ public class Replicator {
     private static Replicator instance;
 
     private AtomicBoolean isRunning;
+    private AtomicBoolean isCancelled;
+
     private FilePairCollection files;
     private ICloudService cloudService;
     private List<Action> actions;
@@ -27,6 +29,7 @@ public class Replicator {
 
     private Replicator() {
         isRunning = new AtomicBoolean(false);
+        isCancelled = new AtomicBoolean(false);
         initialise();
     }
 
@@ -89,6 +92,55 @@ public class Replicator {
         }
     }
 
+    private void listenForCancel() throws Exception {
+        if (isCancelled.get()) {
+            // Handled... reset
+            isCancelled.set(false);
+
+            // Now abort
+            throw new Exception(ServiceManager.getInstance().getString(R.string.replication_abort));
+        }
+    }
+
+    private void resolveConflict(FilePair filePair) throws Exception {
+        // We have two "new" versions of a file. We have to take a brute force approach
+        Logger.info(this, "resolveConflict(" + filePair.key() + ")");
+
+        // We're going to download an alternate version : <filename>.conflict
+        String tempFilepath = filePair.local.getName() +
+                ServiceManager.getInstance().getString(R.string.replication_conflict_extension);
+
+        // Download the server version
+        cloudService.download(filePair.remote, tempFilepath);
+
+        // Compare the files
+        java.io.File tempFile = new FileSystemService().getFile(tempFilepath);
+        java.io.File localFile = (java.io.File)filePair.local.getFile();
+        boolean filesEqual = new FileSystemService().filesEqual(localFile, tempFile);
+
+        // Act
+        if (filesEqual) {
+
+            Logger.info(this, "resolveConflict(" + filePair.key() + "):files equal");
+
+            // Everything is good. Just delete the tempfile
+            new FileSystemService().delete(tempFilepath);
+
+        } else {
+
+            Logger.info(this, "resolveConflict(" + filePair.key() + "):files not equal");
+
+            // Rename the server version to the conflict
+            String serverConflictPath = filePair.remote.getPath() +
+                    ServiceManager.getInstance().getString(R.string.replication_conflict_extension);
+
+            cloudService.move(filePair.remote, serverConflictPath);
+
+            // Upload the local version
+            cloudService.upload(filePair.local);
+        }
+    }
+
     private void doAction(Action action) throws Exception {
         Logger.info(this, "doAction(" + action.key() + ")");
 
@@ -112,11 +164,7 @@ public class Replicator {
                 break;
 
             case ResolveConflict:
-                // We already have the local file. So download the server one but call it <file>.server-conflict
-                // TODO - this is not really complete
-                cloudService.download(action.filePair.remote, action.filePair.local.getName() +
-                        ServiceManager.getInstance().getString(R.string.replication_conflict_extension));
-
+                resolveConflict(action.filePair);
                 break;
         }
     }
@@ -124,6 +172,8 @@ public class Replicator {
     private void analyse() throws Exception {
         // Load all files
         this.loadFiles();
+
+        this.listenForCancel();
 
         // Look at everything that's happened since the last sync
         Date lastSync = ServiceManager.getInstance().getSettings().getLastSync();
@@ -143,6 +193,7 @@ public class Replicator {
         // Now actually do stuff...
         for (Action action : this.actions) {
             this.doAction(action);
+            this.listenForCancel();
         }
     }
 
@@ -171,8 +222,8 @@ public class Replicator {
                 ServiceManager.getInstance().getNotesManager().clearChange();
 
             } catch (Exception ex) {
-                Logger.debug(this, "invoke():error:loadRemoteFiles:" + ex.toString());
-                ServiceManager.getInstance().toast(R.string.replication_error);
+                Logger.debug(this, "invoke():error:" + ex.toString());
+                //ServiceManager.getInstance().toast(R.string.replication_error);
                 if (ServiceManager.getInstance().getSettings().replicationSkipError()) {
                     this.scheduleNext();
                 }
@@ -181,6 +232,17 @@ public class Replicator {
             isRunning.set(false);
         } else {
             Logger.debug(this, "invoke():already running!");
+        }
+    }
+
+    public void cancel() {
+        isCancelled.set(true);
+    }
+
+    public void awaitStop() {
+        while (isRunning.get()) {
+            Logger.debug(this, "awaitStop():waiting");
+            try { Thread.sleep(125); } catch (Exception e) {}
         }
     }
 

@@ -8,6 +8,7 @@ public interface ICloudService {
     void login();
     void logout();
     List<File> files() throws IOException;
+    void move(File file, String desiredName) throws Exception;
     void upload(File file) throws Exception;
     void download(File file) throws Exception ;
     void download(File file, String localName) throws Exception ;

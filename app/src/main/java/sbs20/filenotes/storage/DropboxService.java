@@ -116,6 +116,17 @@ public class DropboxService implements ICloudService, IDirectoryListProvider {
     }
 
     @Override
+    public void move(File file, String desiredPath) throws Exception {
+        Logger.info(this, "move():Start");
+        DbxFiles.FileMetadata remoteFile = (DbxFiles.FileMetadata) file.getFile();
+
+        if (remoteFile != null) {
+            client.files.move(remoteFile.pathLower, desiredPath);
+            Logger.verbose(this, "move():done");
+        }
+    }
+
+    @Override
     public void upload(File file) throws Exception {
         Logger.info(this, "upload():Start");
         java.io.File localFile = (java.io.File) file.getFile();

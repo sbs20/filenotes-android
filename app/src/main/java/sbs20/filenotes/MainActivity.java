@@ -1,6 +1,7 @@
 package sbs20.filenotes;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -288,6 +289,20 @@ public class MainActivity extends ThemedActivity {
         progressDialog.setCancelable(false);
         progressDialog.setTitle(getString(R.string.replication_replicating));
         progressDialog.setMessage(getString(R.string.replication_analysing));
+
+        // Create a cancel button
+        // Put a cancel button in progress dialog
+        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener(){
+            // Set a click listener for progress dialog cancel button
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+                Replicator.getInstance().cancel();
+                Replicator.getInstance().awaitStop();
+
+                // dismiss the progress dialog
+                progressDialog.dismiss();
+            }
+        });
 
         // Have a guess at the max for now... we'll correct later
         progressDialog.setMax(this.noteListView.getCount());

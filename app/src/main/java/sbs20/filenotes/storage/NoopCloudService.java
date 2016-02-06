@@ -25,6 +25,10 @@ public class NoopCloudService implements ICloudService {
     }
 
     @Override
+    public void move(File file, String desiredPath) {
+    }
+
+    @Override
     public void upload(File file) {
     }
 

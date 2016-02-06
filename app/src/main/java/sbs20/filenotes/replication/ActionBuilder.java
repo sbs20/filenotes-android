@@ -92,11 +92,7 @@ class ActionBuilder {
     }
 
     public static Action Create(FilePair pair, Date lastSync) {
-
-        Action.Type type = (lastSync.equals(DateTime.min())) ?
-                decideActionType(pair) :
-                decideActionType(pair, lastSync);
-
+        Action.Type type = decideActionType(pair, lastSync);
         return new Action(type, pair);
     }
 }

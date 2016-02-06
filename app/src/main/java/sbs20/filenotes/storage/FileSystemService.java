@@ -69,6 +69,53 @@ public class FileSystemService implements IDirectoryListProvider {
         return readFileAsString(file, -1);
     }
 
+    public boolean filesEqual(File file1, File file2) {
+
+        // Quickly check size...
+        if (file1.length() != file2.length()) {
+            return false;
+        }
+
+        try {
+            FileInputStream reader1 = new FileInputStream(file2);
+            FileInputStream reader2 = new FileInputStream(file2);
+
+            int size = 1024;
+            byte[] buffer1 = new byte[size];
+            byte[] buffer2 = new byte[size];
+
+            int read1 = reader1.read(buffer1);
+            int read2 = reader2.read(buffer2);
+
+            while (read1 != -1) {
+
+                if (read1 != read2) {
+                    // I can't understand how this would happen given the files are the same size
+                    // but let's be really pessimistic
+                    return false;
+                }
+
+                for (int index = 0; index < read1; index++) {
+                    if (buffer1[index] != buffer2[index]) {
+                        return false;
+                    }
+                }
+
+                read1 = reader1.read(buffer1);
+                read2 = reader2.read(buffer2);
+            }
+
+            reader1.close();
+            reader2.close();
+        } catch (IOException e) {
+            Logger.error(this, e.toString());
+        } finally {
+        }
+
+        // If we made it all the way here...
+        return true;
+    }
+
     public List<File> readAllFilesFromStorage() {
         final Settings settings = ServiceManager.getInstance().getSettings();
         List<File> files = new ArrayList<>();
