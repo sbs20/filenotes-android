@@ -3,12 +3,9 @@ package sbs20.filenotes;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -17,7 +14,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,13 +32,8 @@ public class MainActivity extends ThemedActivity {
 
     private NotesManager notesManager;
 
-    private ListView drawerList;
-	private DrawerLayout drawerLayout;
     private SwipeRefreshLayout swipeLayout;
 	private ListView noteListView;
-
-    private ArrayAdapter<String> drawerAdapter;
-    private ActionBarDrawerToggle drawerToggle;
     private NoteArrayAdapter notesAdapter;
 
     private void loadNotes() {
@@ -71,62 +62,6 @@ public class MainActivity extends ThemedActivity {
         }
     }
 
-	private void addDrawerItems() {
-		final String[] drawerItems = {
-				getString(R.string.title_activity_settings) ,
-				getString(R.string.title_activity_about)
-		};
-
-		this.drawerAdapter = new ArrayAdapter<String>(this,
-				R.layout.listview_drawer,
-				drawerItems);
-
-		this.drawerList.setAdapter(this.drawerAdapter);
-
-		final MainActivity activity = this;
-
-		this.drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selection = drawerItems[position];
-                if (selection.compareTo(getString(R.string.title_activity_settings)) == 0) {
-                    Intent intent = new Intent(activity, SettingsActivity.class);
-                    startActivity(intent);
-                } else if (selection.compareTo(getString(R.string.title_activity_about)) == 0) {
-                    Intent intent = new Intent(activity, AboutActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-	}
-
-	private void setupDrawer() {
-        final String activityTitle = getTitle().toString();
-
-        this.drawerToggle = new ActionBarDrawerToggle(this,
-				this.drawerLayout,
-				R.string.drawer_open,
-				R.string.drawer_close) {
-
-			/** Called when a drawer has settled in a completely open state. */
-			public void onDrawerOpened(View drawerView) {
-				super.onDrawerOpened(drawerView);
-				getSupportActionBar().setTitle(activityTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
-
-			/** Called when a drawer has settled in a completely closed state. */
-			public void onDrawerClosed(View view) {
-				super.onDrawerClosed(view);
-				getSupportActionBar().setTitle(activityTitle);
-				invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-			}
-		};
-
-		this.drawerToggle.setDrawerIndicatorEnabled(true);
-		this.drawerLayout.setDrawerListener(this.drawerToggle);
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -135,18 +70,12 @@ public class MainActivity extends ThemedActivity {
 
         // Set up our main objects
         this.notesManager = ServiceManager.getInstance().getNotesManager();
-        this.drawerList = (ListView)findViewById(R.id.drawer_list);
-        this.drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         this.noteListView = (ListView)this.findViewById(R.id.note_list);
         this.swipeLayout = (SwipeRefreshLayout) findViewById(R.id.note_swiper);
 
-        // Setup the drawer
-		this.addDrawerItems();
-		this.setupDrawer();
-
         // Toolbar
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		getSupportActionBar().setHomeButtonEnabled(false);
 
         // Note list
         this.notesAdapter = new NoteArrayAdapter(this);
@@ -248,38 +177,35 @@ public class MainActivity extends ThemedActivity {
         }
     }
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		this.drawerToggle.syncState();
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		this.drawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	public void createNew() {
-        Note note = this.notesManager.createNote();
-		this.edit(note);
-	}
-	
-	public void edit(Note note) {
-        this.notesManager.editNote(note);
-		Intent intent = new Intent(this, EditActivity.class);
-		this.startActivity(intent);
-	}
-
-	@Override
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (this.drawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                this.startActivity(intent);
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 	}
+
+    public void createNew() {
+        Note note = this.notesManager.createNote();
+        this.edit(note);
+    }
+
+    public void edit(Note note) {
+        this.notesManager.editNote(note);
+        Intent intent = new Intent(this, EditActivity.class);
+        this.startActivity(intent);
+    }
 
     private void startReplication() {
 

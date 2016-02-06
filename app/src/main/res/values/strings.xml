@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Fixed values - never translate -->
-    <string name="app_name">filenotes</string>
+    <string name="app_name">Filenotes</string>
 
     <string name="action_new">New</string>
     <string name="action_delete">Delete</string>
