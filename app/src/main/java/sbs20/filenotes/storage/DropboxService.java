@@ -153,7 +153,7 @@ public class DropboxService implements ICloudService, IDirectoryListProvider {
         if (remoteFile != null) {
 
             // Local file
-            java.io.File localFile = new FileSystemService().getFile(localName);
+            java.io.File localFile = FileSystemService.getInstance().getFile(localName);
 
             OutputStream outputStream = new FileOutputStream(localFile);
 

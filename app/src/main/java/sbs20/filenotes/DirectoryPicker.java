@@ -14,6 +14,6 @@ public class DirectoryPicker extends FolderPicker {
 
     @Override
     public IDirectoryListProvider CreateProvider() {
-        return new FileSystemService();
+        return FileSystemService.getInstance();
     }
 }

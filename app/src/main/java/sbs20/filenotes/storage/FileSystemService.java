@@ -24,15 +24,25 @@ import sbs20.filenotes.model.Settings;
 
 public class FileSystemService implements IDirectoryListProvider {
 
+    private static FileSystemService instance;
+
+    private FileSystemService() {
+    }
+
+    public static FileSystemService getInstance() {
+        if (instance == null) {
+            instance = new FileSystemService();
+        }
+
+        return instance;
+    }
+
     private String getFilepath(String filename) {
         return this.getStorageDirectory().getAbsolutePath() + "/" + filename;
     }
 
     public File getFile(String name) {
         return new File(this.getFilepath(name));
-    }
-
-    public FileSystemService() {
     }
 
     private File getStorageDirectory() {

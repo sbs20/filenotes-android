@@ -77,7 +77,7 @@ public class Replicator {
     }
 
     private void loadFiles() throws IOException {
-        for (java.io.File file : new FileSystemService().readAllFilesFromStorage()) {
+        for (java.io.File file : FileSystemService.getInstance().readAllFilesFromStorage()) {
             files.add(new File(file));
         }
 
@@ -114,9 +114,10 @@ public class Replicator {
         cloudService.download(filePair.remote, tempFilepath);
 
         // Compare the files
-        java.io.File tempFile = new FileSystemService().getFile(tempFilepath);
+        FileSystemService fileSystemService = FileSystemService.getInstance();
+        java.io.File tempFile = fileSystemService.getFile(tempFilepath);
         java.io.File localFile = (java.io.File)filePair.local.getFile();
-        boolean filesEqual = new FileSystemService().filesEqual(localFile, tempFile);
+        boolean filesEqual = fileSystemService.filesEqual(localFile, tempFile);
 
         // Act
         if (filesEqual) {
@@ -124,7 +125,7 @@ public class Replicator {
             Logger.info(this, "resolveConflict(" + filePair.key() + "):files equal");
 
             // Everything is good. Just delete the tempfile
-            new FileSystemService().delete(tempFilepath);
+            fileSystemService.delete(tempFilepath);
 
         } else {
 
@@ -148,7 +149,7 @@ public class Replicator {
 
         switch (action.type) {
             case DeleteLocal:
-                new FileSystemService().delete(action.filePair.local.getName());
+                FileSystemService.getInstance().delete(action.filePair.local.getName());
                 break;
 
             case Download:

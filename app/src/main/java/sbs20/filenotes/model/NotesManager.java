@@ -16,7 +16,7 @@ public class NotesManager {
     private boolean isChanged;
 
     public NotesManager() {
-        this.storage = new FileSystemService();
+        this.storage = FileSystemService.getInstance();
         this.notes = new NoteCollection();
         this.isChanged = false;
     }
