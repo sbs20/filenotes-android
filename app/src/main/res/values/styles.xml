@@ -50,6 +50,8 @@
 
     <!-- Main app theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Status bar -->
+        <item name="colorPrimaryDark">#1565c0</item>
         <!-- Header colour -->
         <item name="colorPrimary">#42a5f5</item>
         <!-- Button and cursor colour -->
@@ -59,6 +61,7 @@
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
+        <item name="colorPrimaryDark">#263238</item>
         <item name="colorPrimary">#455a64</item>
         <item name="colorAccent">#455a64</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
