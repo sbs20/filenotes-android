@@ -28,6 +28,7 @@ import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.replication.Action;
+import sbs20.filenotes.replication.Replicator;
 import sbs20.filenotes.replication.ReplicatorTask;
 
 public class MainActivity extends ThemedActivity {
@@ -241,7 +242,7 @@ public class MainActivity extends ThemedActivity {
             }
         });
 
-        if (this.notesManager.isReplicationRequired()) {
+        if (Replicator.getInstance().shouldRun()) {
             this.startReplication();
         }
     }

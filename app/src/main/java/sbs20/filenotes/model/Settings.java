@@ -7,7 +7,6 @@ import java.util.Date;
 
 import sbs20.filenotes.DateTime;
 import sbs20.filenotes.R;
-import sbs20.filenotes.ServiceManager;
 
 public class Settings {
 
@@ -23,7 +22,11 @@ public class Settings {
 
     public static final String CLOUD_SERVICE = "pref_cloud";
     public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
-    public static final String LAST_SYNC = "last_sync";
+    public static final String REPLICATION_ONCHANGE = "pref_replication_onchange";
+    public static final String REPLICATION_INTERVAL_MINUTES = "pref_replication_interval";
+    public static final String REPLICATION_SKIP_ERROR = "pref_replication_skip_error";
+    public static final String REPLICATION_LAST_SYNC = "last_sync";
+    public static final String REPLICATION_NEXT_SYNC = "next_sync";
 
     public static final String DROPBOX_ACCESS_TOKEN = "pref_dbx_access_token";
 
@@ -109,17 +112,27 @@ public class Settings {
     }
 
     public Date getLastSync() {
-        String s = this.get(LAST_SYNC);
+        String s = this.get(REPLICATION_LAST_SYNC);
         return DateTime.from8601String(s);
     }
 
     public void setLastSync(Date date) {
         String s = DateTime.to8601String(date);
-        this.set(LAST_SYNC, s);
+        this.set(REPLICATION_LAST_SYNC, s);
+    }
+
+    public Date getNextSync() {
+        String s = this.get(REPLICATION_NEXT_SYNC);
+        return DateTime.from8601String(s);
+    }
+
+    public void setNextSync(Date date) {
+        String s = DateTime.to8601String(date);
+        this.set(REPLICATION_NEXT_SYNC, s);
     }
 
     public void clearLastSync() {
-        this.remove(LAST_SYNC);
+        this.remove(REPLICATION_LAST_SYNC);
     }
 
     public boolean showHiddenFile() {
@@ -130,7 +143,17 @@ public class Settings {
         return this.sharedPreferences.getBoolean(STORAGE_SHOW_NONTEXT, false);
     }
 
-    public long replicationThresholdInMilliseconds() {
-        return 5 * 60 * 1000;
+    public long replicationIntervalInMilliseconds() {
+        String s = this.get(REPLICATION_INTERVAL_MINUTES, "15");
+        int interval = Integer.parseInt(s);
+        return interval * 60 * 1000;
+    }
+
+    public boolean replicationSkipError() {
+        return this.sharedPreferences.getBoolean(REPLICATION_SKIP_ERROR, true);
+    }
+
+    public boolean isReplicationOnChange() {
+        return this.sharedPreferences.getBoolean(REPLICATION_ONCHANGE, true);
     }
 }

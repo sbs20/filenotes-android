@@ -13,12 +13,12 @@ public class NotesManager {
     private FileSystemService storage;
 	private Note selectedNote;
 	private NoteCollection notes;
-    private boolean isReplicationRequired;
+    private boolean isChanged;
 
     public NotesManager() {
         this.storage = new FileSystemService();
         this.notes = new NoteCollection();
-        this.isReplicationRequired = false;
+        this.isChanged = false;
     }
 
 	private void setSelectedNote(Note note) {
@@ -90,25 +90,22 @@ public class NotesManager {
         Logger.verbose(this, "readAllFromStorage.Finish");
     }
 
-    private void registerUpdate() {
-        this.isReplicationRequired = true;
+    private void registerChange() {
+        this.isChanged = true;
     }
 
-    public boolean isReplicationRequired() {
-        Settings settings = ServiceManager.getInstance().getSettings();
-        Date lastSync = settings.getLastSync();
-        boolean isOverThreshold = DateTime.now().getTime() - lastSync.getTime() > settings.replicationThresholdInMilliseconds();
-        return this.isReplicationRequired || isOverThreshold;
+    public void clearChange() {
+        this.isChanged = false;
     }
 
-    public void setReplicationRequired(boolean value) {
-        this.isReplicationRequired = value;
+    public boolean isChanged() {
+        return this.isChanged;
     }
 
     public void writeToStorage(Note note) {
         this.storage.write(note.getName(), note.getText());
         note.reset();
-        this.registerUpdate();
+        this.registerChange();
     }
 
     public void editNote(Note note) {
@@ -124,14 +121,14 @@ public class NotesManager {
     public void deleteNote(Note note) {
         this.storage.delete(note.getName());
         this.notes.remove(note);
-        this.registerUpdate();
+        this.registerChange();
     }
 
     public boolean renameNote(Note note, String desiredName) {
         boolean succeeded = this.storage.rename(note.getName(), desiredName);
         if (succeeded) {
             note.setName(desiredName);
-            this.registerUpdate();
+            this.registerChange();
         }
 
         return succeeded;

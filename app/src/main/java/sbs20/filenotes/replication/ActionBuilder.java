@@ -55,6 +55,13 @@ class ActionBuilder {
                 if (pair.remote == null) {
                     return Action.Type.DeleteLocal;
                 } else if (pair.remote.getLastModified().compareTo(lastSync) > 0) {
+
+                    // TODO Heavy debug - emulator time is out of sync with dropbox...
+                    Logger.debug(tag, "decideActionType:lastSync:" + lastSync + ":skip");
+                    Logger.debug(tag, "decideActionType:localModified:" + pair.local.getLastModified() + ":skip");
+                    Logger.debug(tag, "decideActionType:remoteServer:" + pair.remote.getLastModified() + ":skip");
+                    Logger.debug(tag, "decideActionType:remoteClient:" + pair.remote.getClientModified() + ":skip");
+
                     return Action.Type.Download;
                 } else {
                     Logger.debug(tag, "decideActionType:" + pair.key() + ":skip");

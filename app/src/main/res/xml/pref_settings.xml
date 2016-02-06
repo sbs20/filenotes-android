@@ -79,10 +79,30 @@
     <PreferenceCategory
         android:title="Replication">
 
+        <SwitchPreference
+            android:key="pref_replication_onchange"
+            android:title="Sync on change."
+            android:summary="Attempt to sync as soon as changes are detected."
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="pref_replication_skip_error"
+            android:title="Relaxed on error"
+            android:summary="In the event of a sync error will wait until next schedule."
+            android:defaultValue="true" />
+
+        <ListPreference
+            android:key="pref_replication_interval"
+            android:title="Replication interval"
+            android:summary="This is the minimum time between attempts to sync"
+            android:dialogTitle="Replication interval"
+            android:entries="@array/pref_replication_interval_text"
+            android:entryValues="@array/pref_replication_interval_values" />
+
         <Preference
             android:key="pref_replication_clearlast"
-            android:title="Clear last replication"
-            android:summary="This forces filenotes to replicate every file it finds."/>
+            android:title="Clear last sync"
+            android:summary="This forces filenotes to re-examine and sync every file it finds."/>
 
     </PreferenceCategory>
 </PreferenceScreen>

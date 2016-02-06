@@ -7,7 +7,7 @@ public class ReplicatorTask  {
     protected Replicator replicator;
 
     public ReplicatorTask() {
-        this.replicator = new Replicator();
+        this.replicator = Replicator.getInstance();
     }
 
     protected void onProgressUpdate(Action action) {
@@ -17,18 +17,17 @@ public class ReplicatorTask  {
     }
 
     public void execute() {
-        AsyncTask<Replicator, Action, Replicator> task = new AsyncTask<Replicator, Action, Replicator>() {
+        new AsyncTask<Replicator, Action, Replicator>() {
 
             @Override
             protected Replicator doInBackground(Replicator... params) {
                 Replicator replicator = params[0];
-                replicator.addObserver(new IObserver() {
+                replicator.invoke(new IObserver() {
                     @Override
                     public void update(Replicator source, Action action) {
                         publishProgress(action);
                     }
                 });
-                replicator.invoke();
                 return replicator;
             }
 
