@@ -94,6 +94,12 @@ public class EditActivity extends ThemedActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit, menu);
+
+        if (ServiceManager.getInstance().getSettings().autosave()) {
+            MenuItem save = (MenuItem) menu.findItem(R.id.action_save);
+            save.setVisible(false);
+        }
+
         return true;
     }
 
@@ -140,31 +146,37 @@ public class EditActivity extends ThemedActivity {
         this.updateNote();
 
         if (this.note.isDirty()) {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int result) {
-                    switch (result) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            save();
-                            finishClose();
-                            break;
 
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            finishClose();
-                            break;
+            if (ServiceManager.getInstance().getSettings().autosave()) {
+                save();
+                finishClose();
+            } else {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int result) {
+                        switch (result) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                save();
+                                finishClose();
+                                break;
 
-                        case DialogInterface.BUTTON_NEUTRAL:
-                            break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                finishClose();
+                                break;
+
+                            case DialogInterface.BUTTON_NEUTRAL:
+                                break;
+                        }
                     }
-                }
-            };
+                };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Do you want to save your changes?")
-                    .setPositiveButton(R.string.yes, dialogClickListener)
-                    .setNegativeButton(R.string.no, dialogClickListener)
-                    .setNeutralButton(android.R.string.cancel, dialogClickListener)
-                    .show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Do you want to save your changes?")
+                        .setPositiveButton(R.string.yes, dialogClickListener)
+                        .setNegativeButton(R.string.no, dialogClickListener)
+                        .setNeutralButton(android.R.string.cancel, dialogClickListener)
+                        .show();
+            }
         } else {
             // This is not dirty. Nothing to save. Just close
             this.finishClose();

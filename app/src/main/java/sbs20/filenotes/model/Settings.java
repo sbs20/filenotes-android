@@ -18,8 +18,9 @@ public class Settings {
     public static final String APPEARANCE_WORDWRAP = "pref_appearance_wordwrap";
 
     public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
-    public static final String STORAGE_SHOW_HIDDEN = "pref_show_hidden";
-    public static final String STORAGE_SHOW_NONTEXT = "pref_show_nontext";
+    public static final String BEHAVIOUR_SHOW_HIDDEN = "pref_behaviour_show_hidden";
+    public static final String BEHAVIOUR_SHOW_NONTEXT = "pref_behaviour_show_nontext";
+    public static final String BEHAVIOUR_AUTOSAVE = "pref_behaviour_autosave";
 
     public static final String CLOUD_SERVICE = "pref_cloud";
     public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
@@ -137,11 +138,11 @@ public class Settings {
     }
 
     public boolean showHiddenFile() {
-        return this.sharedPreferences.getBoolean(STORAGE_SHOW_HIDDEN, true);
+        return this.sharedPreferences.getBoolean(BEHAVIOUR_SHOW_HIDDEN, true);
     }
 
     public boolean showNonTextFile() {
-        return this.sharedPreferences.getBoolean(STORAGE_SHOW_NONTEXT, false);
+        return this.sharedPreferences.getBoolean(BEHAVIOUR_SHOW_NONTEXT, false);
     }
 
     public long replicationIntervalInMilliseconds() {
@@ -160,5 +161,9 @@ public class Settings {
 
     public boolean wordWrap() {
         return this.sharedPreferences.getBoolean(APPEARANCE_WORDWRAP, false);
+    }
+
+    public boolean autosave() {
+        return this.sharedPreferences.getBoolean(BEHAVIOUR_AUTOSAVE, false);
     }
 }

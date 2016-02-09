@@ -37,7 +37,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Storage">
+        android:title="Storage and behaviour">
 
         <sbs20.filenotes.DirectoryPicker
             android:key="pref_storagedir"
@@ -46,14 +46,19 @@
             android:summary="Filesystem location where notes are stored" />
 
         <SwitchPreference
-            android:key="pref_show_hidden"
+            android:key="pref_behaviour_show_hidden"
             android:title="Show hidden files"
             android:defaultValue="true" />
 
         <SwitchPreference
-            android:key="pref_show_nontext"
+            android:key="pref_behaviour_show_nontext"
             android:title="Show non-text files"
             android:defaultValue="true" />
+
+        <SwitchPreference
+            android:key="pref_behaviour_autosave"
+            android:title="Autosave"
+            android:defaultValue="false" />
 
     </PreferenceCategory>
 

@@ -223,7 +223,9 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onClick(DialogInterface dialog, int which){
                 Replicator.getInstance().cancel();
-                Replicator.getInstance().awaitStop();
+
+                // It would be nice to wait, but it makes android nervous. Comment until solution found
+                // Replicator.getInstance().awaitStop();
 
                 // dismiss the progress dialog
                 progressDialog.dismiss();
