@@ -29,6 +29,11 @@
             android:entries="@array/pref_font_size_text"
             android:entryValues="@array/pref_font_size_values" />
 
+        <SwitchPreference
+            android:key="pref_appearance_wordwrap"
+            android:title="Word wrap"
+            android:defaultValue="false" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

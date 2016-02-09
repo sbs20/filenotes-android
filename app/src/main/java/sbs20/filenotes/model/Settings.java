@@ -15,6 +15,7 @@ public class Settings {
     public static final String THEME = "pref_theme";
     public static final String FONTFACE = "pref_font";
     public static final String FONTSIZE = "pref_font_size";
+    public static final String APPEARANCE_WORDWRAP = "pref_appearance_wordwrap";
 
     public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
     public static final String STORAGE_SHOW_HIDDEN = "pref_show_hidden";
@@ -155,5 +156,9 @@ public class Settings {
 
     public boolean isReplicationOnChange() {
         return this.sharedPreferences.getBoolean(REPLICATION_ONCHANGE, true);
+    }
+
+    public boolean wordWrap() {
+        return this.sharedPreferences.getBoolean(APPEARANCE_WORDWRAP, false);
     }
 }

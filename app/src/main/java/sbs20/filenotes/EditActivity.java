@@ -34,7 +34,11 @@ public class EditActivity extends ThemedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_edit);
+        int layoutId = ServiceManager.getInstance().getSettings().wordWrap() ?
+                R.layout.activity_edit_wrap :
+                R.layout.activity_edit;
+
+        setContentView(layoutId);
 
         // Show the Up button in the action bar.
         setupActionBar();
