@@ -12,9 +12,9 @@ public class Settings {
 
     private SharedPreferences sharedPreferences;
 
-    public static final String THEME = "pref_theme";
-    public static final String FONTFACE = "pref_font";
-    public static final String FONTSIZE = "pref_font_size";
+    public static final String APPEARANCE_THEME = "pref_appearance_theme";
+    public static final String APPEARANCE_FONTFACE = "pref_appearance_font";
+    public static final String APPEARANCE_FONTSIZE = "pref_appearance_font_size";
     public static final String APPEARANCE_WORDWRAP = "pref_appearance_wordwrap";
 
     public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
@@ -54,7 +54,7 @@ public class Settings {
     }
 
     public int getThemeId() {
-        String theme = this.get(THEME, "light");
+        String theme = this.get(APPEARANCE_THEME, "light");
         switch (theme) {
             case "light":
                 return R.style.AppTheme;
@@ -78,7 +78,7 @@ public class Settings {
     }
 
     public Typeface getFontFace() {
-        String fontFace = this.get(FONTFACE, "monospace");
+        String fontFace = this.get(APPEARANCE_FONTFACE, "monospace");
 
         if (fontFace.equals("monospace")) {
             return Typeface.MONOSPACE;
@@ -92,7 +92,7 @@ public class Settings {
     }
 
     public int getFontSize() {
-        String s = this.get(FONTSIZE, "16");
+        String s = this.get(APPEARANCE_FONTSIZE, "16");
         return Integer.parseInt(s);
     }
 
