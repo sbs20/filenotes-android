@@ -104,8 +104,7 @@
         <SwitchPreference
             android:key="pref_replication_skip_error"
             android:title="Relaxed about errors"
-            android:summary="Filenotes will be more relaxed if a sync error occurs and will wait
-                until the next schedule instead of constantly retrying."
+            android:summary="Filenotes will be more relaxed if a sync error occurs and will wait until the next schedule instead of constantly retrying."
             android:defaultValue="true" />
 
         <ListPreference
