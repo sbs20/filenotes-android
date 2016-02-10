@@ -163,8 +163,8 @@ public class DropboxService implements ICloudService, IDirectoryListProvider {
                     .run(outputStream);
 
             // We will attempt to set the last modified time. This MIGHT help replication
-            // and it certainly looks better. However, it doesn't seem to work reliably...
-            // annoyingly it seems to be broken in Lollipop but not Jellybean.
+            // and it certainly looks better. However, it doesn't seem to work reliably with
+            // external storage. On the plus side it seems fine for internal storage.
             // http://stackoverflow.com/questions/18677438/android-set-last-modified-time-for-the-file
             localFile.setLastModified(remoteFile.serverModified.getTime());
 
