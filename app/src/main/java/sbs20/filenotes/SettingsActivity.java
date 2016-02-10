@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
@@ -57,16 +58,28 @@ public class SettingsActivity extends ThemedActivity {
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_settings);
+            this.refresh();
+        }
+
+        private void refresh() {
+            Settings settings = this.serviceManager.getSettings();
+            findPreference(Settings.LOCAL_STORAGE_PATH).setEnabled(!settings.internalStorage());
+
+            boolean isCloudEnabled = !this.serviceManager.array(R.array.pref_cloud_values)[0].equals(settings.getCloudServiceName());
+            findPreference(Settings.REMOTE_STORAGE_PATH).setEnabled(isCloudEnabled);
+            findPreference(Settings.CLOUD_SERVICE_LOGOUT).setEnabled(isCloudEnabled);
+
+            findPreference("Replication").setEnabled(isCloudEnabled);
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View v = super.onCreateView(inflater, container, savedInstanceState);
-            if(v != null) {
-                ListView lv = (ListView) v.findViewById(android.R.id.list);
+            View view = super.onCreateView(inflater, container, savedInstanceState);
+            if(view != null) {
+                ListView lv = (ListView) view.findViewById(android.R.id.list);
                 lv.setPadding(0, 0, 0, 0);
             }
-            return v;
+            return view;
         }
         @Override
         // This fires on initial click rather than selection....
@@ -87,8 +100,9 @@ public class SettingsActivity extends ThemedActivity {
 
                 case "pref_about_overview":
                 case "pref_about_license":
-                    Intent intent = new Intent(this.getActivity(), AboutActivity.class);
-                    this.startActivity(intent);
+                    // Do nothing for now
+                    // Intent intent = new Intent(this.getActivity(), AboutActivity.class);
+                    // this.startActivity(intent);
                     break;
             }
 
@@ -111,17 +125,26 @@ public class SettingsActivity extends ThemedActivity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             Logger.verbose(this, "onSharedPreferenceChanged:" + key);
 
-            if (key.equals(Settings.CLOUD_SERVICE)) {
-                Logger.verbose(this, "onSharedPreferenceChanged:pref_cloud");
-                this.serviceManager.resetCloudSync();
-                this.serviceManager.getSettings().clearLastSync();
-                this.serviceManager.getSettings().clearNextSync();
-                this.serviceManager.getCloudService().login();
-            } else if (key.equals(Settings.REMOTE_STORAGE_PATH) ||
-                    key.equals(Settings.LOCAL_STORAGE_PATH)) {
-                this.serviceManager.getSettings().clearLastSync();
-                this.serviceManager.getSettings().clearNextSync();
+            switch (key) {
+                case Settings.CLOUD_SERVICE:
+                    this.serviceManager.resetCloudSync();
+                    this.serviceManager.getSettings().clearLastSync();
+                    this.serviceManager.getSettings().clearNextSync();
+                    this.serviceManager.getCloudService().login();
+                    break;
+
+                case Settings.REMOTE_STORAGE_PATH:
+                case Settings.LOCAL_STORAGE_PATH:
+                    this.serviceManager.getSettings().clearLastSync();
+                    this.serviceManager.getSettings().clearNextSync();
+                    break;
+
+                case Settings.STORAGE_USE_INTERNAL:
+                    break;
+
             }
+
+            this.refresh();
         }
     }
 }

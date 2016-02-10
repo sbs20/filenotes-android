@@ -91,4 +91,12 @@ public class ServiceManager {
     }
 
     public String getString(int resId) { return  this.application.getString(resId);}
+
+    public String string(int resId) {
+        return this.application.getString(resId);
+    }
+
+    public String[] array(int resId) {
+        return this.application.getResources().getStringArray(resId);
+    }
 }

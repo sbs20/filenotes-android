@@ -46,9 +46,9 @@
 
         <sbs20.filenotes.DirectoryPicker
             android:key="pref_storagedir"
-            android:title="Local Storage Directory"
-            android:dialogTitle="Local Storage Directory"
-            android:summary="Filesystem location where notes are stored" />
+            android:title="Local directory"
+            android:dialogTitle="Local directory"
+            android:summary="Location where notes are stored if you choose not to use internal storage." />
 
         <SwitchPreference
             android:key="pref_behaviour_show_hidden"
@@ -80,9 +80,9 @@
 
         <sbs20.filenotes.DropboxFolderPicker
             android:key="pref_cloudstoragedir"
-            android:title="Remote Folder"
-            android:dialogTitle="Remote Folder"
-            android:summary="Remote location where notes are synced" />
+            android:title="Remote folder"
+            android:dialogTitle="Remote folder"
+            android:summary="Remote folder to which notes are synced" />
 
         <Preference
             android:key="pref_cloud_logout"
@@ -92,7 +92,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Replication">
+        android:title="Replication"
+        android:key="Replication">
 
         <SwitchPreference
             android:key="pref_replication_onchange"
@@ -102,8 +103,9 @@
 
         <SwitchPreference
             android:key="pref_replication_skip_error"
-            android:title="Relaxed on error"
-            android:summary="In the event of a sync error will wait until next schedule."
+            android:title="Relaxed about errors"
+            android:summary="Filenotes will be more relaxed if a sync error occurs and will wait
+                until the next schedule instead of constantly retrying."
             android:defaultValue="true" />
 
         <ListPreference
@@ -116,8 +118,8 @@
 
         <Preference
             android:key="pref_replication_clearlast"
-            android:title="Clear last sync"
-            android:summary="This forces filenotes to re-examine and sync every file it finds."/>
+            android:title="Clear sync history"
+            android:summary="Filenotes will re-examine and sync every file."/>
 
     </PreferenceCategory>
 

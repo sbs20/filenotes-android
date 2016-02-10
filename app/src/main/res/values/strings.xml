@@ -19,12 +19,13 @@
     <string name="pref_font_default">Monospace</string>
 
     <string name="about_overview_header">Overview</string>
-    <string name="about_overview_body">This is a simple note taking app
-        which stores notes as files on the filesystem. You can then use your own cloud backup - OneDrive,
-        Dropbox, GoogleDrive etc - to keep everything up to date.</string>
+    <string name="about_overview_body">This is a simple note taking app which stores notes as files
+        on the filesystem. You can either use your own file sync (e.g. using DropSync or similar)
+        or Filenotes can take care of Dropbox sync for you.</string>
     <string name="about_license_header">License</string>
-    <string name="about_license_body">This software is free to use
-        for business or personal use. It is open source and released under the GPL2 license. Copyright Sam Strachan 2015-16</string>
+    <string name="about_license_body">This software is free to use for business or personal use.
+        It is open source and released under the GPL2 license. Written and maintained by Sam
+        Strachan, this is published by code-seven-six.</string>
 
     <string name="error_storage_does_not_exist">Storage directory does not exist</string>
     <string name="storage_is_empty">No matching files in storage directory</string>

@@ -24,6 +24,7 @@ public class Settings {
     public static final String BEHAVIOUR_AUTOSAVE = "pref_behaviour_autosave";
 
     public static final String CLOUD_SERVICE = "pref_cloud";
+    public static final String CLOUD_SERVICE_LOGOUT = "pref_cloud_logout";
     public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
     public static final String REPLICATION_ONCHANGE = "pref_replication_onchange";
     public static final String REPLICATION_INTERVAL_MINUTES = "pref_replication_interval";
