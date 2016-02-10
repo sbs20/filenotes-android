@@ -18,6 +18,7 @@ public class Settings {
     public static final String APPEARANCE_WORDWRAP = "pref_appearance_wordwrap";
 
     public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
+    public static final String STORAGE_USE_INTERNAL = "pref_storage_useinternal";
     public static final String BEHAVIOUR_SHOW_HIDDEN = "pref_behaviour_show_hidden";
     public static final String BEHAVIOUR_SHOW_NONTEXT = "pref_behaviour_show_nontext";
     public static final String BEHAVIOUR_AUTOSAVE = "pref_behaviour_autosave";
@@ -137,6 +138,10 @@ public class Settings {
         this.remove(REPLICATION_LAST_SYNC);
     }
 
+    public void clearNextSync() {
+        this.remove(REPLICATION_NEXT_SYNC);
+    }
+
     public boolean showHiddenFile() {
         return this.sharedPreferences.getBoolean(BEHAVIOUR_SHOW_HIDDEN, true);
     }
@@ -165,5 +170,9 @@ public class Settings {
 
     public boolean autosave() {
         return this.sharedPreferences.getBoolean(BEHAVIOUR_AUTOSAVE, false);
+    }
+
+    public boolean internalStorage() {
+        return this.sharedPreferences.getBoolean(STORAGE_USE_INTERNAL, true);
     }
 }

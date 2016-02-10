@@ -77,6 +77,7 @@ public class SettingsActivity extends ThemedActivity {
                     this.serviceManager.getCloudService().logout();
                     this.serviceManager.getSettings().clearCloudServiceName();
                     this.serviceManager.getSettings().clearLastSync();
+                    this.serviceManager.getSettings().clearNextSync();
                     this.serviceManager.toast(R.string.logged_out);
                     break;
 
@@ -114,10 +115,12 @@ public class SettingsActivity extends ThemedActivity {
                 Logger.verbose(this, "onSharedPreferenceChanged:pref_cloud");
                 this.serviceManager.resetCloudSync();
                 this.serviceManager.getSettings().clearLastSync();
+                this.serviceManager.getSettings().clearNextSync();
                 this.serviceManager.getCloudService().login();
             } else if (key.equals(Settings.REMOTE_STORAGE_PATH) ||
                     key.equals(Settings.LOCAL_STORAGE_PATH)) {
                 this.serviceManager.getSettings().clearLastSync();
+                this.serviceManager.getSettings().clearNextSync();
             }
         }
     }

@@ -46,8 +46,13 @@ public class FileSystemService implements IDirectoryListProvider {
     }
 
     private File getStorageDirectory() {
-        String directoryPath = ServiceManager.getInstance().getSettings().getLocalStoragePath();
-        return new File(directoryPath);
+        ServiceManager services = ServiceManager.getInstance();
+        if (services.getSettings().internalStorage()) {
+            return services.getContext().getFilesDir();
+        } else {
+            String directoryPath = services.getSettings().getLocalStoragePath();
+            return new File(directoryPath);
+        }
     }
 
     public String readFileAsString(File file, int length) {
@@ -127,7 +132,6 @@ public class FileSystemService implements IDirectoryListProvider {
     }
 
     public List<File> readAllFilesFromStorage() {
-        final Settings settings = ServiceManager.getInstance().getSettings();
         List<File> files = new ArrayList<>();
 
         if (this.getStorageDirectory().exists()) {

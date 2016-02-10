@@ -61,10 +61,12 @@ public class Replicator {
     }
 
     public boolean shouldRun() {
+        Logger.debug(this, "shouldRun()");
         Settings settings = ServiceManager.getInstance().getSettings();
         Date nextSync = settings.getNextSync();
         Date now = DateTime.now();
 
+        Logger.verbose(this, "shouldRun():next=" + DateTime.to8601String(nextSync));
         if (nextSync.before(now)) {
             return true;
         }

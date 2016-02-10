@@ -39,6 +39,11 @@
     <PreferenceCategory
         android:title="Storage and behaviour">
 
+        <SwitchPreference
+            android:key="pref_storage_useinternal"
+            android:title="Use internal storage"
+            android:defaultValue="true" />
+
         <sbs20.filenotes.DirectoryPicker
             android:key="pref_storagedir"
             android:title="Local Storage Directory"
