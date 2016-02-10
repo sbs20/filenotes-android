@@ -53,14 +53,6 @@ public class SettingsActivity extends ThemedActivity {
 
         private ServiceManager serviceManager = ServiceManager.getInstance();
 
-        @Override
-        public void onCreate(final Bundle savedInstanceState)
-        {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_settings);
-            this.refresh();
-        }
-
         private void refresh() {
             Settings settings = this.serviceManager.getSettings();
             findPreference(Settings.LOCAL_STORAGE_PATH).setEnabled(!settings.internalStorage());
@@ -73,6 +65,14 @@ public class SettingsActivity extends ThemedActivity {
         }
 
         @Override
+        public void onCreate(final Bundle savedInstanceState)
+        {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_settings);
+            this.refresh();
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if(view != null) {
@@ -81,6 +81,7 @@ public class SettingsActivity extends ThemedActivity {
             }
             return view;
         }
+
         @Override
         // This fires on initial click rather than selection....
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
