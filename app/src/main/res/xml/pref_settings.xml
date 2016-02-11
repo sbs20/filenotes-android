@@ -45,7 +45,7 @@
             android:defaultValue="true" />
 
         <sbs20.filenotes.DirectoryPicker
-            android:key="pref_storagedir"
+            android:key="pref_storage_directory"
             android:title="Local directory"
             android:dialogTitle="Local directory"
             android:summary="Location where notes are stored if you choose not to use internal storage." />
@@ -63,7 +63,8 @@
         <SwitchPreference
             android:key="pref_behaviour_autosave"
             android:title="Autosave"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            android:summary="Notes will be saved automatically when closed."/>
 
     </PreferenceCategory>
 
@@ -79,7 +80,7 @@
             android:entryValues="@array/pref_cloud_values" />
 
         <sbs20.filenotes.DropboxFolderPicker
-            android:key="pref_cloudstoragedir"
+            android:key="pref_cloud_storage_directory"
             android:title="Remote folder"
             android:dialogTitle="Remote folder"
             android:summary="Remote folder to which notes are synced" />

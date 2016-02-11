@@ -17,15 +17,17 @@ public class Settings {
     public static final String APPEARANCE_FONTSIZE = "pref_appearance_font_size";
     public static final String APPEARANCE_WORDWRAP = "pref_appearance_wordwrap";
 
-    public static final String LOCAL_STORAGE_PATH = "pref_storagedir";
+    public static final String STORAGE_DIRECTORY = "pref_storage_directory";
     public static final String STORAGE_USE_INTERNAL = "pref_storage_useinternal";
+
     public static final String BEHAVIOUR_SHOW_HIDDEN = "pref_behaviour_show_hidden";
     public static final String BEHAVIOUR_SHOW_NONTEXT = "pref_behaviour_show_nontext";
     public static final String BEHAVIOUR_AUTOSAVE = "pref_behaviour_autosave";
 
     public static final String CLOUD_SERVICE = "pref_cloud";
     public static final String CLOUD_SERVICE_LOGOUT = "pref_cloud_logout";
-    public static final String REMOTE_STORAGE_PATH = "pref_cloudstoragedir";
+    public static final String CLOUD_STORAGE_PATH = "pref_cloud_storage_directory";
+
     public static final String REPLICATION_ONCHANGE = "pref_replication_onchange";
     public static final String REPLICATION_INTERVAL_MINUTES = "pref_replication_interval";
     public static final String REPLICATION_SKIP_ERROR = "pref_replication_skip_error";
@@ -77,7 +79,7 @@ public class Settings {
     }
 
     public String getLocalStoragePath() {
-        return this.get(LOCAL_STORAGE_PATH, "");
+        return this.get(STORAGE_DIRECTORY, "");
     }
 
     public Typeface getFontFace() {
@@ -112,7 +114,7 @@ public class Settings {
     }
 
     public String getRemoteStoragePath() {
-        return this.get(REMOTE_STORAGE_PATH);
+        return this.get(CLOUD_STORAGE_PATH);
     }
 
     public Date getLastSync() {

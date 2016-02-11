@@ -1,10 +1,8 @@
 package sbs20.filenotes;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
@@ -55,10 +53,10 @@ public class SettingsActivity extends ThemedActivity {
 
         private void refresh() {
             Settings settings = this.serviceManager.getSettings();
-            findPreference(Settings.LOCAL_STORAGE_PATH).setEnabled(!settings.internalStorage());
+            findPreference(Settings.STORAGE_DIRECTORY).setEnabled(!settings.internalStorage());
 
             boolean isCloudEnabled = !this.serviceManager.array(R.array.pref_cloud_values)[0].equals(settings.getCloudServiceName());
-            findPreference(Settings.REMOTE_STORAGE_PATH).setEnabled(isCloudEnabled);
+            findPreference(Settings.CLOUD_STORAGE_PATH).setEnabled(isCloudEnabled);
             findPreference(Settings.CLOUD_SERVICE_LOGOUT).setEnabled(isCloudEnabled);
 
             findPreference("Replication").setEnabled(isCloudEnabled);
@@ -134,8 +132,8 @@ public class SettingsActivity extends ThemedActivity {
                     this.serviceManager.getCloudService().login();
                     break;
 
-                case Settings.REMOTE_STORAGE_PATH:
-                case Settings.LOCAL_STORAGE_PATH:
+                case Settings.CLOUD_STORAGE_PATH:
+                case Settings.STORAGE_DIRECTORY:
                     this.serviceManager.getSettings().clearLastSync();
                     this.serviceManager.getSettings().clearNextSync();
                     break;
