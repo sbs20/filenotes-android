@@ -11,24 +11,38 @@ import android.text.format.DateFormat;
 
 public class DateTime {
 
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
-
-    public DateTime() {
-        Context context = ServiceManager.getInstance().getContext();
-        SimpleDateFormat simpleDateFormat = (SimpleDateFormat)DateFormat.getDateFormat(context);
-        SimpleDateFormat simpleTimeFormat = (SimpleDateFormat)DateFormat.getTimeFormat(context);
-
-        this.dateFormat = new SimpleDateFormat(simpleDateFormat.toLocalizedPattern());
-        this.timeFormat = new SimpleDateFormat(simpleTimeFormat.toLocalizedPattern());
+    private DateTime() {
     }
 
-    public String formatDate(Date date) {
-        return this.dateFormat.format(date);
+    private static SimpleDateFormat dateFormat;
+    private static SimpleDateFormat timeFormat;
+
+    private static SimpleDateFormat dateFormat() {
+        if (dateFormat == null) {
+            Context context = ServiceManager.getInstance().getContext();
+            SimpleDateFormat tmp = (SimpleDateFormat)DateFormat.getDateFormat(context);
+            dateFormat = new SimpleDateFormat(tmp.toLocalizedPattern());
+        }
+
+        return dateFormat;
     }
 
-    public String formatTime(Date date) {
-        return this.timeFormat.format(date);
+    private static SimpleDateFormat timeFormat() {
+        if (timeFormat == null) {
+            Context context = ServiceManager.getInstance().getContext();
+            SimpleDateFormat tmp = (SimpleDateFormat)DateFormat.getTimeFormat(context);
+            timeFormat = new SimpleDateFormat(tmp.toLocalizedPattern());
+        }
+
+        return timeFormat;
+    }
+
+    public static String formatDate(Date date) {
+        return dateFormat().format(date);
+    }
+
+    public static String formatTime(Date date) {
+        return timeFormat().format(date);
     }
 
     public static Date min() {

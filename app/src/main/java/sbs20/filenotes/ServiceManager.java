@@ -63,14 +63,6 @@ public class ServiceManager {
         this.cloudService = null;
     }
 
-    public DateTime getDateTime() {
-        if (this.dateTime == null) {
-            this.dateTime = new DateTime();
-        }
-
-        return this.dateTime;
-    }
-
     public Settings getSettings() {
         if (this.settings == null) {
             this.settings = new Settings(PreferenceManager.getDefaultSharedPreferences(this.application));

@@ -35,11 +35,9 @@ public class NoteArrayAdapter extends GenericBaseAdpater<Note> {
         text.setText(note.getTextSummary());
 
         TextView lastModified = (TextView) row.findViewById(R.id.listnode_lastModified);
-        MainActivity activity = (MainActivity)this.context;
-        DateTime dateTime = ServiceManager.getInstance().getDateTime();
 
-        String date = dateTime.formatDate(note.getLastModified());
-        date += "\n" + dateTime.formatTime(note.getLastModified());
+        String date = DateTime.formatDate(note.getLastModified());
+        date += "\n" + DateTime.formatTime(note.getLastModified());
         lastModified.setText(date);
 
         TextView size = (TextView) row.findViewById(R.id.listnote_size);
