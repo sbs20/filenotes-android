@@ -38,7 +38,6 @@ public class MainActivity extends ThemedActivity {
 
     private void loadNotes() {
 		TextView message = (TextView) this.findViewById(R.id.note_list_message);
-        NoteCollection notes = this.notesManager.getNotes();
 
 		try {
             this.notesManager.readAllFromStorage();
@@ -48,7 +47,8 @@ public class MainActivity extends ThemedActivity {
 			message.setVisibility(View.VISIBLE);
 		}
 
-		if (notes.size() == 0) {
+        NoteCollection notes = this.notesManager.getNotes();
+        if (notes.size() == 0) {
 			message.setText(R.string.storage_is_empty);
 			message.setVisibility(View.VISIBLE);
 		} else {
@@ -120,7 +120,7 @@ public class MainActivity extends ThemedActivity {
                         SparseBooleanArray checked = noteListView.getCheckedItemPositions();
                         List<Note> toBeDeleted = new ArrayList<>();
                         for (int i = 0; i < checked.size(); i++) {
-                            if(checked.valueAt(i) == true) {
+                            if(checked.valueAt(i)) {
                                 Note note = (Note) noteListView.getItemAtPosition(checked.keyAt(i));
                                 toBeDeleted.add(note);
                             }

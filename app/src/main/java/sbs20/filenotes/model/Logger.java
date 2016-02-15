@@ -19,24 +19,22 @@ public class Logger {
 
     private static void log(String level, String tag, String msg) {
         // TODO - write somewhere better
-        if (level.equals(ERROR)) {
-            ServiceManager.getInstance().toast(level + ":" + tag + ":" + msg);
-            Log.e(tag, msg);
-        } else {
-            switch (level) {
-                case VERBOSE:
-                    Log.v(tag, msg);
-                    break;
-                case INFORMATION:
-                    Log.i(tag, msg);
-                    break;
-                case DEBUG:
-                    Log.d(tag, msg);
-                    break;
-                case WARN:
-                    Log.w(tag, msg);
-                    break;
-            }
+        switch (level) {
+            case ERROR:
+                Log.e(tag, msg);
+                break;
+            case VERBOSE:
+                Log.v(tag, msg);
+                break;
+            case INFORMATION:
+                Log.i(tag, msg);
+                break;
+            case DEBUG:
+                Log.d(tag, msg);
+                break;
+            case WARN:
+                Log.w(tag, msg);
+                break;
         }
     }
 
