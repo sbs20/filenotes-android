@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import sbs20.filenotes.R;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Settings;
 
-public class DropboxService implements ICloudService, IDirectoryListProvider {
+public class DropboxService implements ICloudService, IDirectoryProvider {
 
     private static final String APP_KEY = "q1p3jfhnraz1k7l";
     private static final String CLIENT_IDENTIFER = "sbs20.filenotes/1.0";
@@ -220,5 +221,18 @@ public class DropboxService implements ICloudService, IDirectoryListProvider {
     @Override
     public String getRootDirectoryPath() {
         return "";
+    }
+
+    @Override
+    public void createDirectory(String path) throws Exception {
+        Logger.info(this, "createDirectory(" + path + ")");
+        if (this.isAuthenticated()) {
+            try {
+                client.files.createFolder(path);
+                Logger.verbose(this, "createDirectory():done");
+            } catch (DbxFiles.CreateFolderException ex) {
+                throw new IOException(serviceManager.string(R.string.exception_directory_already_exists));
+            }
+        }
     }
 }

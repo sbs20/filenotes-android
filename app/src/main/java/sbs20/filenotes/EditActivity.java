@@ -212,7 +212,7 @@ public class EditActivity extends ThemedActivity {
                         if (succeeded) {
                             setTitle(note.getName());
                         } else {
-                            ServiceManager.getInstance().toast(getString(R.string.rename_failed));
+                            ServiceManager.getInstance().toast(R.string.rename_failed);
                         }
                         break;
 

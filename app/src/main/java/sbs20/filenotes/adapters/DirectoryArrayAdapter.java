@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.R;
-import sbs20.filenotes.storage.IDirectoryListProvider;
+import sbs20.filenotes.storage.IDirectoryProvider;
 
 public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
 
-    private IDirectoryListProvider provider;
+    private IDirectoryProvider provider;
     private String currentDirectory;
 
-    public DirectoryArrayAdapter(Context context, IDirectoryListProvider provider) {
+    public DirectoryArrayAdapter(Context context, IDirectoryProvider provider) {
         super(context);
         this.provider = provider;
     }
@@ -26,9 +26,9 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
     public void setCurrentDirectory(final String directory) {
         this.currentDirectory = directory;
 
-        AsyncTask<IDirectoryListProvider, Void, List<String>> query = new AsyncTask<IDirectoryListProvider, Void, List<String>>() {
+        AsyncTask<IDirectoryProvider, Void, List<String>> query = new AsyncTask<IDirectoryProvider, Void, List<String>>() {
             @Override
-            protected List<String> doInBackground(IDirectoryListProvider... params) {
+            protected List<String> doInBackground(IDirectoryProvider... params) {
                 try {
                     return params[0].getChildDirectoryPaths(directory);
                 } catch (Exception e) {

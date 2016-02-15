@@ -34,6 +34,7 @@
     <string name="no">no</string>
     <string name="yes">yes</string>
     <string name="logged_out">Logged out</string>
+
     <string name="replication_replicating">Syncing</string>
     <string name="replication_analysing">Analysing&#8230;</string>
     <string name="replication_delete_local">Delete (local)</string>
@@ -53,6 +54,8 @@
     <string name="replication_notes_updated">Notes updated</string>
     <string name="replication_conflict_extension">.conflict</string>
     <string name="replication_abort">User abort</string>
+    <string name="exception_directory_already_exists">Directory already exists</string>
+    <string name="default_new_folder_name">New Folder</string>
 
 
     <string-array name="pref_font_list_text">

@@ -18,11 +18,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import sbs20.filenotes.R;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.model.Logger;
-import sbs20.filenotes.model.Settings;
 
-public class FileSystemService implements IDirectoryListProvider {
+public class FileSystemService implements IDirectoryProvider {
 
     private static FileSystemService instance;
 
@@ -253,7 +253,18 @@ public class FileSystemService implements IDirectoryListProvider {
         return list;
     }
 
+    @Override
     public String getRootDirectoryPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
+    @Override
+    public void createDirectory(String path) throws IOException {
+        File directory = new File(path);
+        if (directory.exists()) {
+            throw new IOException(ServiceManager.getInstance().string(R.string.exception_directory_already_exists));
+        } else {
+            directory.mkdir();
+        }
     }
 }
