@@ -56,15 +56,17 @@ public class SettingsActivity extends ThemedActivity {
             findPreference(Settings.STORAGE_DIRECTORY).setEnabled(!settings.internalStorage());
 
             boolean isCloudEnabled = !this.serviceManager.array(R.array.pref_cloud_values)[0].equals(settings.getCloudServiceName());
-            findPreference(Settings.CLOUD_STORAGE_PATH).setEnabled(isCloudEnabled);
-            findPreference(Settings.CLOUD_SERVICE_LOGOUT).setEnabled(isCloudEnabled);
+            boolean authenticated = this.serviceManager.getCloudService().isAuthenticated();
 
-            findPreference("Replication").setEnabled(isCloudEnabled);
+            findPreference(Settings.CLOUD_SERVICE_LOGIN).setEnabled(isCloudEnabled && !authenticated);
+            findPreference(Settings.CLOUD_STORAGE_PATH).setEnabled(isCloudEnabled && authenticated);
+            findPreference(Settings.CLOUD_SERVICE_LOGOUT).setEnabled(isCloudEnabled && authenticated);
+
+            findPreference("Replication").setEnabled(isCloudEnabled && authenticated);
         }
 
         @Override
-        public void onCreate(final Bundle savedInstanceState)
-        {
+        public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_settings);
             this.refresh();
@@ -93,6 +95,10 @@ public class SettingsActivity extends ThemedActivity {
                     this.serviceManager.toast(R.string.logged_out);
                     break;
 
+                case "pref_cloud_login":
+                    this.serviceManager.getCloudService().login();
+                    break;
+
                 case "pref_replication_clearlast":
                     this.serviceManager.getSettings().clearLastSync();
                     break;
@@ -112,6 +118,9 @@ public class SettingsActivity extends ThemedActivity {
         public void onResume() {
             super.onResume();
             this.getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+            // This event gets called after the Dropbox AuthActivity
+            this.refresh();
         }
 
         @Override

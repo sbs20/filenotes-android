@@ -11,6 +11,11 @@ public class NoopCloudService implements ICloudService {
     }
 
     @Override
+    public boolean isAuthenticated() {
+        return true;
+    }
+
+    @Override
     public void login() {
     }
 

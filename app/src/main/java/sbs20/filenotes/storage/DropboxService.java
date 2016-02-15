@@ -2,6 +2,7 @@ package sbs20.filenotes.storage;
 
 import com.dropbox.core.*;
 import com.dropbox.core.android.Auth;
+import com.dropbox.core.android.AuthActivity;
 import com.dropbox.core.v2.*;
 
 import java.io.FileInputStream;
@@ -20,10 +21,6 @@ import sbs20.filenotes.model.Settings;
 
 public class DropboxService implements ICloudService, IDirectoryProvider {
 
-    private static final String APP_KEY = "q1p3jfhnraz1k7l";
-    private static final String CLIENT_IDENTIFER = "sbs20.filenotes/1.0";
-    private static final String LOCALE = "en_UK";
-
     protected ServiceManager serviceManager;
     protected Settings settings;
 
@@ -32,6 +29,18 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     public DropboxService() {
         this.serviceManager = ServiceManager.getInstance();
         this.settings = serviceManager.getSettings();
+    }
+
+    private String appKey() {
+        return serviceManager.string(R.string.dropbox_app_key);
+    }
+
+    private String clientId() {
+        return serviceManager.string(R.string.dropbox_client_identifier);
+    }
+
+    private String locale() {
+        return serviceManager.string(R.string.dropbox_locale);
     }
 
     private String getAuthenticationToken() {
@@ -51,7 +60,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
         if (client == null) {
             String accessToken = this.getAuthenticationToken();
             if (accessToken != null && accessToken.length() > 0) {
-                DbxRequestConfig config = new DbxRequestConfig(CLIENT_IDENTIFER, LOCALE);
+                DbxRequestConfig config = new DbxRequestConfig(clientId(), locale());
                 client = new DbxClientV2(config, accessToken);
             }
         }
@@ -60,7 +69,8 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
         return client;
     }
 
-    private boolean isAuthenticated() {
+    @Override
+    public boolean isAuthenticated() {
         return this.getClient() != null;
     }
 
@@ -69,12 +79,14 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
         Logger.info(this, "login()");
         if (!this.isAuthenticated()) {
             Logger.verbose(this, "login():!Authenticated");
-            Auth.startOAuth2Authentication(this.serviceManager.getContext(), APP_KEY);
+            Auth.startOAuth2Authentication(serviceManager.getContext(), appKey());
         }
     }
 
     @Override
     public void logout() {
+        client = null;
+        AuthActivity.result = null;
         this.settings.clearDropboxAccessToken();
         Logger.info(this, "logout()");
     }

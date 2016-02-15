@@ -25,6 +25,7 @@ public class Settings {
     public static final String BEHAVIOUR_AUTOSAVE = "pref_behaviour_autosave";
 
     public static final String CLOUD_SERVICE = "pref_cloud";
+    public static final String CLOUD_SERVICE_LOGIN = "pref_cloud_login";
     public static final String CLOUD_SERVICE_LOGOUT = "pref_cloud_logout";
     public static final String CLOUD_STORAGE_PATH = "pref_cloud_storage_directory";
 

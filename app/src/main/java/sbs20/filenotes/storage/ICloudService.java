@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface ICloudService {
 
+    boolean isAuthenticated();
     void login();
     void logout();
     List<File> files() throws IOException;

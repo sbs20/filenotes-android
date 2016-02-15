@@ -79,6 +79,11 @@
             android:entries="@array/pref_cloud_text"
             android:entryValues="@array/pref_cloud_values" />
 
+        <Preference
+            android:key="pref_cloud_login"
+            android:title="Cloud login"
+            android:summary="Log into your cloud account"/>
+
         <sbs20.filenotes.DropboxFolderPicker
             android:key="pref_cloud_storage_directory"
             android:title="Remote folder"
