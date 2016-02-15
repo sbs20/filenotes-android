@@ -19,7 +19,6 @@ public class ServiceManager {
     private Settings settings;
     private ICloudService cloudService;
     private NotesManager notesManager;
-    private DateTime dateTime;
 
     private ServiceManager() {}
 
