@@ -75,14 +75,12 @@ public class ServiceManager {
     }
 
     public void toast(int resId) {
-        this.toast(this.getString(resId));
+        this.toast(this.string(resId));
     }
 
     public Context getContext() {
         return this.application.getBaseContext();
     }
-
-    public String getString(int resId) { return  this.application.getString(resId);}
 
     public String string(int resId) {
         return this.application.getString(resId);

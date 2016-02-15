@@ -100,7 +100,7 @@ public class Replicator {
             isCancelled.set(false);
 
             // Now abort
-            throw new Exception(ServiceManager.getInstance().getString(R.string.replication_abort));
+            throw new Exception(ServiceManager.getInstance().string(R.string.replication_abort));
         }
     }
 
@@ -110,7 +110,7 @@ public class Replicator {
 
         // We're going to download an alternate version : <filename>.conflict
         String tempFilepath = filePair.local.getName() +
-                ServiceManager.getInstance().getString(R.string.replication_conflict_extension);
+                ServiceManager.getInstance().string(R.string.replication_conflict_extension);
 
         // Download the server version
         cloudService.download(filePair.remote, tempFilepath);
@@ -135,7 +135,7 @@ public class Replicator {
 
             // Rename the server version to the conflict
             String serverConflictPath = filePair.remote.getPath() +
-                    ServiceManager.getInstance().getString(R.string.replication_conflict_extension);
+                    ServiceManager.getInstance().string(R.string.replication_conflict_extension);
 
             cloudService.move(filePair.remote, serverConflictPath);
 

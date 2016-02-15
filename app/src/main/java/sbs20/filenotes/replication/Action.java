@@ -22,22 +22,26 @@ public class Action {
         this.filePair = filePair;
     }
 
+    private String string(int resId) {
+        return ServiceManager.getInstance().string(resId);
+    }
+
     private String toString(Type type) {
         switch (type) {
             case None:
-                return ServiceManager.getInstance().getString(R.string.replication_none);
+                return string(R.string.replication_none);
             case Download:
-                return ServiceManager.getInstance().getString(R.string.replication_download);
+                return string(R.string.replication_download);
             case Upload:
-                return ServiceManager.getInstance().getString(R.string.replication_upload);
+                return string(R.string.replication_upload);
             case DeleteLocal:
-                return ServiceManager.getInstance().getString(R.string.replication_delete_local);
+                return string(R.string.replication_delete_local);
             case DeleteRemote:
-                return ServiceManager.getInstance().getString(R.string.replication_delete_remote);
+                return string(R.string.replication_delete_remote);
             case ResolveConflict:
-                return ServiceManager.getInstance().getString(R.string.replication_resolve_conflict);
+                return string(R.string.replication_resolve_conflict);
             default:
-                return ServiceManager.getInstance().getString(R.string.replication_unknown);
+                return string(R.string.replication_unknown);
         }
     }
 
