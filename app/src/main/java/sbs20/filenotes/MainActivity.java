@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
+import sbs20.filenotes.model.Logger;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
@@ -212,7 +213,7 @@ public class MainActivity extends ThemedActivity {
         final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
         progressDialog.setTitle(getString(R.string.replication_replicating));
         progressDialog.setMessage(getString(R.string.replication_analysing));
 
@@ -222,6 +223,7 @@ public class MainActivity extends ThemedActivity {
             // Set a click listener for progress dialog cancel button
             @Override
             public void onClick(DialogInterface dialog, int which){
+                Logger.info(this, "onClick()");
                 Replicator.getInstance().cancel();
 
                 // It would be nice to wait, but it makes android nervous. Comment until solution found
@@ -229,6 +231,15 @@ public class MainActivity extends ThemedActivity {
 
                 // dismiss the progress dialog
                 progressDialog.dismiss();
+            }
+        });
+
+        // Handles the back button - required by Google design guidelines
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                Logger.info(this, "onCancel()");
+                Replicator.getInstance().cancel();
             }
         });
 
