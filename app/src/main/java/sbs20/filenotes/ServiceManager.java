@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import sbs20.filenotes.storage.ICloudService;
 import sbs20.filenotes.storage.DropboxService;
+import sbs20.filenotes.storage.IStringTransform;
 import sbs20.filenotes.storage.NoopCloudService;
 import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Settings;
@@ -87,5 +88,23 @@ public class ServiceManager {
 
     public String[] array(int resId) {
         return this.application.getResources().getStringArray(resId);
+    }
+
+    public IStringTransform fileReadTransform() {
+        return new IStringTransform() {
+            @Override
+            public String transform(String s) {
+                return s.replaceAll("\r\n", "\n");
+            }
+        };
+    }
+
+    public IStringTransform fileWriteTransform() {
+        return new IStringTransform() {
+            @Override
+            public String transform(String s) {
+                return s.replaceAll("\n", "\r\n");
+            }
+        };
     }
 }

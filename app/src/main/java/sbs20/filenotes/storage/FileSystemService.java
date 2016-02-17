@@ -55,7 +55,7 @@ public class FileSystemService implements IDirectoryProvider {
         }
     }
 
-    public String readFileAsString(File file, int length) {
+    private String readFileAsString(File file, IStringTransform transform, int length) {
         StringBuffer stringBuffer = new StringBuffer();
         try {
             FileReader reader = new FileReader(file);
@@ -77,11 +77,15 @@ public class FileSystemService implements IDirectoryProvider {
             return stringBuffer.substring(0, length);
         }
 
-        return stringBuffer.toString();
+        return transform.transform(stringBuffer.toString());
     }
 
-    public String readFileAsString(File file) {
-        return readFileAsString(file, -1);
+    public String fileAsString(File file) {
+        return readFileAsString(file, ServiceManager.getInstance().fileReadTransform(), -1);
+    }
+
+    public String fileSummaryAsString(File file) {
+        return readFileAsString(file, ServiceManager.getInstance().fileReadTransform() , 128);
     }
 
     public boolean filesEqual(File file1, File file2) {
@@ -153,10 +157,11 @@ public class FileSystemService implements IDirectoryProvider {
     }
 
     public void write(String name, String text) {
+        IStringTransform transform = ServiceManager.getInstance().fileWriteTransform();
         try {
             FileWriter fileWriter = new FileWriter(this.getFilepath(name));
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(text);
+            bufferedWriter.write(transform.transform(text));
             bufferedWriter.close();
             fileWriter.close();
             ServiceManager.getInstance().toast("Saved");

@@ -33,7 +33,7 @@ public class NotesManager {
 	}
 
     private void mergeFileIntoNote(File file, Note note) {
-        note.setTextSummary(this.storage.readFileAsString(file, 128));
+        note.setTextSummary(this.storage.fileSummaryAsString(file));
         note.setSize(file.length());
         note.setLastModified(new Date(file.lastModified()));
     }
@@ -111,7 +111,7 @@ public class NotesManager {
     public void editNote(Note note) {
         File file = this.storage.getFile(note.getName());
         if (file.exists()) {
-            note.setText(this.storage.readFileAsString(file));
+            note.setText(this.storage.fileAsString(file));
             note.reset();
         }
 
