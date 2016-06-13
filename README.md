@@ -1,7 +1,9 @@
 # filenotes-android
 
 ## Install
-https://play.google.com/store/apps/details?id=sbs20.filenotes
+[Install from Google Play](https://play.google.com/store/apps/details?id=sbs20.filenotes)
+
+![screenshot](https://github.com/sbs20/filenotes-android/raw/master/img/screen.png)
 
 ## Simple note taking with text files and cloud sync
 Filenotes is an app designed for simple note taking and cloud sync. It has no closed or proprietary formats, no lock-in and is compatible with any device which supports text files. Filenotes has integrated Dropbox synchronisation but you are free to use your own software to sync files with your cloud provider of choice.
