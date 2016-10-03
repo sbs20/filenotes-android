@@ -57,7 +57,7 @@ public class NoteArrayAdapter extends GenericBaseAdpater<Note> {
             row = inflater.inflate(R.layout.listview_notes, parent, false);
         }
 
-        View flash = (View) row.findViewById(R.id.viewColor);
+        View flash = (View) row.findViewById(R.id.listnote_flash);
         flash.setBackgroundColor(this.getColor(note));
 
         TextView name = (TextView) row.findViewById(R.id.listnote_name);

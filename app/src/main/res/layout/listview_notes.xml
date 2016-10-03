@@ -19,7 +19,7 @@
         card_view:contentPadding="0dp">
 
         <View
-            android:id="@+id/viewColor"
+            android:id="@+id/listnote_flash"
             android:layout_height="match_parent"
             android:layout_width="4dp" />
 
