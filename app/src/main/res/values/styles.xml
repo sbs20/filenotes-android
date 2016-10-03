@@ -13,6 +13,14 @@
         http://stackoverflow.com/questions/28700593/how-to-import-set-of-icons-into-android-studio-project
     -->
 
+    <declare-styleable name="mainCardStyle">
+        <attr name="noteCardStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="mainListStyle">
+        <attr name="noteListStyle" format="reference" />
+    </declare-styleable>
+
     <!-- Font sizes -->
     <style name="Text">
         <item name="android:paddingBottom">5sp</item>
@@ -48,23 +56,34 @@
         <item name="android:paddingTop">10dp</item>
     </style>
 
+    <style name="ListLight">
+        <item name="android:background">#e0e0e0</item>
+    </style>
+
+    <style name="ListDark">
+        <item name="android:background">#000000</item>
+    </style>
+
     <!-- Main app theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Status bar -->
-        <item name="colorPrimaryDark">#1565c0</item>
+        <item name="colorPrimaryDark">#283593</item>
         <!-- Header colour -->
-        <item name="colorPrimary">#42a5f5</item>
+        <item name="colorPrimary">#3f51b5</item>
         <!-- Button and cursor colour -->
-        <item name="colorAccent">#42a5f5</item>
-        <!-- Header text colour -->
+        <item name="colorAccent">#e91e63</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="noteCardStyle">@style/CardView.Light</item>
+        <item name="noteListStyle">@style/ListLight</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
-        <item name="colorPrimaryDark">#263238</item>
-        <item name="colorPrimary">#455a64</item>
-        <item name="colorAccent">#455a64</item>
+        <item name="colorPrimaryDark">#283593</item>
+        <item name="colorPrimary">#3f51b5</item>
+        <item name="colorAccent">#e91e63</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="noteCardStyle">@style/CardView.Dark</item>
+        <item name="noteListStyle">@style/ListDark</item>
     </style>
 
 </resources>
