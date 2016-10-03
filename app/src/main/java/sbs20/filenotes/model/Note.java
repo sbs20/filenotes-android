@@ -1,5 +1,9 @@
 package sbs20.filenotes.model;
 
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Locale;
 
@@ -115,5 +119,17 @@ public class Note implements Comparable<Note> {
 
     public boolean isText() {
         return this.name.toLowerCase().endsWith(".txt");
+    }
+
+    @Override
+    public int hashCode() {
+        try {
+            Charset utf8 = Charset.forName("UTF-8");
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(utf8.encode(this.getName()));
+            return new BigInteger(md5.digest()).hashCode();
+        } catch (NoSuchAlgorithmException e) {
+            return super.hashCode();
+        }
     }
 }
