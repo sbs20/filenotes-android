@@ -25,7 +25,56 @@ public class EditActivity extends ThemedActivity {
     private Note note;
     private EditText noteText;
 
-    private void updateNote() {
+    private void loadData(Bundle savedInstanceState) {
+
+        // set up the text field
+        this.noteText = (EditText) this.findViewById(R.id.note);
+        this.note = ServiceManager.getInstance().getNotesManager().getSelectedNote();
+
+        String name = null;
+        String text = null;
+        String debug = "";
+
+        // Use saved values if possible
+        if (this.note != null) {
+            debug += "this.note != null;\n";
+            name = this.note.getName();
+            text = this.note.getText();
+        }
+
+        // If there is saved instance data then we need to override
+        if (savedInstanceState != null) {
+            debug += "savedInstanceState != null;\n";
+
+            // Get the current note name
+            name = savedInstanceState.getString(UNSAVEDNOTE);
+            text = savedInstanceState.getString(UNSAVEDTEXT);
+        }
+
+        if (this.note == null && name != null) {
+            debug += "this.note == null && name != null;\n";
+
+            // We need to reload all notes
+            ServiceManager.getInstance().getNotesManager()
+                    .readAllFromStorage();
+
+            // Now get that note
+            this.note = ServiceManager.getInstance().getNotesManager()
+                    .getNotes()
+                    .getByName(name);
+        }
+
+        if (this.note != null) {
+            this.setTitle(name);
+            this.noteText.setText(text);
+        } else {
+            this.noteText.setText(debug);
+        }
+
+        Logger.verbose(this, debug);
+    }
+
+    private void uiToModel() {
         EditText edit = (EditText) this.findViewById(R.id.note);
         this.note.setText(edit.getText().toString());
     }
@@ -44,20 +93,19 @@ public class EditActivity extends ThemedActivity {
         setupActionBar();
 
         // Load the note
-        this.note = ServiceManager.getInstance().getNotesManager().getSelectedNote();
-        this.noteText = (EditText) this.findViewById(R.id.note);
-        this.noteText.setText(this.note.getText());
-        this.setTitle(this.note.getName());
+        this.loadData(savedInstanceState);
 
         // Listen for changes so we can mark this as dirty
         this.noteText.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence one, int a, int b, int c) {
-                updateNote();
+                uiToModel();
                 if (note.isDirty()) {
                     String title = getTitle().toString();
                     if (!title.startsWith("* ")) {
                         setTitle("* " + title);
                     }
+                } else {
+                    setTitle(note.getName());
                 }
             }
 
@@ -143,7 +191,7 @@ public class EditActivity extends ThemedActivity {
 
     public void startClose() {
 
-        this.updateNote();
+        this.uiToModel();
 
         if (this.note.isDirty()) {
 
@@ -184,6 +232,8 @@ public class EditActivity extends ThemedActivity {
     }
 
     public void finishClose() {
+        // Clear the savedInstanceState
+
         // Do not clear the current note yet - we need to know about it on the MainActivity
         NavUtils.navigateUpFromSameTask(this);
     }
@@ -245,14 +295,10 @@ public class EditActivity extends ThemedActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
-        this.updateNote();
+        this.uiToModel();
         Logger.verbose(this, "onSaveInstanceState");
-        if (this.note.isDirty()) {
-            Logger.verbose(this, "onSaveInstanceState.savingNote");
-
-            savedInstanceState.putString(UNSAVEDNOTE, this.note.getName());
-            savedInstanceState.putCharSequence(UNSAVEDTEXT, this.note.getText());
-        }
+        savedInstanceState.putString(UNSAVEDNOTE, this.note.getName());
+        savedInstanceState.putString(UNSAVEDTEXT, this.note.getText());
 
         super.onSaveInstanceState(savedInstanceState);
     }
@@ -261,29 +307,5 @@ public class EditActivity extends ThemedActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
-
-        Logger.verbose(this, "onRestoreInstanceState");
-
-        // Restore state members from saved instance
-        if (this.note == null) {
-
-            Logger.verbose(this, "onRestoreInstanceState.restoreNote");
-
-            // Get the current note name
-            String name = savedInstanceState.getString(UNSAVEDNOTE);
-
-            // Reload all notes
-            ServiceManager.getInstance().getNotesManager()
-                    .readAllFromStorage();
-
-            // Now get that note
-            this.note = ServiceManager.getInstance().getNotesManager()
-                    .getNotes()
-                    .getByName(name);
-
-            // Finally update the text field
-            EditText edit = (EditText) this.findViewById(R.id.note);
-            edit.setText(savedInstanceState.getCharSequence(UNSAVEDTEXT));
-        }
     }
 }
