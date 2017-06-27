@@ -65,6 +65,9 @@ public class Settings {
             case "light":
                 return R.style.AppTheme;
 
+            case "amoled":
+                return R.style.AppTheme_Amoled;
+
             case "dark":
             default:
                 return R.style.AppTheme_Dark;

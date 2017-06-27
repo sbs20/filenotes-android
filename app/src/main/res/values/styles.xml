@@ -21,6 +21,10 @@
         <attr name="noteListStyle" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="mainEditorStyle">
+        <attr name="editorStyle" format="reference" />
+    </declare-styleable>
+
     <!-- Font sizes -->
     <style name="Text">
         <item name="android:paddingBottom">5sp</item>
@@ -64,6 +68,24 @@
         <item name="android:background">#000000</item>
     </style>
 
+    <!-- Amoled bits -->
+    <style name="CardView.Black">
+        <item name="cardBackgroundColor">#000000</item>
+    </style>
+    <style name="ListViewBlack" parent="Widget.AppCompat.ListView">
+        <item name="android:background">#000000</item>
+        <!--
+        <item name="android:listSelector">#202020</item>
+        -->
+    </style>
+    <style name="DialogBlack" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">#3498db</item>
+        <item name="android:background">#000000</item>
+    </style>
+    <style name="TextViewBlack">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
     <!-- Main app theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Status bar -->
@@ -75,6 +97,7 @@
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="noteCardStyle">@style/CardView.Light</item>
         <item name="noteListStyle">@style/ListLight</item>
+        <item name="editorStyle">@null</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
@@ -84,6 +107,22 @@
         <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="noteCardStyle">@style/CardView.Dark</item>
         <item name="noteListStyle">@style/ListDark</item>
+        <item name="editorStyle">@null</item>
+    </style>
+
+    <style name="AppTheme.Amoled" parent="Theme.AppCompat">
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorPrimary">#101010</item>
+        <item name="colorAccent">#3498db</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="noteCardStyle">@style/CardView.Black</item>
+        <item name="noteListStyle">@style/ListDark</item>
+        <item name="editorStyle">@style/ListDark</item>
+        <item name="android:textViewStyle">@style/TextViewBlack</item>
+
+        <!-- for preferences -->
+        <item name="android:listViewStyle">@style/ListViewBlack</item>
+        <item name="android:alertDialogTheme">@style/DialogBlack</item>
     </style>
 
 </resources>
