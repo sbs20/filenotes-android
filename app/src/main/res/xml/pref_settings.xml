@@ -34,6 +34,14 @@
             android:title="Word wrap"
             android:defaultValue="false" />
 
+        <ListPreference
+            android:key="pref_appearance_note_sort"
+            android:title="Sorting"
+            android:summary="Choose sorting"
+            android:dialogTitle="Sorting"
+            android:entries="@array/pref_note_sort_text"
+            android:entryValues="@array/pref_note_sort_values" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

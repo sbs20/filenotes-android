@@ -85,7 +85,7 @@ public class NotesManager {
             }
         }
 
-        notes.sort();
+        notes.sortBy(settings.getNoteSortComparator());
 
         Logger.verbose(this, "readAllFromStorage.Finish");
     }

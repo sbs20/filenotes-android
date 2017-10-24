@@ -97,6 +97,15 @@
         <item>amoled</item>
     </string-array>
 
+    <string-array name="pref_note_sort_text">
+        <item>By name</item>
+        <item>By date modified (descending)</item>
+    </string-array>
+    <string-array name="pref_note_sort_values">
+        <item>name_asc</item>
+        <item>modified_desc</item>
+    </string-array>
+
     <string-array name="pref_cloud_text">
         <item>None</item>
         <item>Dropbox</item>

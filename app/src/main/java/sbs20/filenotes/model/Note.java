@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -107,10 +108,7 @@ public class Note implements Comparable<Note> {
     }
 
     public int compareTo(Note another) {
-        Locale locale = Locale.getDefault();
-        String l = this.getName().toLowerCase(locale);
-        String r = another.getName().toLowerCase(locale);
-        return l.compareTo(r);
+        return Comparators.Name.compare(this, another);
     }
 
     public boolean isHidden() {
@@ -131,5 +129,25 @@ public class Note implements Comparable<Note> {
         } catch (NoSuchAlgorithmException e) {
             return super.hashCode();
         }
+    }
+
+    public static class Comparators {
+
+        public static Comparator<Note> Name = new Comparator<Note>() {
+            @Override
+            public int compare(Note n1, Note n2) {
+                Locale locale = Locale.getDefault();
+                String l = n1.getName().toLowerCase(locale);
+                String r = n2.getName().toLowerCase(locale);
+                return l.compareTo(r);
+            }
+        };
+
+        public static Comparator<Note> DateModifiedDescending = new Comparator<Note>() {
+            @Override
+            public int compare(Note n1, Note n2) {
+                return -1 * n1.lastModified.compareTo(n2.lastModified);
+            }
+        };
     }
 }

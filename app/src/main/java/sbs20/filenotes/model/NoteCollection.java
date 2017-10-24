@@ -2,11 +2,12 @@ package sbs20.filenotes.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class NoteCollection extends ArrayList<Note> {
 
-    public void sort() {
-        Collections.sort(this);
+    public void sortBy(Comparator<Note> comparator) {
+        Collections.sort(this, comparator);
     }
 
     public boolean isExistingName(String name) {

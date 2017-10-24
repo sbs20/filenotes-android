@@ -3,6 +3,7 @@ package sbs20.filenotes.model;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
+import java.util.Comparator;
 import java.util.Date;
 
 import sbs20.filenotes.DateTime;
@@ -16,6 +17,7 @@ public class Settings {
     public static final String APPEARANCE_FONTFACE = "pref_appearance_font";
     public static final String APPEARANCE_FONTSIZE = "pref_appearance_font_size";
     public static final String APPEARANCE_WORDWRAP = "pref_appearance_wordwrap";
+    public static final String APPEARANCE_NOTE_SORT = "pref_appearance_note_sort";
 
     public static final String STORAGE_DIRECTORY = "pref_storage_directory";
     public static final String STORAGE_USE_INTERNAL = "pref_storage_useinternal";
@@ -103,6 +105,15 @@ public class Settings {
     public int getFontSize() {
         String s = this.get(APPEARANCE_FONTSIZE, "16");
         return Integer.parseInt(s);
+    }
+
+    public Comparator<Note> getNoteSortComparator() {
+        String s = this.get(APPEARANCE_NOTE_SORT, "name");
+        if (s.equals("modified_desc")) {
+            return Note.Comparators.DateModifiedDescending;
+        } else {
+            return Note.Comparators.Name;
+        }
     }
 
     public String getDropboxAccessToken() {
