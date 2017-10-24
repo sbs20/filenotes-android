@@ -189,6 +189,7 @@ public class MainActivity extends ThemedActivity {
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
+        // See here: https://stackoverflow.com/a/41901653/1229065
         SearchView searchView = (SearchView) menu
                 .findItem(R.id.action_search)
                 .getActionView();

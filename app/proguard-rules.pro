@@ -4,6 +4,7 @@
 -optimizationpasses 2
 
 -keep class com.dropbox.** { *; }
+-keep class android.support.v7.widget.SearchView { *; }
 
 -dontwarn com.dropbox.**
 
