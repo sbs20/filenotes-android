@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import sbs20.filenotes.DateTime;
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.R;
 import sbs20.filenotes.storage.FileSystemService;
@@ -27,6 +26,24 @@ public class NotesManager {
 	public Note getSelectedNote() {
 		return this.selectedNote;
 	}
+
+    public NoteCollection search(String query) {
+        Logger.debug(this, "search()");
+        NoteCollection results = new NoteCollection();
+
+        for (Note note : this.notes) {
+            if (note.getName()
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                this.storedContent(note)
+                    .toLowerCase()
+                    .contains(query.toLowerCase())) {
+                results.add(note);
+            }
+        }
+
+        return results;
+    }
 
 	public NoteCollection getNotes() {
 		return this.notes;
@@ -108,10 +125,20 @@ public class NotesManager {
         this.registerChange();
     }
 
-    public void editNote(Note note) {
+    public String storedContent(Note note) {
         File file = this.storage.getFile(note.getName());
         if (file.exists()) {
-            note.setText(this.storage.fileAsString(file));
+            return this.storage.fileAsString(file);
+        }
+
+        return null;
+    }
+
+    public void editNote(Note note) {
+        String content = this.storedContent(note);
+
+        if (content != null) {
+            note.setText(content);
             note.reset();
         }
 
