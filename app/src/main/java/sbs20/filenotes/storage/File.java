@@ -1,6 +1,6 @@
 package sbs20.filenotes.storage;
 
-import com.dropbox.core.v2.DbxFiles;
+import com.dropbox.core.v2.files.FileMetadata;
 
 import java.util.Date;
 
@@ -16,15 +16,15 @@ public class File {
     private Object file;
     private boolean isLocal;
 
-    public File(DbxFiles.FileMetadata dbxfile) {
+    public File(FileMetadata dbxfile) {
         this.isFolder = false;
-        this.name = dbxfile.name;
-        this.path = dbxfile.pathLower;
-        this.id = dbxfile.id;
-        this.rev = dbxfile.rev;
-        this.size = dbxfile.size;
-        this.lastModified = dbxfile.serverModified;
-        this.clientModified = dbxfile.clientModified;
+        this.name = dbxfile.getName();
+        this.path = dbxfile.getPathLower();
+        this.id = dbxfile.getId();
+        this.rev = dbxfile.getRev();
+        this.size = dbxfile.getSize();
+        this.lastModified = dbxfile.getServerModified();
+        this.clientModified = dbxfile.getClientModified();
         this.file = dbxfile;
         this.isLocal = false;
     }
