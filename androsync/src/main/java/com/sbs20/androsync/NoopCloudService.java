@@ -22,25 +22,25 @@ public class NoopCloudService implements ICloudService {
     }
 
     @Override
-    public List<File> files(String remotePath) throws IOException {
+    public List<FileItem> files(String remotePath) throws IOException {
         Logger.verbose(this, "files()");
         throw new IOException("NoopService has no remote files");
     }
 
     @Override
-    public void move(File remoteFile, String desiredPath) {
+    public void move(FileItem remoteFile, String desiredPath) {
     }
 
     @Override
-    public void upload(File file, String remotePath) {
+    public void upload(FileItem file, String remotePath) {
     }
 
     @Override
-    public void download(File file, String localPath) {
+    public void download(FileItem file, String localPath) {
     }
 
     @Override
-    public void delete(File file) {
+    public void delete(FileItem file) {
     }
 
     @Override
