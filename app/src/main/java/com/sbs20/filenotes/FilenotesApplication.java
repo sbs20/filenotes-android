@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.app.Application;
 

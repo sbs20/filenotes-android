@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,8 +21,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import sbs20.filenotes.adapters.DirectoryArrayAdapter;
+import com.sbs20.filenotes.adapters.DirectoryArrayAdapter;
 import com.sbs20.androsync.IDirectoryProvider;
+
+import sbs20.filenotes.R;
 
 public abstract class FolderPicker extends DialogPreference {
 

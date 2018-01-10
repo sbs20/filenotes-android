@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.content.Context;
 import android.util.AttributeSet;

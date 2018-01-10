@@ -1,4 +1,4 @@
-package sbs20.filenotes.model;
+package com.sbs20.filenotes.model;
 
 import java.util.ArrayList;
 import java.util.Collections;

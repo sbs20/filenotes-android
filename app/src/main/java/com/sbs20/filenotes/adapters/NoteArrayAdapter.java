@@ -1,4 +1,4 @@
-package sbs20.filenotes.adapters;
+package com.sbs20.filenotes.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sbs20.androsync.DateTime;
-import sbs20.filenotes.model.Note;
+import com.sbs20.filenotes.model.Note;
+
 import sbs20.filenotes.R;
 
 public class NoteArrayAdapter extends GenericBaseAdpater<Note> {

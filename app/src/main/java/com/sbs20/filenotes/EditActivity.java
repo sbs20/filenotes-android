@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,7 +15,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.sbs20.androsync.Logger;
-import sbs20.filenotes.model.Note;
+import com.sbs20.filenotes.model.Note;
+
+import sbs20.filenotes.R;
 
 public class EditActivity extends ThemedActivity {
 

@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -24,14 +24,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import sbs20.filenotes.adapters.NoteArrayAdapter;
+import com.sbs20.filenotes.adapters.NoteArrayAdapter;
 import com.sbs20.androsync.DateTime;
 import com.sbs20.androsync.Logger;
-import sbs20.filenotes.model.Note;
-import sbs20.filenotes.model.NoteCollection;
-import sbs20.filenotes.model.NotesManager;
+import com.sbs20.filenotes.model.Note;
+import com.sbs20.filenotes.model.NoteCollection;
+import com.sbs20.filenotes.model.NotesManager;
 import com.sbs20.androsync.Action;
-import sbs20.filenotes.model.Settings;
+import com.sbs20.filenotes.model.Settings;
+
+import sbs20.filenotes.R;
 
 public class MainActivity extends ThemedActivity {
 

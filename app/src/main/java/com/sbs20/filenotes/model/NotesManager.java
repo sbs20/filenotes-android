@@ -1,4 +1,4 @@
-package sbs20.filenotes.model;
+package com.sbs20.filenotes.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 
-import sbs20.filenotes.ServiceManager;
+import com.sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.R;
 import com.sbs20.androsync.FileSystemService;
 import com.sbs20.androsync.Logger;

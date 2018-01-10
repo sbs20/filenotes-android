@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.app.Application;
 import android.content.Context;
@@ -11,8 +11,10 @@ import com.sbs20.androsync.DropboxService;
 import com.sbs20.androsync.NoopCloudService;
 import com.sbs20.androsync.Replicator;
 import com.sbs20.androsync.SyncContext;
-import sbs20.filenotes.model.NotesManager;
-import sbs20.filenotes.model.Settings;
+import com.sbs20.filenotes.model.NotesManager;
+import com.sbs20.filenotes.model.Settings;
+
+import sbs20.filenotes.R;
 
 public class ServiceManager {
 

@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -10,11 +10,13 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import sbs20.filenotes.adapters.NoteArrayAdapter;
+import com.sbs20.filenotes.adapters.NoteArrayAdapter;
 import com.sbs20.androsync.Logger;
-import sbs20.filenotes.model.Note;
-import sbs20.filenotes.model.NoteCollection;
-import sbs20.filenotes.model.NotesManager;
+import com.sbs20.filenotes.model.Note;
+import com.sbs20.filenotes.model.NoteCollection;
+import com.sbs20.filenotes.model.NotesManager;
+
+import sbs20.filenotes.R;
 
 public class SearchResultsActivity extends ThemedActivity {
 

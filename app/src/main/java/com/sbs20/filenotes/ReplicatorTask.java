@@ -1,10 +1,12 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.os.AsyncTask;
 
 import com.sbs20.androsync.Action;
 import com.sbs20.androsync.IObserver;
 import com.sbs20.androsync.Replicator;
+
+import sbs20.filenotes.R;
 
 public class ReplicatorTask  {
 

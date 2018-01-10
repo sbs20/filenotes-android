@@ -1,8 +1,10 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.KeyEvent;
+
+import sbs20.filenotes.R;
 
 public class AboutActivity extends ThemedActivity {
 

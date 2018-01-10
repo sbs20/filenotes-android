@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.filenotes;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.sbs20.androsync.Logger;
-import sbs20.filenotes.model.Settings;
+import com.sbs20.filenotes.model.Settings;
+
+import sbs20.filenotes.R;
 
 public class SettingsActivity extends ThemedActivity {
 

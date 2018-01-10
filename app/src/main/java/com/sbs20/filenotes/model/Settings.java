@@ -1,4 +1,4 @@
-package sbs20.filenotes.model;
+package com.sbs20.filenotes.model;
 
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -12,7 +12,7 @@ import java.util.Date;
 import com.sbs20.androsync.DateTime;
 import com.sbs20.androsync.Logger;
 import sbs20.filenotes.R;
-import sbs20.filenotes.ServiceManager;
+import com.sbs20.filenotes.ServiceManager;
 
 public class Settings implements ISettings {
 

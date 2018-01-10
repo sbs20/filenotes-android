@@ -1,4 +1,4 @@
-package sbs20.filenotes.model;
+package com.sbs20.filenotes.model;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
