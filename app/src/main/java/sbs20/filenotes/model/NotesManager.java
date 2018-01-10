@@ -1,7 +1,6 @@
 package sbs20.filenotes.model;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Date;
@@ -9,12 +8,16 @@ import java.util.List;
 
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.R;
-import sbs20.filenotes.IStringTransform;
 import com.sbs20.androsync.FileSystemService;
 import com.sbs20.androsync.Logger;
 import com.sbs20.androsync.SyncContext;
 
 public class NotesManager {
+
+    public interface IStringTransform {
+        String transform(String s);
+    }
+
     private SyncContext syncContext;
     private FileSystemService storage;
 	private Note selectedNote;

@@ -3,13 +3,11 @@ package com.sbs20.androsync;
 import android.os.Environment;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,13 +20,8 @@ import java.util.Locale;
 public class FileSystemService implements IDirectoryProvider {
 
     private static final int BUFFER_SIZE = 1024;
-//    private SyncContext syncContext;
-//    private File storageDirectory;
 
     public FileSystemService() {
-
-//        this.syncContext = syncContext;
-//        this.storageDirectory = new File(this.syncContext.getLocalStoragePath());
     }
 
     public File getFile(String path) {
@@ -102,16 +95,11 @@ public class FileSystemService implements IDirectoryProvider {
     }
 
     public void write(String path, byte[] data) throws IOException {
-//        try {
-            FileOutputStream fileWriter = new FileOutputStream(path);
-            BufferedOutputStream bufferedWriter = new BufferedOutputStream(fileWriter);
-            bufferedWriter.write(data);
-            bufferedWriter.close();
-            fileWriter.close();
-//            ServiceManager.getInstance().toast("Saved");
-//        } catch (IOException ex) {
-//            Logger.error(this, ex.toString());
-//        }
+        FileOutputStream fileWriter = new FileOutputStream(path);
+        BufferedOutputStream bufferedWriter = new BufferedOutputStream(fileWriter);
+        bufferedWriter.write(data);
+        bufferedWriter.close();
+        fileWriter.close();
     }
 
     public void delete(String path) {

@@ -31,8 +31,6 @@ import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
 import com.sbs20.androsync.Action;
-import com.sbs20.androsync.Replicator;
-import sbs20.filenotes.ReplicatorTask;
 import sbs20.filenotes.model.Settings;
 
 public class MainActivity extends ThemedActivity {

@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 
 import com.sbs20.androsync.Action;
 import com.sbs20.androsync.IObserver;
-import com.sbs20.androsync.Logger;
 import com.sbs20.androsync.Replicator;
 
 public class ReplicatorTask  {

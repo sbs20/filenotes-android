@@ -207,6 +207,7 @@ public class Replicator {
     public void invoke(IObserver observer) {
 
         if (isRunning.compareAndSet(false, true)) {
+            this.status = Status.Running;
 
             Logger.info(this, "invoke()");
 
@@ -232,6 +233,7 @@ public class Replicator {
                 }
             }
 
+            this.status = Status.Succeeded;
             isRunning.set(false);
         } else {
             Logger.debug(this, "invoke():already running!");

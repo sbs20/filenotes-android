@@ -1,7 +1,5 @@
 package com.sbs20.androsync;
 
-import android.content.Context;
-
 import java.util.Date;
 
 public interface ISettings {
