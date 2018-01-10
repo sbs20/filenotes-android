@@ -1,8 +1,8 @@
 package com.sbs20.androsync;
 
 class FilePair {
-    File local;
-    File remote;
+    FileItem local;
+    FileItem remote;
 
     FilePair() {
     }

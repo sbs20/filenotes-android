@@ -21,7 +21,7 @@ class FilePairCollection implements Iterable<FilePair> {
         return null;
     }
 
-    void add(File file) {
+    void add(FileItem file) {
         String key = file.key();
         FilePair filePair = findByKey(key);
 

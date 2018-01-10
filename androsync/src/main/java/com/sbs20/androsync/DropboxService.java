@@ -100,10 +100,10 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     }
 
     @Override
-    public List<File> files(String remotePath) throws IOException {
+    public List<FileItem> files(String remotePath) throws IOException {
         Logger.info(this, "files():Start");
 
-        List<File> files = new ArrayList<>();
+        List<FileItem> files = new ArrayList<>();
 
         if (this.isAuthenticated()) {
             Logger.verbose(this, "files():Authenticated");
@@ -115,7 +115,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
                     for (Metadata m : result.getEntries()) {
                         if (m instanceof FileMetadata) {
                             FileMetadata f = (FileMetadata) m;
-                            files.add(new File(f));
+                            files.add(new FileItem(f));
                         }
                     }
 
@@ -137,7 +137,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     }
 
     @Override
-    public void move(File remoteFile, String desiredPath) throws Exception {
+    public void move(FileItem remoteFile, String desiredPath) throws Exception {
         Logger.info(this, "move():Start");
         FileMetadata fileMetadata = (FileMetadata) remoteFile.getFile();
 
@@ -148,7 +148,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     }
 
     @Override
-    public void upload(File file, String remotePath) throws Exception {
+    public void upload(FileItem file, String remotePath) throws Exception {
         Logger.info(this, "upload():Start");
         java.io.File localFile = (java.io.File) file.getFile();
 
@@ -162,7 +162,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     }
 
     @Override
-    public void download(File file, String localPath) throws Exception {
+    public void download(FileItem file, String localPath) throws Exception {
         Logger.info(this, "download():Start");
         FileMetadata remoteFile = (FileMetadata) file.getFile();
 
@@ -186,7 +186,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     }
 
     @Override
-    public void delete(File file) throws DbxException {
+    public void delete(FileItem file) throws DbxException {
         Logger.info(this, "delete():Start");
         FileMetadata remoteFile = (FileMetadata) file.getFile();
 

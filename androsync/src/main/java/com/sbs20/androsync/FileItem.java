@@ -4,7 +4,7 @@ import com.dropbox.core.v2.files.FileMetadata;
 
 import java.util.Date;
 
-public class File {
+public class FileItem {
     private boolean isFolder;
     private String name;
     private String path;
@@ -16,7 +16,7 @@ public class File {
     private Object file;
     private boolean isLocal;
 
-    public File(FileMetadata dbxfile) {
+    public FileItem(FileMetadata dbxfile) {
         this.isFolder = false;
         this.name = dbxfile.getName();
         this.path = dbxfile.getPathLower();
@@ -29,7 +29,7 @@ public class File {
         this.isLocal = false;
     }
 
-    public File(java.io.File file) {
+    public FileItem(java.io.File file) {
         this.isFolder = file.isDirectory();
         this.name = file.getName();
         this.path = file.getPath();

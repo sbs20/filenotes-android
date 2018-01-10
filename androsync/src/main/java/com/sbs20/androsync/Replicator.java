@@ -72,10 +72,10 @@ public class Replicator {
     private void loadFiles() throws IOException {
         for (java.io.File file : this.context.getLocalFilesystem()
                 .readAllFilesFromStorage(this.context.getLocalStoragePath())) {
-            files.add(new File(file));
+            files.add(new FileItem(file));
         }
 
-        for (File file : cloudService.files(this.context.getRemoteStoragePath())) {
+        for (FileItem file : cloudService.files(this.context.getRemoteStoragePath())) {
             files.add(file);
         }
     }

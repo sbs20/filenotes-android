@@ -7,9 +7,9 @@ public interface ICloudService extends IDirectoryProvider {
     boolean isAuthenticated();
     void login();
     void logout();
-    List<File> files(String remotePath) throws IOException;
-    void move(File remoteFile, String desiredName) throws Exception;
-    void upload(File localFile, String remotePath) throws Exception;
-    void download(File remoteFile, String localPath) throws Exception ;
-    void delete(File remoteFile) throws Exception ;
+    List<FileItem> files(String remotePath) throws IOException;
+    void move(FileItem remoteFile, String desiredName) throws Exception;
+    void upload(FileItem localFile, String remotePath) throws Exception;
+    void download(FileItem remoteFile, String localPath) throws Exception ;
+    void delete(FileItem remoteFile) throws Exception ;
 }

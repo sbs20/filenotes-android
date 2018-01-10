@@ -46,19 +46,19 @@ public class SyncContext {
         return asPath(outputPath);
     }
 
-    public String toCommonPath(File file) {
+    public String toCommonPath(FileItem file) {
         return this.toCommonPath(file.getPath(), file.isLocal());
     }
 
-    public String toLocalPath(File file) {
+    public String toLocalPath(FileItem file) {
         return this.asPath(this.getLocalStoragePath() + this.toCommonPath(file));
     }
 
-    public String toRemotePath(File file) {
+    public String toRemotePath(FileItem file) {
         return this.asPath(this.getRemoteStoragePath() + this.toCommonPath(file));
     }
 
-    public String toOppositePath(File file) {
+    public String toOppositePath(FileItem file) {
         return file.isLocal() ?
                 this.toRemotePath(file) :
                 this.toLocalPath(file);
