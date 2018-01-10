@@ -1,21 +1,29 @@
 package sbs20.filenotes.model;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 
 import sbs20.filenotes.ServiceManager;
 import sbs20.filenotes.R;
-import sbs20.filenotes.storage.FileSystemService;
+import sbs20.filenotes.IStringTransform;
+import com.sbs20.androsync.FileSystemService;
+import com.sbs20.androsync.Logger;
+import com.sbs20.androsync.SyncContext;
 
 public class NotesManager {
+    private SyncContext syncContext;
     private FileSystemService storage;
 	private Note selectedNote;
 	private NoteCollection notes;
     private boolean isChanged;
 
     public NotesManager() {
-        this.storage = FileSystemService.getInstance();
+        this.syncContext = ServiceManager.getInstance().getSyncContext();
+        this.storage = ServiceManager.getInstance().getLocalFilesystem();
         this.notes = new NoteCollection();
         this.isChanged = false;
     }
@@ -50,7 +58,7 @@ public class NotesManager {
 	}
 
     private void mergeFileIntoNote(File file, Note note) {
-        note.setTextSummary(this.storage.fileSummaryAsString(file));
+        note.setTextSummary(this.fileSummaryAsString(file));
         note.setSize(file.length());
         note.setLastModified(new Date(file.lastModified()));
     }
@@ -65,10 +73,36 @@ public class NotesManager {
         return false;
     }
 
-    public void readAllFromStorage() {
+    public IStringTransform fileReadTransform() {
+        return new IStringTransform() {
+            @Override
+            public String transform(String s) {
+                return s.replaceAll("\r\n", "\n");
+            }
+        };
+    }
 
+    public IStringTransform fileWriteTransform() {
+        return new IStringTransform() {
+            @Override
+            public String transform(String s) {
+                return s.replaceAll("\n", "\r\n");
+            }
+        };
+    }
+
+    public String fileAsString(File file) {
+        return this.fileReadTransform().transform(FileSystemService.fileToString(file));
+    }
+
+    public String fileSummaryAsString(File file) {
+        return this.fileReadTransform().transform(FileSystemService.fileToString(file, 128));
+    }
+
+    public void readAllFromStorage() {
         Logger.verbose(this, "readAllFromStorage.Start");
-        List<File> files = this.storage.readAllFilesFromStorage();
+        String path = ServiceManager.getInstance().getSettings().getLocalStoragePath();
+        List<File> files = this.storage.readAllFilesFromStorage(path);
 
         // Ensure all files are in notes and up to date
         for (File file : files) {
@@ -76,6 +110,7 @@ public class NotesManager {
             if (note == null) {
                 note = new Note();
                 note.setName(file.getName());
+                note.setPath(file.getAbsolutePath());
                 notes.add(note);
             }
 
@@ -120,15 +155,23 @@ public class NotesManager {
     }
 
     public void writeToStorage(Note note) {
-        this.storage.write(note.getName(), note.getText());
-        note.reset();
-        this.registerChange();
+        byte[] data = this.fileWriteTransform().transform(note.getText())
+                .getBytes(Charset.defaultCharset());
+
+        try {
+            this.storage.write(note.getPath(), data);
+            ServiceManager.getInstance().toast("Saved");
+            note.reset();
+            this.registerChange();
+        } catch (IOException ex) {
+            Logger.error(this, ex.toString());
+        }
     }
 
     public String storedContent(Note note) {
-        File file = this.storage.getFile(note.getName());
+        File file = this.storage.getFile(note.getPath());
         if (file.exists()) {
-            return this.storage.fileAsString(file);
+            return this.fileAsString(file);
         }
 
         return null;
@@ -146,13 +189,26 @@ public class NotesManager {
     }
 
     public void deleteNote(Note note) {
-        this.storage.delete(note.getName());
+        this.storage.delete(note.getPath());
         this.notes.remove(note);
         this.registerChange();
     }
 
+    private static String containerPath(String filePath) {
+        int pathStemEnd = filePath.lastIndexOf("/");
+        if (pathStemEnd == -1) {
+            pathStemEnd = 0;
+        }
+
+        String stem = filePath.substring(0, pathStemEnd);
+        return  stem;
+    }
+
     public boolean renameNote(Note note, String desiredName) {
-        boolean succeeded = this.storage.rename(note.getName(), desiredName);
+        String desiredPath = containerPath(note.getPath()) + "/" +
+                desiredName;
+
+        boolean succeeded = this.storage.rename(note.getPath(), desiredPath);
         if (succeeded) {
             note.setName(desiredName);
             this.registerChange();
@@ -162,7 +218,7 @@ public class NotesManager {
     }
 
     public boolean isStored(Note note) {
-        return this.storage.exists(note.getName());
+        return this.storage.exists(note.getPath());
     }
 
     private String createUniqueNewName(String stem) {

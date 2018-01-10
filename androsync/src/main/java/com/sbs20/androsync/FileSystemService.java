@@ -1,7 +1,8 @@
-package sbs20.filenotes.storage;
+package com.sbs20.androsync;
 
 import android.os.Environment;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
@@ -18,74 +19,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import sbs20.filenotes.R;
-import sbs20.filenotes.ServiceManager;
-import sbs20.filenotes.model.Logger;
-
 public class FileSystemService implements IDirectoryProvider {
 
-    private static FileSystemService instance;
+    private static final int BUFFER_SIZE = 1024;
+//    private SyncContext syncContext;
+//    private File storageDirectory;
 
-    private FileSystemService() {
+    public FileSystemService() {
+
+//        this.syncContext = syncContext;
+//        this.storageDirectory = new File(this.syncContext.getLocalStoragePath());
     }
 
-    public static FileSystemService getInstance() {
-        if (instance == null) {
-            instance = new FileSystemService();
-        }
-
-        return instance;
-    }
-
-    private String getFilepath(String filename) {
-        return this.getStorageDirectory().getAbsolutePath() + "/" + filename;
-    }
-
-    public File getFile(String name) {
-        return new File(this.getFilepath(name));
-    }
-
-    private File getStorageDirectory() {
-        ServiceManager services = ServiceManager.getInstance();
-        if (services.getSettings().internalStorage()) {
-            return services.getContext().getFilesDir();
-        } else {
-            String directoryPath = services.getSettings().getLocalStoragePath();
-            return new File(directoryPath);
-        }
-    }
-
-    private String readFileAsString(File file, IStringTransform transform, int length) {
-        StringBuffer stringBuffer = new StringBuffer();
-        try {
-            FileReader reader = new FileReader(file);
-            char[] buffer = new char[1024];
-            int read;
-            while ((read = reader.read(buffer)) != -1) {
-                stringBuffer.append(buffer, 0, read);
-                if (length > -1 && stringBuffer.length() > length) {
-                    break;
-                }
-            }
-            reader.close();
-        } catch (IOException e) {
-            Logger.error(this, e.toString());
-        } finally {
-        }
-
-        if (length > -1 && stringBuffer.length() > length) {
-            return stringBuffer.substring(0, length);
-        }
-
-        return transform.transform(stringBuffer.toString());
-    }
-
-    public String fileAsString(File file) {
-        return readFileAsString(file, ServiceManager.getInstance().fileReadTransform(), -1);
-    }
-
-    public String fileSummaryAsString(File file) {
-        return readFileAsString(file, ServiceManager.getInstance().fileReadTransform() , 128);
+    public File getFile(String path) {
+        return new File(path);
     }
 
     public boolean filesEqual(File file1, File file2) {
@@ -99,9 +46,8 @@ public class FileSystemService implements IDirectoryProvider {
             FileInputStream reader1 = new FileInputStream(file2);
             FileInputStream reader2 = new FileInputStream(file2);
 
-            int size = 1024;
-            byte[] buffer1 = new byte[size];
-            byte[] buffer2 = new byte[size];
+            byte[] buffer1 = new byte[BUFFER_SIZE];
+            byte[] buffer2 = new byte[BUFFER_SIZE];
 
             int read1 = reader1.read(buffer1);
             int read2 = reader2.read(buffer2);
@@ -135,58 +81,56 @@ public class FileSystemService implements IDirectoryProvider {
         return true;
     }
 
-    public List<File> readAllFilesFromStorage() {
+    public List<File> readAllFilesFromStorage(String path) {
         List<File> files = new ArrayList<>();
 
-        if (this.getStorageDirectory().exists()) {
-            if (this.getStorageDirectory().isDirectory()) {
-                File[] array = this.getStorageDirectory().listFiles(new FileFilter() {
-                    @Override
-                    public boolean accept(File file) {
-                        return file.canRead() && file.isFile();
-                    }
-                });
-
-                for (File file : array) {
-                    files.add(file);
+        File directory = new File(path);
+        if (directory.exists() && directory.isDirectory()) {
+            File[] array = directory.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return file.canRead() && file.isFile();
                 }
+            });
+
+            for (File file : array) {
+                files.add(file);
             }
         }
 
         return files;
     }
 
-    public void write(String name, String text) {
-        IStringTransform transform = ServiceManager.getInstance().fileWriteTransform();
-        try {
-            FileWriter fileWriter = new FileWriter(this.getFilepath(name));
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(transform.transform(text));
+    public void write(String path, byte[] data) throws IOException {
+//        try {
+            FileOutputStream fileWriter = new FileOutputStream(path);
+            BufferedOutputStream bufferedWriter = new BufferedOutputStream(fileWriter);
+            bufferedWriter.write(data);
             bufferedWriter.close();
             fileWriter.close();
-            ServiceManager.getInstance().toast("Saved");
-        } catch (IOException ex) {
-            Logger.error(this, ex.toString());
-        }
+//            ServiceManager.getInstance().toast("Saved");
+//        } catch (IOException ex) {
+//            Logger.error(this, ex.toString());
+//        }
     }
 
-    public void delete(String name) {
-        File file = new File(this.getFilepath(name));
+    public void delete(String path) {
+        File file = new File(path);
         if (file.exists()) {
             file.delete();
         }
     }
 
-    public void copy(String srcname, String destname) {
-        File src = this.getFile(srcname);
-        File dst = this.getFile(destname);
+    public void copy(String sourcePath, String destinationPath) {
+        File src = this.getFile(sourcePath);
+        File dst = this.getFile(destinationPath);
 
         try {
             InputStream in = new FileInputStream(src);
             OutputStream out = new FileOutputStream(dst);
 
             // Transfer bytes from in to out
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[BUFFER_SIZE];
             int len;
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
@@ -199,25 +143,30 @@ public class FileSystemService implements IDirectoryProvider {
         }
     }
 
-    public boolean rename(String name, String desiredName) {
-        File desiredFile = new File(this.getFilepath(desiredName));
+    public boolean rename(String path, String desiredPath) {
+        File desiredFile = new File(desiredPath);
         if (desiredFile.exists()) {
             return false;
         }
 
         // Do a copy and delete rather than rename. Rename doesn't tickle
         // the file's lastModified and makes replication bad.
-        this.copy(name, desiredName);
-        this.delete(name);
+        this.copy(path, desiredPath);
+        this.delete(path);
 
-        File old = this.getFile(name);
+        File old = this.getFile(path);
         return (!old.exists() && desiredFile.exists());
     }
 
-
-    public boolean exists(String name) {
-        File file = new File(this.getFilepath(name));
+    public boolean exists(String path) {
+        File file = new File(path);
         return file.exists();
+    }
+
+    @Override
+    public boolean directoryExists(String path) {
+        File file = new File(path);
+        return file.exists() && file.isDirectory();
     }
 
     @Override
@@ -266,10 +215,37 @@ public class FileSystemService implements IDirectoryProvider {
     @Override
     public void createDirectory(String path) throws IOException {
         File directory = new File(path);
-        if (directory.exists()) {
-            throw new IOException(ServiceManager.getInstance().string(R.string.exception_directory_already_exists));
-        } else {
+        if (!directory.exists()) {
             directory.mkdir();
         }
+    }
+
+    public static String fileToString(File file, int length) {
+        StringBuffer stringBuffer = new StringBuffer();
+        try {
+            FileReader reader = new FileReader(file);
+            char[] buffer = new char[BUFFER_SIZE];
+            int read;
+            while ((read = reader.read(buffer)) != -1) {
+                stringBuffer.append(buffer, 0, read);
+                if (length > -1 && stringBuffer.length() > length) {
+                    break;
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            Logger.error(FileSystemService.class, e.toString());
+        } finally {
+        }
+
+        if (length > -1 && stringBuffer.length() > length) {
+            return stringBuffer.substring(0, length);
+        }
+
+        return stringBuffer.toString();
+    }
+
+    public static String fileToString(File file) {
+        return fileToString(file, -1);
     }
 }

@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import sbs20.filenotes.model.Logger;
+import com.sbs20.androsync.Logger;
 import sbs20.filenotes.model.Note;
 
 public class EditActivity extends ThemedActivity {

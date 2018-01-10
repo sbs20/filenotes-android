@@ -5,10 +5,12 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import sbs20.filenotes.storage.ICloudService;
-import sbs20.filenotes.storage.DropboxService;
-import sbs20.filenotes.storage.IStringTransform;
-import sbs20.filenotes.storage.NoopCloudService;
+import com.sbs20.androsync.FileSystemService;
+import com.sbs20.androsync.ICloudService;
+import com.sbs20.androsync.DropboxService;
+import com.sbs20.androsync.NoopCloudService;
+import com.sbs20.androsync.Replicator;
+import com.sbs20.androsync.SyncContext;
 import sbs20.filenotes.model.NotesManager;
 import sbs20.filenotes.model.Settings;
 
@@ -18,9 +20,11 @@ public class ServiceManager {
 
     private Application application;
     private Settings settings;
-    private ICloudService cloudService;
     private NotesManager notesManager;
-
+    private FileSystemService localFilesystem;
+    private ICloudService cloudService;
+    private Replicator replicator;
+    private SyncContext syncContext;
     private ServiceManager() {}
 
     public static ServiceManager getInstance() {
@@ -43,11 +47,41 @@ public class ServiceManager {
         return this.notesManager;
     }
 
+    public SyncContext getSyncContext() {
+        if (this.syncContext == null) {
+            this.syncContext = new SyncContext(
+                    this.getLocalFilesystem(),
+                    this.getCloudService(),
+                    this.getSettings().getLocalStoragePath(),
+                    this.getSettings().getRemoteStoragePath(),
+                    string(R.string.replication_conflict_extension));
+        }
+
+        return this.syncContext;
+    }
+
+    public FileSystemService getLocalFilesystem() {
+        if (this.localFilesystem == null) {
+            this.localFilesystem = new FileSystemService();
+        }
+
+        return this.localFilesystem;
+    }
+
+    public DropboxService getDropboxService() {
+        return new DropboxService(
+                this.string(R.string.dropbox_app_key),
+                this.string(R.string.dropbox_client_identifier),
+                this.string(R.string.dropbox_locale),
+                this.getContext(),
+                this.settings);
+    }
+
     public ICloudService getCloudService() {
         if (this.cloudService == null) {
             switch (this.getSettings().getCloudServiceName()) {
                 case "dropbox":
-                    this.cloudService = new DropboxService();
+                    this.cloudService = this.getDropboxService();
                     break;
 
                 default:
@@ -59,6 +93,16 @@ public class ServiceManager {
         return this.cloudService;
     }
 
+    public Replicator getReplicator() {
+        if (this.replicator == null) {
+            this.replicator = new Replicator(
+                    this.getSettings(),
+                    this.getSyncContext());
+        }
+
+        return this.replicator;
+    }
+
     public void resetCloudSync() {
         this.cloudService = null;
     }
@@ -67,6 +111,7 @@ public class ServiceManager {
         if (this.settings == null) {
             this.settings = new Settings(PreferenceManager.getDefaultSharedPreferences(this.application));
         }
+
         return this.settings;
     }
 
@@ -90,21 +135,4 @@ public class ServiceManager {
         return this.application.getResources().getStringArray(resId);
     }
 
-    public IStringTransform fileReadTransform() {
-        return new IStringTransform() {
-            @Override
-            public String transform(String s) {
-                return s.replaceAll("\r\n", "\n");
-            }
-        };
-    }
-
-    public IStringTransform fileWriteTransform() {
-        return new IStringTransform() {
-            @Override
-            public String transform(String s) {
-                return s.replaceAll("\n", "\r\n");
-            }
-        };
-    }
 }

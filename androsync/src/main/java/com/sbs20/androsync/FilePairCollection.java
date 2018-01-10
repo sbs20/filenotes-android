@@ -1,10 +1,8 @@
-package sbs20.filenotes.replication;
+package com.sbs20.androsync;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import sbs20.filenotes.storage.File;
 
 class FilePairCollection implements Iterable<FilePair> {
     private List<FilePair> list;

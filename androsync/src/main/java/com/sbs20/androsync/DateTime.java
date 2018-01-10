@@ -1,4 +1,4 @@
-package sbs20.filenotes;
+package com.sbs20.androsync;
 
 import android.content.Context;
 
@@ -11,15 +11,16 @@ import android.text.format.DateFormat;
 
 public class DateTime {
 
-    private DateTime() {
+    private Context context;
+    private SimpleDateFormat dateFormat;
+    private SimpleDateFormat timeFormat;
+
+    public DateTime(Context context) {
+        this.context = context;
     }
 
-    private static SimpleDateFormat dateFormat;
-    private static SimpleDateFormat timeFormat;
-
-    private static SimpleDateFormat dateFormat() {
+    private SimpleDateFormat dateFormat() {
         if (dateFormat == null) {
-            Context context = ServiceManager.getInstance().getContext();
             SimpleDateFormat tmp = (SimpleDateFormat)DateFormat.getDateFormat(context);
             dateFormat = new SimpleDateFormat(tmp.toLocalizedPattern());
         }
@@ -27,9 +28,8 @@ public class DateTime {
         return dateFormat;
     }
 
-    private static SimpleDateFormat timeFormat() {
+    private SimpleDateFormat timeFormat() {
         if (timeFormat == null) {
-            Context context = ServiceManager.getInstance().getContext();
             SimpleDateFormat tmp = (SimpleDateFormat)DateFormat.getTimeFormat(context);
             timeFormat = new SimpleDateFormat(tmp.toLocalizedPattern());
         }
@@ -37,11 +37,11 @@ public class DateTime {
         return timeFormat;
     }
 
-    public static String formatDate(Date date) {
+    public String formatDate(Date date) {
         return dateFormat().format(date);
     }
 
-    public static String formatTime(Date date) {
+    public String formatTime(Date date) {
         return timeFormat().format(date);
     }
 

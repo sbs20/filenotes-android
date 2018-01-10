@@ -1,4 +1,4 @@
-package sbs20.filenotes.replication;
+package com.sbs20.androsync;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,18 +6,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import sbs20.filenotes.DateTime;
-import sbs20.filenotes.R;
-import sbs20.filenotes.ServiceManager;
-import sbs20.filenotes.model.Logger;
-import sbs20.filenotes.model.Settings;
-import sbs20.filenotes.storage.ICloudService;
-import sbs20.filenotes.storage.File;
-import sbs20.filenotes.storage.FileSystemService;
-
 public class Replicator {
 
-    private static Replicator instance;
+    public enum Status {
+        Idle,
+        Running,
+        Succeeded,
+        Aborted,
+        Failed
+    }
 
     private AtomicBoolean isRunning;
     private AtomicBoolean isCancelled;
@@ -27,63 +24,58 @@ public class Replicator {
     private List<Action> actions;
     private List<IObserver> observers;
 
-    private Replicator() {
+    private ISettings settings;
+    private SyncContext context;
+    private Status status;
+
+    public Replicator(ISettings settings, SyncContext context) {
         isRunning = new AtomicBoolean(false);
         isCancelled = new AtomicBoolean(false);
-        initialise();
+
+        this.settings = settings;
+        this.context = context;
     }
 
     private void initialise() {
-        files = new FilePairCollection();
-        cloudService = ServiceManager.getInstance().getCloudService();
-        observers = new ArrayList<>();
-        actions = new ArrayList<>();
+        this.status = Status.Idle;
+        this.files = new FilePairCollection();
+        this.cloudService = this.context.getRemoteFilesystem();
+        this.observers = new ArrayList<>();
+        this.actions = new ArrayList<>();
     }
 
-    public static Replicator getInstance() {
-        if (instance == null) {
-            instance = new Replicator();
-        }
-        return instance;
+    public Status getStatus() {
+        return this.status;
     }
 
     private void recordLast() {
-        Settings settings = ServiceManager.getInstance().getSettings();
         Date now = DateTime.now();
         settings.setLastSync(now);
     }
 
     private void scheduleNext() {
-        Settings settings = ServiceManager.getInstance().getSettings();
         Date now = DateTime.now();
         Date next = new Date(now.getTime() + settings.replicationIntervalInMilliseconds());
         settings.setNextSync(next);
     }
 
-    public boolean shouldRun() {
-        Logger.debug(this, "shouldRun()");
-        Settings settings = ServiceManager.getInstance().getSettings();
-        Date nextSync = settings.getNextSync();
-        Date now = DateTime.now();
-
-        Logger.verbose(this, "shouldRun():next=" + DateTime.to8601String(nextSync));
-        if (nextSync.before(now)) {
-            return true;
+    private void validate() throws Exception {
+        if (!this.cloudService.directoryExists(this.context.getRemoteStoragePath())) {
+            throw new IOException("Remote directory does not exist");
         }
 
-        if (settings.isReplicationOnChange() && ServiceManager.getInstance().getNotesManager().isChanged()) {
-            return true;
+        if (this.context.getRemoteStoragePath().equals(this.cloudService.getRootDirectoryPath())) {
+            throw new Exception("Remote directory must not be root");
         }
-
-        return false;
     }
 
     private void loadFiles() throws IOException {
-        for (java.io.File file : FileSystemService.getInstance().readAllFilesFromStorage()) {
+        for (java.io.File file : this.context.getLocalFilesystem()
+                .readAllFilesFromStorage(this.context.getLocalStoragePath())) {
             files.add(new File(file));
         }
 
-        for (File file : cloudService.files()) {
+        for (File file : cloudService.files(this.context.getRemoteStoragePath())) {
             files.add(file);
         }
     }
@@ -94,13 +86,13 @@ public class Replicator {
         }
     }
 
-    private void listenForCancel() throws Exception {
+    private void listenForCancel() {
         if (isCancelled.get()) {
             // Handled... reset
             isCancelled.set(false);
 
             // Now abort
-            throw new Exception(ServiceManager.getInstance().string(R.string.replication_abort));
+            this.status = Status.Aborted;
         }
     }
 
@@ -109,16 +101,17 @@ public class Replicator {
         Logger.info(this, "resolveConflict(" + filePair.key() + ")");
 
         // We're going to download an alternate version : <filename>.conflict
-        String tempFilepath = filePair.local.getName() +
-                ServiceManager.getInstance().string(R.string.replication_conflict_extension);
+        String tempFilepath = this.context.getLocalStoragePath() +
+                filePair.local.getName() +
+                this.context.getConflictExtension();
 
         // Download the server version
         cloudService.download(filePair.remote, tempFilepath);
 
         // Compare the files
-        FileSystemService fileSystemService = FileSystemService.getInstance();
-        java.io.File tempFile = fileSystemService.getFile(tempFilepath);
+        FileSystemService fileSystemService = this.context.getLocalFilesystem();
         java.io.File localFile = (java.io.File)filePair.local.getFile();
+        java.io.File tempFile = new java.io.File(tempFilepath);
         boolean filesEqual = fileSystemService.filesEqual(localFile, tempFile);
 
         // Act
@@ -135,12 +128,14 @@ public class Replicator {
 
             // Rename the server version to the conflict
             String serverConflictPath = filePair.remote.getPath() +
-                    ServiceManager.getInstance().string(R.string.replication_conflict_extension);
+                    this.context.getConflictExtension();
 
             cloudService.move(filePair.remote, serverConflictPath);
 
             // Upload the local version
-            cloudService.upload(filePair.local);
+            cloudService.upload(
+                    filePair.local,
+                    this.context.toOppositePath(filePair.local));
         }
     }
 
@@ -151,11 +146,13 @@ public class Replicator {
 
         switch (action.type) {
             case DeleteLocal:
-                FileSystemService.getInstance().delete(action.filePair.local.getName());
+                this.context.getLocalFilesystem().delete(action.filePair.local.getPath());
                 break;
 
             case Download:
-                cloudService.download(action.filePair.remote);
+                cloudService.download(
+                        action.filePair.remote,
+                        this.context.toOppositePath(action.filePair.remote));
                 break;
 
             case DeleteRemote:
@@ -163,7 +160,9 @@ public class Replicator {
                 break;
 
             case Upload:
-                cloudService.upload(action.filePair.local);
+                cloudService.upload(
+                        action.filePair.local,
+                        this.context.toOppositePath(action.filePair.local));
                 break;
 
             case ResolveConflict:
@@ -173,13 +172,14 @@ public class Replicator {
     }
 
     private void analyse() throws Exception {
-        // Load all files
+        this.validate();
+
         this.loadFiles();
 
         this.listenForCancel();
 
         // Look at everything that's happened since the last sync
-        Date lastSync = ServiceManager.getInstance().getSettings().getLastSync();
+        Date lastSync = settings.getLastSync();
         Logger.debug(this, "sync (previous success:" + DateTime.to8601String(lastSync) + ")");
 
         // Make decisions about each filePair...
@@ -221,13 +221,13 @@ public class Replicator {
                 this.recordLast();
                 this.scheduleNext();
 
-                // Also clear the need for further replications
-                ServiceManager.getInstance().getNotesManager().clearChange();
+                this.status = Status.Succeeded;
 
             } catch (Exception ex) {
                 Logger.debug(this, "invoke():error:" + ex.toString());
-                //ServiceManager.getInstance().toast(R.string.replication_error);
-                if (ServiceManager.getInstance().getSettings().replicationSkipError()) {
+                this.status = Status.Failed;
+
+                if (settings.replicationSkipError()) {
                     this.scheduleNext();
                 }
             }

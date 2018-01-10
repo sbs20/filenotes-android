@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.adapters.DirectoryArrayAdapter;
-import sbs20.filenotes.storage.IDirectoryProvider;
+import com.sbs20.androsync.IDirectoryProvider;
 
 public abstract class FolderPicker extends DialogPreference {
 

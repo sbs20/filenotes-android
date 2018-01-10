@@ -3,13 +3,18 @@ package sbs20.filenotes.model;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 
+import com.sbs20.androsync.ISettings;
+
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 
-import sbs20.filenotes.DateTime;
+import com.sbs20.androsync.DateTime;
+import com.sbs20.androsync.Logger;
 import sbs20.filenotes.R;
+import sbs20.filenotes.ServiceManager;
 
-public class Settings {
+public class Settings implements ISettings {
 
     private SharedPreferences sharedPreferences;
 
@@ -85,7 +90,15 @@ public class Settings {
     }
 
     public String getLocalStoragePath() {
-        return this.get(STORAGE_DIRECTORY, "");
+        try {
+            if (this.internalStorage()) {
+                return ServiceManager.getInstance().getContext().getFilesDir().getCanonicalPath();
+            } else {
+                return this.get(STORAGE_DIRECTORY, "");
+            }
+        } catch (IOException ex) {
+            return "";
+        }
     }
 
     public Typeface getFontFace() {
@@ -116,15 +129,15 @@ public class Settings {
         }
     }
 
-    public String getDropboxAccessToken() {
+    public String getAuthToken() {
         return this.get(DROPBOX_ACCESS_TOKEN, null);
     }
 
-    public void setDropboxAccessToken(String value) {
+    public void setAuthToken(String value) {
         this.set(DROPBOX_ACCESS_TOKEN, value);
     }
 
-    public void clearDropboxAccessToken() {
+    public void clearAuthToken() {
         this.remove(DROPBOX_ACCESS_TOKEN);
     }
 

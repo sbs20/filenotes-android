@@ -3,8 +3,8 @@ package sbs20.filenotes;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import sbs20.filenotes.storage.FileSystemService;
-import sbs20.filenotes.storage.IDirectoryProvider;
+import com.sbs20.androsync.FileSystemService;
+import com.sbs20.androsync.IDirectoryProvider;
 
 public class DirectoryPicker extends FolderPicker {
 
@@ -14,6 +14,6 @@ public class DirectoryPicker extends FolderPicker {
 
     @Override
     public IDirectoryProvider createProvider() {
-        return FileSystemService.getInstance();
+        return ServiceManager.getInstance().getLocalFilesystem();
     }
 }

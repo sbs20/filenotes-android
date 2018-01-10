@@ -1,8 +1,6 @@
-package sbs20.filenotes.model;
+package com.sbs20.androsync;
 
 import android.util.Log;
-
-import sbs20.filenotes.ServiceManager;
 
 public class Logger {
 
@@ -11,8 +9,6 @@ public class Logger {
     private static final String INFORMATION = "Info";
     private static final String WARN = "Warn";
     private static final String ERROR = "Error";
-
-    private ServiceManager serviceManager;
 
     private Logger() {
     }

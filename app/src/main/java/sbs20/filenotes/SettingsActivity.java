@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import sbs20.filenotes.model.Logger;
+import com.sbs20.androsync.Logger;
 import sbs20.filenotes.model.Settings;
 
 public class SettingsActivity extends ThemedActivity {

@@ -1,9 +1,6 @@
-package sbs20.filenotes.replication;
+package com.sbs20.androsync;
 
 import java.util.Date;
-
-import sbs20.filenotes.DateTime;
-import sbs20.filenotes.model.Logger;
 
 class ActionBuilder {
 

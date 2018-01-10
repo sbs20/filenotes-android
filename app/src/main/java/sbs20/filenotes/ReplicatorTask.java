@@ -1,13 +1,18 @@
-package sbs20.filenotes.replication;
+package sbs20.filenotes;
 
 import android.os.AsyncTask;
+
+import com.sbs20.androsync.Action;
+import com.sbs20.androsync.IObserver;
+import com.sbs20.androsync.Logger;
+import com.sbs20.androsync.Replicator;
 
 public class ReplicatorTask  {
 
     protected Replicator replicator;
 
     public ReplicatorTask() {
-        this.replicator = Replicator.getInstance();
+        this.replicator = ServiceManager.getInstance().getReplicator();
     }
 
     protected void onProgressUpdate(Action action) {
@@ -38,6 +43,20 @@ public class ReplicatorTask  {
 
             @Override
             protected void onPostExecute(Replicator replicator) {
+                switch (replicator.getStatus()) {
+                    case Succeeded:
+                        ServiceManager.getInstance().getNotesManager().clearChange();
+                        break;
+
+                    case Aborted:
+                        ServiceManager.getInstance().toast(R.string.replication_abort);
+                        break;
+
+                    case Failed:
+                        ServiceManager.getInstance().toast(R.string.replication_error);
+                        break;
+                }
+
                 ReplicatorTask.this.onPostExecute();
             }
 

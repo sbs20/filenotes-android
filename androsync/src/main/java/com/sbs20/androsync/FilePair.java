@@ -1,6 +1,4 @@
-package sbs20.filenotes.replication;
-
-import sbs20.filenotes.storage.File;
+package com.sbs20.androsync;
 
 class FilePair {
     File local;

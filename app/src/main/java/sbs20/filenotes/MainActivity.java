@@ -21,16 +21,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import sbs20.filenotes.adapters.NoteArrayAdapter;
-import sbs20.filenotes.model.Logger;
+import com.sbs20.androsync.DateTime;
+import com.sbs20.androsync.Logger;
 import sbs20.filenotes.model.Note;
 import sbs20.filenotes.model.NoteCollection;
 import sbs20.filenotes.model.NotesManager;
-import sbs20.filenotes.replication.Action;
-import sbs20.filenotes.replication.Replicator;
-import sbs20.filenotes.replication.ReplicatorTask;
+import com.sbs20.androsync.Action;
+import com.sbs20.androsync.Replicator;
+import sbs20.filenotes.ReplicatorTask;
+import sbs20.filenotes.model.Settings;
 
 public class MainActivity extends ThemedActivity {
 
@@ -66,7 +69,25 @@ public class MainActivity extends ThemedActivity {
         }
     }
 
-	@Override
+    public boolean shouldReplicatorRun() {
+        Logger.debug(this, "shouldReplicatorRun()");
+        Settings settings = ServiceManager.getInstance().getSettings();
+        Date nextSync =  settings.getNextSync();
+        Date now = DateTime.now();
+
+        Logger.verbose(this, "shouldRun():next=" + DateTime.to8601String(nextSync));
+        if (nextSync.before(now)) {
+            return true;
+        }
+
+        if (settings.isReplicationOnChange() && ServiceManager.getInstance().getNotesManager().isChanged()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -176,7 +197,7 @@ public class MainActivity extends ThemedActivity {
             }
         });
 
-        if (Replicator.getInstance().shouldRun()) {
+        if (this.shouldReplicatorRun()) {
             this.startReplication();
         }
     }
@@ -223,6 +244,34 @@ public class MainActivity extends ThemedActivity {
         this.startActivity(intent);
     }
 
+
+    private String string(int resId) {
+        return ServiceManager.getInstance().string(resId);
+    }
+
+    private String toString(Action.Type type) {
+        switch (type) {
+            case None:
+                return string(R.string.replication_none);
+            case Download:
+                return string(R.string.replication_download);
+            case Upload:
+                return string(R.string.replication_upload);
+            case DeleteLocal:
+                return string(R.string.replication_delete_local);
+            case DeleteRemote:
+                return string(R.string.replication_delete_remote);
+            case ResolveConflict:
+                return string(R.string.replication_resolve_conflict);
+            default:
+                return string(R.string.replication_unknown);
+        }
+    }
+
+    private String actionMessage(Action action) {
+        return toString(action.getType()) + ": " + action.key();
+    }
+
     private void startReplication() {
 
         final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
@@ -239,7 +288,7 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onClick(DialogInterface dialog, int which){
                 Logger.info(this, "onClick()");
-                Replicator.getInstance().cancel();
+                ServiceManager.getInstance().getReplicator().cancel();
 
                 // It would be nice to wait, but it makes android nervous. Comment until solution found
                 // Replicator.getInstance().awaitStop();
@@ -254,7 +303,7 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 Logger.info(this, "onCancel()");
-                Replicator.getInstance().cancel();
+                ServiceManager.getInstance().getReplicator().cancel();
             }
         });
 
@@ -272,7 +321,7 @@ public class MainActivity extends ThemedActivity {
             protected void onProgressUpdate(Action action) {
                 loadNotes();
                 progressDialog.setMax(this.replicator.getActionCount());
-                progressDialog.setMessage(action.message());
+                progressDialog.setMessage(MainActivity.this.actionMessage(action));
                 progressDialog.incrementProgressBy(1);
             }
 

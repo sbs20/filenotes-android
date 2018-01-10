@@ -1,4 +1,4 @@
-package sbs20.filenotes.storage;
+package com.sbs20.androsync;
 
 import com.dropbox.core.v2.files.FileMetadata;
 

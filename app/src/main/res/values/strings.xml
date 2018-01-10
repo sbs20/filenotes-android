@@ -38,17 +38,6 @@
     <string name="yes">yes</string>
     <string name="logged_out">Logged out</string>
 
-    <string name="replication_replicating">Syncing</string>
-    <string name="replication_analysing">Analysing&#8230;</string>
-    <string name="replication_delete_local">Delete (local)</string>
-    <string name="replication_delete_remote">Delete (remote)</string>
-    <string name="replication_download">Download</string>
-    <string name="replication_upload">Upload</string>
-    <string name="replication_resolve_conflict">Comparing</string>
-    <string name="replication_none">No action</string>
-    <string name="replication_error">Sync error - aborted</string>
-    <string name="replication_unknown">Unknown</string>
-
     <!-- Used? -->
     <string name="version">Filenotes 1.0</string>
     <string name="version_summary">Sam Strachan</string>
@@ -59,6 +48,17 @@
     <string name="replication_abort">User abort</string>
     <string name="exception_directory_already_exists">Directory already exists</string>
     <string name="default_new_folder_name">New Folder</string>
+
+    <string name="replication_replicating">Syncing</string>
+    <string name="replication_analysing">Analysing&#8230;</string>
+    <string name="replication_delete_local">Delete (local)</string>
+    <string name="replication_delete_remote">Delete (remote)</string>
+    <string name="replication_download">Download</string>
+    <string name="replication_upload">Upload</string>
+    <string name="replication_resolve_conflict">Comparing</string>
+    <string name="replication_none">No action</string>
+    <string name="replication_error">Sync error. Aborted. Check remote directory.</string>
+    <string name="replication_unknown">Unknown</string>
 
     <string-array name="pref_font_list_text">
         <item>Monospace</item>

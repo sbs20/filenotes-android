@@ -1,4 +1,6 @@
-package sbs20.filenotes.storage;
+package com.sbs20.androsync;
+
+import android.content.Context;
 
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
@@ -9,6 +11,7 @@ import com.dropbox.core.v2.files.CreateFolderErrorException;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.FolderMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.LookupError;
 import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.files.WriteMode;
 
@@ -17,46 +20,42 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import sbs20.filenotes.R;
-import sbs20.filenotes.ServiceManager;
-import sbs20.filenotes.model.Logger;
-import sbs20.filenotes.model.Settings;
-
 public class DropboxService implements ICloudService, IDirectoryProvider {
 
-    protected ServiceManager serviceManager;
-    protected Settings settings;
+    private String appKey;
+    private String clientId;
+    private String locale;
 
+    private Context context;
+    private ISettings settings;
     private static DbxClientV2 client;
 
-    public DropboxService() {
-        this.serviceManager = ServiceManager.getInstance();
-        this.settings = serviceManager.getSettings();
-    }
+    public DropboxService(
+            String appKey,
+            String clientId,
+            String locale,
+            Context context,
+            ISettings settings) {
 
-    private String appKey() {
-        return serviceManager.string(R.string.dropbox_app_key);
-    }
-
-    private String clientId() {
-        return serviceManager.string(R.string.dropbox_client_identifier);
-    }
-
-    private String locale() {
-        return serviceManager.string(R.string.dropbox_locale);
+        this.appKey = appKey;
+        this.clientId = clientId;
+        this.locale = locale;
+        this.context = context;
+        this.settings = settings;
     }
 
     private String getAuthenticationToken() {
-        String accessToken = this.settings.getDropboxAccessToken();
+        String accessToken = this.settings.getAuthToken();
 
         if (accessToken == null) {
             accessToken = Auth.getOAuth2Token();
             if (accessToken != null) {
-                this.settings.setDropboxAccessToken(accessToken);
+                this.settings.setAuthToken(accessToken);
             }
         }
 
@@ -68,8 +67,8 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
             String accessToken = this.getAuthenticationToken();
             if (accessToken != null && accessToken.length() > 0) {
                 DbxRequestConfig config = DbxRequestConfig
-                        .newBuilder(clientId())
-                        .withUserLocale(locale())
+                        .newBuilder(this.clientId)
+                        .withUserLocale(this.locale)
                         .build();
 
                 client = new DbxClientV2(config, accessToken);
@@ -90,7 +89,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
         Logger.info(this, "login()");
         if (!this.isAuthenticated()) {
             Logger.verbose(this, "login():!Authenticated");
-            Auth.startOAuth2Authentication(serviceManager.getContext(), appKey());
+            Auth.startOAuth2Authentication(this.context, this.appKey);
         }
     }
 
@@ -98,12 +97,12 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     public void logout() {
         client = null;
         AuthActivity.result = null;
-        this.settings.clearDropboxAccessToken();
+        this.settings.clearAuthToken();
         Logger.info(this, "logout()");
     }
 
     @Override
-    public List<File> files() throws IOException {
+    public List<File> files(String remotePath) throws IOException {
         Logger.info(this, "files():Start");
 
         List<File> files = new ArrayList<>();
@@ -112,7 +111,7 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
             Logger.verbose(this, "files():Authenticated");
 
             try {
-                ListFolderResult result = client.files().listFolder(this.settings.getRemoteStoragePath());
+                ListFolderResult result = client.files().listFolder(remotePath);
                 while (true) {
 
                     for (Metadata m : result.getEntries()) {
@@ -140,29 +139,24 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     }
 
     @Override
-    public void move(File file, String desiredPath) throws Exception {
+    public void move(File remoteFile, String desiredPath) throws Exception {
         Logger.info(this, "move():Start");
-        FileMetadata remoteFile = (FileMetadata) file.getFile();
+        FileMetadata fileMetadata = (FileMetadata) remoteFile.getFile();
 
         if (remoteFile != null) {
-            client.files().moveV2(remoteFile.getPathLower(), desiredPath);
+            client.files().moveV2(fileMetadata.getPathLower(), desiredPath);
             Logger.verbose(this, "move():done");
         }
     }
 
     @Override
-    public void upload(File file) throws Exception {
+    public void upload(File file, String remotePath) throws Exception {
         Logger.info(this, "upload():Start");
         java.io.File localFile = (java.io.File) file.getFile();
 
         if (localFile != null) {
-            String remoteFolderPath = this.settings.getRemoteStoragePath();
-
-            // Note - this is not ensuring the name is a valid dropbox file name
-            String remoteFileName = localFile.getName();
-
             InputStream inputStream = new FileInputStream(localFile);
-            client.files().uploadBuilder(remoteFolderPath + "/" + remoteFileName)
+            client.files().uploadBuilder(remotePath)
                     .withMode(WriteMode.OVERWRITE)
                     .uploadAndFinish(inputStream);
             Logger.verbose(this, "upload():done");
@@ -170,15 +164,12 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
     }
 
     @Override
-    public void download(File file, String localName) throws Exception {
+    public void download(File file, String localPath) throws Exception {
         Logger.info(this, "download():Start");
         FileMetadata remoteFile = (FileMetadata) file.getFile();
 
         if (remoteFile != null) {
-
-            // Local file
-            java.io.File localFile = FileSystemService.getInstance().getFile(localName);
-
+            java.io.File localFile = new java.io.File(localPath);
             OutputStream outputStream = new FileOutputStream(localFile);
 
             client.files()
@@ -194,11 +185,6 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
 
             Logger.verbose(this, "download():done");
         }
-    }
-
-    @Override
-    public void download(File file) throws Exception {
-        this.download(file, file.getName());
     }
 
     @Override
@@ -254,8 +240,27 @@ public class DropboxService implements ICloudService, IDirectoryProvider {
                 client.files().createFolderV2(path);
                 Logger.verbose(this, "createDirectory():done");
             } catch (CreateFolderErrorException ex) {
-                throw new IOException(serviceManager.string(R.string.exception_directory_already_exists));
+                // Ignore
             }
+        }
+    }
+
+    @Override
+    public boolean directoryExists(String path) {
+        // An empty path is the root directory
+        if (path.equals("")) {
+            return true;
+        }
+
+        try {
+            Logger.debug(this, "directoryExists(" + path + ")");
+            Metadata metadata = this.getClient().files().getMetadata(path);
+
+            Logger.debug(this, "Metadata:" + metadata.toString());
+            return metadata instanceof FolderMetadata;
+        } catch (DbxException ex) {
+            Logger.debug(this, "Directory does not exist: " + ex.toString());
+            return false;
         }
     }
 }

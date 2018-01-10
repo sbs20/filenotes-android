@@ -10,6 +10,7 @@ import java.util.Locale;
 
 public class Note implements Comparable<Note> {
 
+    private String path;
     private String name;
     private String text;
     private String textSummary;
@@ -19,6 +20,7 @@ public class Note implements Comparable<Note> {
     private String originalText;
 
     public Note() {
+        this.path = "";
         this.name = "";
         this.text = "";
         this.textSummary = "";
@@ -58,6 +60,12 @@ public class Note implements Comparable<Note> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPath() { return path; }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getTextSummary() {

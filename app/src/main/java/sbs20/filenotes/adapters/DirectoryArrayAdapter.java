@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sbs20.filenotes.R;
-import sbs20.filenotes.storage.IDirectoryProvider;
+import com.sbs20.androsync.IDirectoryProvider;
+import com.sbs20.androsync.Logger;
 
 public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
 
@@ -30,8 +31,19 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
             @Override
             protected List<String> doInBackground(IDirectoryProvider... params) {
                 try {
-                    return params[0].getChildDirectoryPaths(directory);
+                    IDirectoryProvider provider = params[0];
+
+                    // Check the directory exists - if not fallback
+                    if (!provider.directoryExists(DirectoryArrayAdapter.this.currentDirectory)) {
+                        Logger.debug(this, DirectoryArrayAdapter.this.currentDirectory + " does not exist");
+                        DirectoryArrayAdapter.this.currentDirectory = provider.getRootDirectoryPath();
+                    }
+
+                    return params[0].getChildDirectoryPaths(DirectoryArrayAdapter.this.currentDirectory);
                 } catch (Exception e) {
+                    Logger.error(
+                            this,
+                            e.getMessage() + ";path=" + DirectoryArrayAdapter.this.currentDirectory);
                     return new ArrayList<>();
                 }
             }
