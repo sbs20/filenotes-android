@@ -19,7 +19,7 @@ public class FileItem {
     public FileItem(FileMetadata dbxfile) {
         this.isFolder = false;
         this.name = dbxfile.getName();
-        this.path = dbxfile.getPathLower();
+        this.path = dbxfile.getPathDisplay();
         this.id = dbxfile.getId();
         this.rev = dbxfile.getRev();
         this.size = dbxfile.getSize();
@@ -77,7 +77,7 @@ public class FileItem {
     public Object getFile() {return this.file;}
 
     public String key() {
-        return name;
+        return name.toLowerCase();
     }
 
     public boolean isLocal() { return this.isLocal; }
