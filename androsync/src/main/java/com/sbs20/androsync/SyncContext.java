@@ -22,11 +22,11 @@ public class SyncContext {
         this.conflictExtension = conflictExtension;
     }
 
-    public String getLocalStoragePath() {
+    public String getLocalPath() {
         return localPath;
     }
 
-    public String getRemoteStoragePath() {
+    public String getRemotePath() {
         return remotePath;
     }
 
@@ -40,8 +40,8 @@ public class SyncContext {
 
     private String toCommonPath(String path, boolean isLocal) {
         String outputPath = isLocal ?
-                path.substring(this.getLocalStoragePath().length()) :
-                path.substring(this.getRemoteStoragePath().length());
+                path.substring(this.getLocalPath().length()) :
+                path.substring(this.getRemotePath().length());
 
         return asPath(outputPath);
     }
@@ -51,11 +51,11 @@ public class SyncContext {
     }
 
     public String toLocalPath(FileItem file) {
-        return this.asPath(this.getLocalStoragePath() + this.toCommonPath(file));
+        return this.asPath(this.getLocalPath() + this.toCommonPath(file));
     }
 
     public String toRemotePath(FileItem file) {
-        return this.asPath(this.getRemoteStoragePath() + this.toCommonPath(file));
+        return this.asPath(this.getRemotePath() + this.toCommonPath(file));
     }
 
     public String toOppositePath(FileItem file) {

@@ -9,7 +9,7 @@ import com.sbs20.androsync.FileSystemService;
 import com.sbs20.androsync.ICloudService;
 import com.sbs20.androsync.DropboxService;
 import com.sbs20.androsync.NoopCloudService;
-import com.sbs20.androsync.Replicator;
+import com.sbs20.androsync.Sync;
 import com.sbs20.androsync.SyncContext;
 import com.sbs20.filenotes.model.NotesManager;
 import com.sbs20.filenotes.model.Settings;
@@ -25,7 +25,7 @@ public class ServiceManager {
     private NotesManager notesManager;
     private FileSystemService localFilesystem;
     private ICloudService cloudService;
-    private Replicator replicator;
+    private Sync sync;
     private SyncContext syncContext;
     private ServiceManager() {}
 
@@ -56,7 +56,7 @@ public class ServiceManager {
                     this.getCloudService(),
                     this.getSettings().getLocalStoragePath(),
                     this.getSettings().getRemoteStoragePath(),
-                    string(R.string.replication_conflict_extension));
+                    resourceString(R.string.replication_conflict_extension));
         }
 
         return this.syncContext;
@@ -72,9 +72,9 @@ public class ServiceManager {
 
     public DropboxService getDropboxService() {
         return new DropboxService(
-                this.string(R.string.dropbox_app_key),
-                this.string(R.string.dropbox_client_identifier),
-                this.string(R.string.dropbox_locale),
+                this.resourceString(R.string.dropbox_app_key),
+                this.resourceString(R.string.dropbox_client_identifier),
+                this.resourceString(R.string.dropbox_locale),
                 this.getContext(),
                 this.settings);
     }
@@ -95,14 +95,14 @@ public class ServiceManager {
         return this.cloudService;
     }
 
-    public Replicator getReplicator() {
-        if (this.replicator == null) {
-            this.replicator = new Replicator(
+    public Sync getSync() {
+        if (this.sync == null) {
+            this.sync = new Sync(
                     this.getSettings(),
                     this.getSyncContext());
         }
 
-        return this.replicator;
+        return this.sync;
     }
 
     public void resetCloudSync() {
@@ -122,18 +122,18 @@ public class ServiceManager {
     }
 
     public void toast(int resId) {
-        this.toast(this.string(resId));
+        this.toast(this.resourceString(resId));
     }
 
     public Context getContext() {
         return this.application.getBaseContext();
     }
 
-    public String string(int resId) {
+    public String resourceString(int resId) {
         return this.application.getString(resId);
     }
 
-    public String[] array(int resId) {
+    public String[] resourceArray(int resId) {
         return this.application.getResources().getStringArray(resId);
     }
 

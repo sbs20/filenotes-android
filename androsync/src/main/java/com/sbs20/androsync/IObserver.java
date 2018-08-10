@@ -1,5 +1,5 @@
 package com.sbs20.androsync;
 
 public interface IObserver {
-    void update(Replicator source, Action action);
+    void update(Sync source, Action action);
 }

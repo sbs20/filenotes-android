@@ -57,7 +57,7 @@ public class SettingsActivity extends ThemedActivity {
             Settings settings = this.serviceManager.getSettings();
             findPreference(Settings.STORAGE_DIRECTORY).setEnabled(!settings.internalStorage());
 
-            boolean isCloudEnabled = !this.serviceManager.array(R.array.pref_cloud_values)[0].equals(settings.getCloudServiceName());
+            boolean isCloudEnabled = !this.serviceManager.resourceArray(R.array.pref_cloud_values)[0].equals(settings.getCloudServiceName());
             boolean authenticated = this.serviceManager.getCloudService().isAuthenticated();
 
             findPreference(Settings.CLOUD_SERVICE_LOGIN).setEnabled(isCloudEnabled && !authenticated);

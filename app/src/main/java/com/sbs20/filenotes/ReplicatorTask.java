@@ -4,16 +4,16 @@ import android.os.AsyncTask;
 
 import com.sbs20.androsync.Action;
 import com.sbs20.androsync.IObserver;
-import com.sbs20.androsync.Replicator;
+import com.sbs20.androsync.Sync;
 
 import sbs20.filenotes.R;
 
 public class ReplicatorTask  {
 
-    protected Replicator replicator;
+    protected Sync replicator;
 
     public ReplicatorTask() {
-        this.replicator = ServiceManager.getInstance().getReplicator();
+        this.replicator = ServiceManager.getInstance().getSync();
     }
 
     protected void onProgressUpdate(Action action) {
@@ -23,14 +23,14 @@ public class ReplicatorTask  {
     }
 
     public void execute() {
-        new AsyncTask<Replicator, Action, Replicator>() {
+        new AsyncTask<Sync, Action, Sync>() {
 
             @Override
-            protected Replicator doInBackground(Replicator... params) {
-                Replicator replicator = params[0];
+            protected Sync doInBackground(Sync... params) {
+                Sync replicator = params[0];
                 replicator.invoke(new IObserver() {
                     @Override
-                    public void update(Replicator source, Action action) {
+                    public void update(Sync source, Action action) {
                         publishProgress(action);
                     }
                 });
@@ -43,7 +43,7 @@ public class ReplicatorTask  {
             }
 
             @Override
-            protected void onPostExecute(Replicator replicator) {
+            protected void onPostExecute(Sync replicator) {
                 switch (replicator.getStatus()) {
                     case Succeeded:
                         ServiceManager.getInstance().getNotesManager().clearChange();

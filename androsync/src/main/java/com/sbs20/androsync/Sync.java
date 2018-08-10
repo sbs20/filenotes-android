@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Replicator {
+public class Sync {
 
     public enum Status {
         Idle,
@@ -28,7 +28,7 @@ public class Replicator {
     private SyncContext context;
     private Status status;
 
-    public Replicator(ISettings settings, SyncContext context) {
+    public Sync(ISettings settings, SyncContext context) {
         isRunning = new AtomicBoolean(false);
         isCancelled = new AtomicBoolean(false);
 
@@ -60,22 +60,22 @@ public class Replicator {
     }
 
     private void validate() throws Exception {
-        if (!this.cloudService.directoryExists(this.context.getRemoteStoragePath())) {
+        if (!this.cloudService.directoryExists(this.context.getRemotePath())) {
             throw new IOException("Remote directory does not exist");
         }
 
-        if (this.context.getRemoteStoragePath().equals(this.cloudService.getRootDirectoryPath())) {
+        if (this.context.getRemotePath().equals(this.cloudService.getRootDirectoryPath())) {
             throw new Exception("Remote directory must not be root");
         }
     }
 
     private void loadFiles() throws IOException {
         for (java.io.File file : this.context.getLocalFilesystem()
-                .readAllFilesFromStorage(this.context.getLocalStoragePath())) {
+                .readAllFilesFromStorage(this.context.getLocalPath())) {
             files.add(new FileItem(file));
         }
 
-        for (FileItem file : cloudService.files(this.context.getRemoteStoragePath())) {
+        for (FileItem file : cloudService.files(this.context.getRemotePath())) {
             files.add(file);
         }
     }
@@ -101,7 +101,7 @@ public class Replicator {
         Logger.info(this, "resolveConflict(" + filePair.key() + ")");
 
         // We're going to download an alternate version : <filename>.conflict
-        String tempFilepath = this.context.getLocalStoragePath() +
+        String tempFilepath = this.context.getLocalPath() +
                 filePair.local.getName() +
                 this.context.getConflictExtension();
 

@@ -246,7 +246,7 @@ public class MainActivity extends ThemedActivity {
 
 
     private String string(int resId) {
-        return ServiceManager.getInstance().string(resId);
+        return ServiceManager.getInstance().resourceString(resId);
     }
 
     private String toString(Action.Type type) {
@@ -288,7 +288,7 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onClick(DialogInterface dialog, int which){
                 Logger.info(this, "onClick()");
-                ServiceManager.getInstance().getReplicator().cancel();
+                ServiceManager.getInstance().getSync().cancel();
 
                 // It would be nice to wait, but it makes android nervous. Comment until solution found
                 // Replicator.getInstance().awaitStop();
@@ -303,7 +303,7 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onCancel(DialogInterface dialog) {
                 Logger.info(this, "onCancel()");
-                ServiceManager.getInstance().getReplicator().cancel();
+                ServiceManager.getInstance().getSync().cancel();
             }
         });
 
