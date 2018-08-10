@@ -52,5 +52,6 @@ Temporary Items
 local.properties
 /*/build
 /build
-app/src/main/res/values/dropbox.xml
-app/app-release.apk
+**/dropbox.xml
+**/*.apk
+**/*.iml 
