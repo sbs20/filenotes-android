@@ -28,7 +28,7 @@ public class EditActivity extends ThemedActivity {
     private void loadData(Bundle savedInstanceState) {
 
         // set up the text field
-        this.noteText = (EditText) this.findViewById(R.id.note);
+        this.noteText = this.findViewById(R.id.note);
         this.note = ServiceManager.getInstance().getNotesManager().getSelectedNote();
 
         String name = null;
@@ -75,7 +75,7 @@ public class EditActivity extends ThemedActivity {
     }
 
     private void uiToModel() {
-        EditText edit = (EditText) this.findViewById(R.id.note);
+        EditText edit = this.findViewById(R.id.note);
         this.note.setText(edit.getText().toString());
     }
 
@@ -144,7 +144,7 @@ public class EditActivity extends ThemedActivity {
         getMenuInflater().inflate(R.menu.edit, menu);
 
         if (ServiceManager.getInstance().getSettings().autosave()) {
-            MenuItem save = (MenuItem) menu.findItem(R.id.action_save);
+            MenuItem save = menu.findItem(R.id.action_save);
             save.setVisible(false);
         }
 

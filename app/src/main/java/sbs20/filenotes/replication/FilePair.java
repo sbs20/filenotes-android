@@ -20,10 +20,8 @@ class FilePair {
             return false;
         } else if (this.local.getLastModified().equals(this.remote.getLastModified())) {
             return true;
-        } else if (this.local.getLastModified().equals(this.remote.getClientModified())) {
-            return true;
         } else {
-            return false;
+            return this.local.getLastModified().equals(this.remote.getClientModified());
         }
     }
 }

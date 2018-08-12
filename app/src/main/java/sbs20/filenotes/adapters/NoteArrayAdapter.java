@@ -57,22 +57,22 @@ public class NoteArrayAdapter extends GenericBaseAdpater<Note> {
             row = inflater.inflate(R.layout.listview_notes, parent, false);
         }
 
-        View flash = (View) row.findViewById(R.id.listnote_flash);
+        View flash = row.findViewById(R.id.listnote_flash);
         flash.setBackgroundColor(this.getColor(note));
 
-        TextView name = (TextView) row.findViewById(R.id.listnote_name);
+        TextView name = row.findViewById(R.id.listnote_name);
         name.setText(note.getName());
 
-        TextView text = (TextView) row.findViewById(R.id.listnote_text);
+        TextView text = row.findViewById(R.id.listnote_text);
         text.setText(note.getTextSummary());
 
-        TextView lastModified = (TextView) row.findViewById(R.id.listnode_lastModified);
+        TextView lastModified = row.findViewById(R.id.listnode_lastModified);
 
         String date = DateTime.formatDate(note.getLastModified());
         date += "\n" + DateTime.formatTime(note.getLastModified());
         lastModified.setText(date);
 
-        TextView size = (TextView) row.findViewById(R.id.listnote_size);
+        TextView size = row.findViewById(R.id.listnote_size);
         size.setText(note.getSizeString());
 
         row.setTag(note);

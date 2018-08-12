@@ -56,7 +56,7 @@ public class DirectoryArrayAdapter extends GenericBaseAdpater<String> {
             row = inflater.inflate(R.layout.listview_folders, parent, false);
         }
 
-        TextView directoryItem = (TextView) row.findViewById(R.id.directoryItem);
+        TextView directoryItem = row.findViewById(R.id.directoryItem);
 
         directoryItem.setText(directory);
         row.setTag(directory);
