@@ -13,8 +13,10 @@ android {
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "sbs20.filenotes"
+        versionCode 9
+        versionName "1.8"
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
     }
     buildTypes {
         release {
