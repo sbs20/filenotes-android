@@ -41,7 +41,7 @@ public class MainActivity extends ThemedActivity {
     private NoteArrayAdapter notesAdapter;
 
     private void loadNotes() {
-		TextView message = (TextView) this.findViewById(R.id.note_list_message);
+		TextView message = this.findViewById(R.id.note_list_message);
 
 		try {
             this.notesManager.readAllFromStorage();
@@ -74,8 +74,8 @@ public class MainActivity extends ThemedActivity {
 
         // Set up our main objects
         this.notesManager = ServiceManager.getInstance().getNotesManager();
-        this.noteListView = (ListView)this.findViewById(R.id.note_list);
-        this.swipeLayout = (SwipeRefreshLayout) findViewById(R.id.note_swiper);
+        this.noteListView = this.findViewById(R.id.note_list);
+        this.swipeLayout = findViewById(R.id.note_swiper);
 
         // Toolbar
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -168,7 +168,7 @@ public class MainActivity extends ThemedActivity {
             }
         });
 
-		FloatingActionButton createNew = (FloatingActionButton)this.findViewById(R.id.note_create);
+		FloatingActionButton createNew = this.findViewById(R.id.note_create);
 		createNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,6 +189,7 @@ public class MainActivity extends ThemedActivity {
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
+        // See here: https://stackoverflow.com/a/41901653/1229065
         SearchView searchView = (SearchView) menu
                 .findItem(R.id.action_search)
                 .getActionView();

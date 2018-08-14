@@ -76,7 +76,7 @@ public class SettingsActivity extends ThemedActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if(view != null) {
-                ListView lv = (ListView) view.findViewById(android.R.id.list);
+                ListView lv = view.findViewById(android.R.id.list);
                 lv.setPadding(0, 0, 0, 0);
             }
             return view;

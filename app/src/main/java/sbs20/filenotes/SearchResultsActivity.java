@@ -33,7 +33,7 @@ public class SearchResultsActivity extends ThemedActivity {
 
         // Set up our main objects
         this.notesManager = ServiceManager.getInstance().getNotesManager();
-        this.searchListView = (ListView)this.findViewById(R.id.search_list);
+        this.searchListView = this.findViewById(R.id.search_list);
 
         this.notesAdapter = new NoteArrayAdapter(this);
         this.searchListView.setAdapter(this.notesAdapter);
@@ -88,7 +88,7 @@ public class SearchResultsActivity extends ThemedActivity {
 
         NoteCollection notes = this.notesManager.search(query);
 
-        TextView message = (TextView) this.findViewById(R.id.search_message);
+        TextView message = this.findViewById(R.id.search_message);
 
         message.setText(
                 String.format(

@@ -50,7 +50,8 @@ Temporary Items
 .gradle
 .idea
 local.properties
-/*/build
-/build
-app/src/main/res/values/dropbox.xml
-app/app-release.apk
+**/build
+**/release
+**/dropbox.xml
+**/*.apk
+**/*.iml 

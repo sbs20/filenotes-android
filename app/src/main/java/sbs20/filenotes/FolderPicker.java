@@ -133,8 +133,8 @@ public abstract class FolderPicker extends DialogPreference {
     protected View onCreateDialogView() {
 
         LinearLayout layout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.dialog_preference_folder, null);
-        final TextView textView = (TextView) layout.findViewById(R.id.currentDirectory);
-        final ListView listView = (ListView) layout.findViewById(R.id.directoryList);
+        final TextView textView = layout.findViewById(R.id.currentDirectory);
+        final ListView listView = layout.findViewById(R.id.directoryList);
 
         directoryAdapter = new DirectoryArrayAdapter(context, provider);
         directoryAdapter.setCurrentDirectory(currentDirectory);

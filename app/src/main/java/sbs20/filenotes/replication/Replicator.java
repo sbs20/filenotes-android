@@ -71,11 +71,9 @@ public class Replicator {
             return true;
         }
 
-        if (settings.isReplicationOnChange() && ServiceManager.getInstance().getNotesManager().isChanged()) {
-            return true;
-        }
+        return settings.isReplicationOnChange()
+                && ServiceManager.getInstance().getNotesManager().isChanged();
 
-        return false;
     }
 
     private void loadFiles() throws IOException {
